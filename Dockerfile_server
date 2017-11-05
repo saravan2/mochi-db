@@ -1,0 +1,11 @@
+FROM azul/zulu-openjdk:8u144
+
+RUN java -version  && mkdir -pv /opt/mochi-db/ 
+COPY mochi-db-*.jar /opt/mochi-db/
+RUN ls -la /opt/mochi-db/
+
+# Http port
+EXPOSE 8080
+# Mochi communication
+EXPOSE 8081
+CMD java -jar /opt/mochi-db/mochi-db-*.jar
