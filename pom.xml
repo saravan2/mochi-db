@@ -27,7 +27,29 @@
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-core</artifactId>
 		    <version>1.2.3</version>
-		</dependency>	        
+		</dependency>
+		<dependency>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-all</artifactId>
+		    <version>4.1.16.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.protobuf</groupId>
+		    <artifactId>protobuf-java</artifactId>
+		    <version>3.4.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.testng</groupId>
+		    <artifactId>testng</artifactId>
+		    <version>6.11</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-all</artifactId>
+		    <version>1.10.19</version>
+		    <scope>test</scope>
+		</dependency>
     </dependencies>
 
     <properties>

@@ -20,6 +20,11 @@ build_mochi_docker.sh
 ### Running mochi docker
 start_mochi_docker.sh
 
-# Useful commands:
+# Useful commands/Notes:
 
 mvn clean install -nsu && ./build_mochi_docker.sh && ./start_mochi_docker.sh
+
+Install protobuf - https://stackoverflow.com/questions/21775151/installing-google-protocol-buffers-on-mac
+
+Generate proto - /usr/local/bin/protoc ./src/main/java/edu/stanford/cs244b/mochi/server/messages/MochiProtocol.proto --java_out=src/main/java/
+

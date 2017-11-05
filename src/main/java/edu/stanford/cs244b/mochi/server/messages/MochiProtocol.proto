@@ -1,0 +1,14 @@
+syntax = "proto3";
+package edu.stanford.cs244b.mochi.server.messages;
+
+
+option optimize_for = SPEED;
+
+message HelloToServer {
+    string msg = 1;
+}
+
+message HelloFromServer {
+    string msg = 1;
+    string clientMsg = 2;
+}
