@@ -1,4 +1,4 @@
-package edu.stanford.cs244b.mochi.server;
+package edu.stanford.cs244b.mochi.server.messaging;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -13,6 +13,8 @@ import javax.net.ssl.SSLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import edu.stanford.cs244b.mochi.server.Utils;
 
 /* Should allow to be instantiated multiple times per JVM */
 public class MochiServer {

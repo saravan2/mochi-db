@@ -1,4 +1,4 @@
-package edu.stanford.cs244b.mochi.server;
+package edu.stanford.cs244b.mochi.server.messaging;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

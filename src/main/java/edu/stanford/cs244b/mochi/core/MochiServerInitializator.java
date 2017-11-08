@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
-import edu.stanford.cs244b.mochi.server.MochiServer;
+import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 
 @Component
 public class MochiServerInitializator {
