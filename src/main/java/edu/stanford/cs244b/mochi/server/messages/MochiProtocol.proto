@@ -12,3 +12,12 @@ message HelloFromServer {
     string msg = 1;
     string clientMsg = 2;
 }
+
+
+message ProtocolMessage {
+    oneof msg111 {
+        HelloToServer helloToServer = 1;
+        HelloFromServer helloFromServer = 2;
+    };
+    int64 msgTimestamp = 3;
+}

@@ -16,7 +16,7 @@ public class MochiServerInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline p = ch.pipeline();
 
         p.addLast(new ProtobufVarint32FrameDecoder());
-        p.addLast(new ProtobufDecoder(MochiProtocol.HelloToServer.getDefaultInstance()));
+        p.addLast(new ProtobufDecoder(MochiProtocol.ProtocolMessage.getDefaultInstance()));
 
         p.addLast(new ProtobufVarint32LengthFieldPrepender());
         p.addLast(new ProtobufEncoder());
