@@ -15,7 +15,7 @@ message HelloFromServer {
 
 
 message ProtocolMessage {
-    oneof msg111 {
+    oneof payload {
         HelloToServer helloToServer = 1;
         HelloFromServer helloFromServer = 2;
     };

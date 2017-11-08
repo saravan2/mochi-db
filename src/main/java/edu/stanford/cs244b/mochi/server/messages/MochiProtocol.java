@@ -1230,7 +1230,7 @@ public final class MochiProtocol {
      */
     long getMsgTimestamp();
 
-    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.Msg111Case getMsg111Case();
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase getPayloadCase();
   }
   /**
    * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.ProtocolMessage}
@@ -1278,30 +1278,30 @@ public final class MochiProtocol {
             }
             case 10: {
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder subBuilder = null;
-              if (msg111Case_ == 1) {
-                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_).toBuilder();
+              if (payloadCase_ == 1) {
+                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_).toBuilder();
               }
-              msg111_ =
+              payload_ =
                   input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_);
-                msg111_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_);
+                payload_ = subBuilder.buildPartial();
               }
-              msg111Case_ = 1;
+              payloadCase_ = 1;
               break;
             }
             case 18: {
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.Builder subBuilder = null;
-              if (msg111Case_ == 2) {
-                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_).toBuilder();
+              if (payloadCase_ == 2) {
+                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_).toBuilder();
               }
-              msg111_ =
+              payload_ =
                   input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_);
-                msg111_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_);
+                payload_ = subBuilder.buildPartial();
               }
-              msg111Case_ = 2;
+              payloadCase_ = 2;
               break;
             }
             case 24: {
@@ -1333,30 +1333,30 @@ public final class MochiProtocol {
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.Builder.class);
     }
 
-    private int msg111Case_ = 0;
-    private java.lang.Object msg111_;
-    public enum Msg111Case
+    private int payloadCase_ = 0;
+    private java.lang.Object payload_;
+    public enum PayloadCase
         implements com.google.protobuf.Internal.EnumLite {
       HELLOTOSERVER(1),
       HELLOFROMSERVER(2),
-      MSG111_NOT_SET(0);
+      PAYLOAD_NOT_SET(0);
       private final int value;
-      private Msg111Case(int value) {
+      private PayloadCase(int value) {
         this.value = value;
       }
       /**
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static Msg111Case valueOf(int value) {
+      public static PayloadCase valueOf(int value) {
         return forNumber(value);
       }
 
-      public static Msg111Case forNumber(int value) {
+      public static PayloadCase forNumber(int value) {
         switch (value) {
           case 1: return HELLOTOSERVER;
           case 2: return HELLOFROMSERVER;
-          case 0: return MSG111_NOT_SET;
+          case 0: return PAYLOAD_NOT_SET;
           default: return null;
         }
       }
@@ -1365,10 +1365,10 @@ public final class MochiProtocol {
       }
     };
 
-    public Msg111Case
-    getMsg111Case() {
-      return Msg111Case.forNumber(
-          msg111Case_);
+    public PayloadCase
+    getPayloadCase() {
+      return PayloadCase.forNumber(
+          payloadCase_);
     }
 
     public static final int HELLOTOSERVER_FIELD_NUMBER = 1;
@@ -1376,14 +1376,14 @@ public final class MochiProtocol {
      * <code>.edu.stanford.cs244b.mochi.server.messages.HelloToServer helloToServer = 1;</code>
      */
     public boolean hasHelloToServer() {
-      return msg111Case_ == 1;
+      return payloadCase_ == 1;
     }
     /**
      * <code>.edu.stanford.cs244b.mochi.server.messages.HelloToServer helloToServer = 1;</code>
      */
     public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer getHelloToServer() {
-      if (msg111Case_ == 1) {
-         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_;
+      if (payloadCase_ == 1) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_;
       }
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
     }
@@ -1391,8 +1391,8 @@ public final class MochiProtocol {
      * <code>.edu.stanford.cs244b.mochi.server.messages.HelloToServer helloToServer = 1;</code>
      */
     public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServerOrBuilder getHelloToServerOrBuilder() {
-      if (msg111Case_ == 1) {
-         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_;
+      if (payloadCase_ == 1) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_;
       }
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
     }
@@ -1402,14 +1402,14 @@ public final class MochiProtocol {
      * <code>.edu.stanford.cs244b.mochi.server.messages.HelloFromServer helloFromServer = 2;</code>
      */
     public boolean hasHelloFromServer() {
-      return msg111Case_ == 2;
+      return payloadCase_ == 2;
     }
     /**
      * <code>.edu.stanford.cs244b.mochi.server.messages.HelloFromServer helloFromServer = 2;</code>
      */
     public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer getHelloFromServer() {
-      if (msg111Case_ == 2) {
-         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_;
+      if (payloadCase_ == 2) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_;
       }
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
     }
@@ -1417,8 +1417,8 @@ public final class MochiProtocol {
      * <code>.edu.stanford.cs244b.mochi.server.messages.HelloFromServer helloFromServer = 2;</code>
      */
     public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServerOrBuilder getHelloFromServerOrBuilder() {
-      if (msg111Case_ == 2) {
-         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_;
+      if (payloadCase_ == 2) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_;
       }
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
     }
@@ -1444,11 +1444,11 @@ public final class MochiProtocol {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (msg111Case_ == 1) {
-        output.writeMessage(1, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_);
+      if (payloadCase_ == 1) {
+        output.writeMessage(1, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_);
       }
-      if (msg111Case_ == 2) {
-        output.writeMessage(2, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_);
+      if (payloadCase_ == 2) {
+        output.writeMessage(2, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_);
       }
       if (msgTimestamp_ != 0L) {
         output.writeInt64(3, msgTimestamp_);
@@ -1461,13 +1461,13 @@ public final class MochiProtocol {
       if (size != -1) return size;
 
       size = 0;
-      if (msg111Case_ == 1) {
+      if (payloadCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_);
+          .computeMessageSize(1, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_);
       }
-      if (msg111Case_ == 2) {
+      if (payloadCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_);
+          .computeMessageSize(2, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_);
       }
       if (msgTimestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
@@ -1491,10 +1491,10 @@ public final class MochiProtocol {
       boolean result = true;
       result = result && (getMsgTimestamp()
           == other.getMsgTimestamp());
-      result = result && getMsg111Case().equals(
-          other.getMsg111Case());
+      result = result && getPayloadCase().equals(
+          other.getPayloadCase());
       if (!result) return false;
-      switch (msg111Case_) {
+      switch (payloadCase_) {
         case 1:
           result = result && getHelloToServer()
               .equals(other.getHelloToServer());
@@ -1520,7 +1520,7 @@ public final class MochiProtocol {
       hash = (37 * hash) + MSGTIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getMsgTimestamp());
-      switch (msg111Case_) {
+      switch (payloadCase_) {
         case 1:
           hash = (37 * hash) + HELLOTOSERVER_FIELD_NUMBER;
           hash = (53 * hash) + getHelloToServer().hashCode();
@@ -1663,8 +1663,8 @@ public final class MochiProtocol {
         super.clear();
         msgTimestamp_ = 0L;
 
-        msg111Case_ = 0;
-        msg111_ = null;
+        payloadCase_ = 0;
+        payload_ = null;
         return this;
       }
 
@@ -1687,22 +1687,22 @@ public final class MochiProtocol {
 
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage buildPartial() {
         edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage(this);
-        if (msg111Case_ == 1) {
+        if (payloadCase_ == 1) {
           if (helloToServerBuilder_ == null) {
-            result.msg111_ = msg111_;
+            result.payload_ = payload_;
           } else {
-            result.msg111_ = helloToServerBuilder_.build();
+            result.payload_ = helloToServerBuilder_.build();
           }
         }
-        if (msg111Case_ == 2) {
+        if (payloadCase_ == 2) {
           if (helloFromServerBuilder_ == null) {
-            result.msg111_ = msg111_;
+            result.payload_ = payload_;
           } else {
-            result.msg111_ = helloFromServerBuilder_.build();
+            result.payload_ = helloFromServerBuilder_.build();
           }
         }
         result.msgTimestamp_ = msgTimestamp_;
-        result.msg111Case_ = msg111Case_;
+        result.payloadCase_ = payloadCase_;
         onBuilt();
         return result;
       }
@@ -1747,7 +1747,7 @@ public final class MochiProtocol {
         if (other.getMsgTimestamp() != 0L) {
           setMsgTimestamp(other.getMsgTimestamp());
         }
-        switch (other.getMsg111Case()) {
+        switch (other.getPayloadCase()) {
           case HELLOTOSERVER: {
             mergeHelloToServer(other.getHelloToServer());
             break;
@@ -1756,7 +1756,7 @@ public final class MochiProtocol {
             mergeHelloFromServer(other.getHelloFromServer());
             break;
           }
-          case MSG111_NOT_SET: {
+          case PAYLOAD_NOT_SET: {
             break;
           }
         }
@@ -1786,17 +1786,17 @@ public final class MochiProtocol {
         }
         return this;
       }
-      private int msg111Case_ = 0;
-      private java.lang.Object msg111_;
-      public Msg111Case
-          getMsg111Case() {
-        return Msg111Case.forNumber(
-            msg111Case_);
+      private int payloadCase_ = 0;
+      private java.lang.Object payload_;
+      public PayloadCase
+          getPayloadCase() {
+        return PayloadCase.forNumber(
+            payloadCase_);
       }
 
-      public Builder clearMsg111() {
-        msg111Case_ = 0;
-        msg111_ = null;
+      public Builder clearPayload() {
+        payloadCase_ = 0;
+        payload_ = null;
         onChanged();
         return this;
       }
@@ -1808,19 +1808,19 @@ public final class MochiProtocol {
        * <code>.edu.stanford.cs244b.mochi.server.messages.HelloToServer helloToServer = 1;</code>
        */
       public boolean hasHelloToServer() {
-        return msg111Case_ == 1;
+        return payloadCase_ == 1;
       }
       /**
        * <code>.edu.stanford.cs244b.mochi.server.messages.HelloToServer helloToServer = 1;</code>
        */
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer getHelloToServer() {
         if (helloToServerBuilder_ == null) {
-          if (msg111Case_ == 1) {
-            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_;
+          if (payloadCase_ == 1) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_;
           }
           return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
         } else {
-          if (msg111Case_ == 1) {
+          if (payloadCase_ == 1) {
             return helloToServerBuilder_.getMessage();
           }
           return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
@@ -1834,12 +1834,12 @@ public final class MochiProtocol {
           if (value == null) {
             throw new NullPointerException();
           }
-          msg111_ = value;
+          payload_ = value;
           onChanged();
         } else {
           helloToServerBuilder_.setMessage(value);
         }
-        msg111Case_ = 1;
+        payloadCase_ = 1;
         return this;
       }
       /**
@@ -1848,12 +1848,12 @@ public final class MochiProtocol {
       public Builder setHelloToServer(
           edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder builderForValue) {
         if (helloToServerBuilder_ == null) {
-          msg111_ = builderForValue.build();
+          payload_ = builderForValue.build();
           onChanged();
         } else {
           helloToServerBuilder_.setMessage(builderForValue.build());
         }
-        msg111Case_ = 1;
+        payloadCase_ = 1;
         return this;
       }
       /**
@@ -1861,21 +1861,21 @@ public final class MochiProtocol {
        */
       public Builder mergeHelloToServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer value) {
         if (helloToServerBuilder_ == null) {
-          if (msg111Case_ == 1 &&
-              msg111_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance()) {
-            msg111_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_)
+          if (payloadCase_ == 1 &&
+              payload_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance()) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_)
                 .mergeFrom(value).buildPartial();
           } else {
-            msg111_ = value;
+            payload_ = value;
           }
           onChanged();
         } else {
-          if (msg111Case_ == 1) {
+          if (payloadCase_ == 1) {
             helloToServerBuilder_.mergeFrom(value);
           }
           helloToServerBuilder_.setMessage(value);
         }
-        msg111Case_ = 1;
+        payloadCase_ = 1;
         return this;
       }
       /**
@@ -1883,15 +1883,15 @@ public final class MochiProtocol {
        */
       public Builder clearHelloToServer() {
         if (helloToServerBuilder_ == null) {
-          if (msg111Case_ == 1) {
-            msg111Case_ = 0;
-            msg111_ = null;
+          if (payloadCase_ == 1) {
+            payloadCase_ = 0;
+            payload_ = null;
             onChanged();
           }
         } else {
-          if (msg111Case_ == 1) {
-            msg111Case_ = 0;
-            msg111_ = null;
+          if (payloadCase_ == 1) {
+            payloadCase_ = 0;
+            payload_ = null;
           }
           helloToServerBuilder_.clear();
         }
@@ -1907,11 +1907,11 @@ public final class MochiProtocol {
        * <code>.edu.stanford.cs244b.mochi.server.messages.HelloToServer helloToServer = 1;</code>
        */
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServerOrBuilder getHelloToServerOrBuilder() {
-        if ((msg111Case_ == 1) && (helloToServerBuilder_ != null)) {
+        if ((payloadCase_ == 1) && (helloToServerBuilder_ != null)) {
           return helloToServerBuilder_.getMessageOrBuilder();
         } else {
-          if (msg111Case_ == 1) {
-            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_;
+          if (payloadCase_ == 1) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_;
           }
           return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
         }
@@ -1923,17 +1923,17 @@ public final class MochiProtocol {
           edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServerOrBuilder> 
           getHelloToServerFieldBuilder() {
         if (helloToServerBuilder_ == null) {
-          if (!(msg111Case_ == 1)) {
-            msg111_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
+          if (!(payloadCase_ == 1)) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.getDefaultInstance();
           }
           helloToServerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServerOrBuilder>(
-                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) msg111_,
+                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer) payload_,
                   getParentForChildren(),
                   isClean());
-          msg111_ = null;
+          payload_ = null;
         }
-        msg111Case_ = 1;
+        payloadCase_ = 1;
         onChanged();;
         return helloToServerBuilder_;
       }
@@ -1944,19 +1944,19 @@ public final class MochiProtocol {
        * <code>.edu.stanford.cs244b.mochi.server.messages.HelloFromServer helloFromServer = 2;</code>
        */
       public boolean hasHelloFromServer() {
-        return msg111Case_ == 2;
+        return payloadCase_ == 2;
       }
       /**
        * <code>.edu.stanford.cs244b.mochi.server.messages.HelloFromServer helloFromServer = 2;</code>
        */
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer getHelloFromServer() {
         if (helloFromServerBuilder_ == null) {
-          if (msg111Case_ == 2) {
-            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_;
+          if (payloadCase_ == 2) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_;
           }
           return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
         } else {
-          if (msg111Case_ == 2) {
+          if (payloadCase_ == 2) {
             return helloFromServerBuilder_.getMessage();
           }
           return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
@@ -1970,12 +1970,12 @@ public final class MochiProtocol {
           if (value == null) {
             throw new NullPointerException();
           }
-          msg111_ = value;
+          payload_ = value;
           onChanged();
         } else {
           helloFromServerBuilder_.setMessage(value);
         }
-        msg111Case_ = 2;
+        payloadCase_ = 2;
         return this;
       }
       /**
@@ -1984,12 +1984,12 @@ public final class MochiProtocol {
       public Builder setHelloFromServer(
           edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.Builder builderForValue) {
         if (helloFromServerBuilder_ == null) {
-          msg111_ = builderForValue.build();
+          payload_ = builderForValue.build();
           onChanged();
         } else {
           helloFromServerBuilder_.setMessage(builderForValue.build());
         }
-        msg111Case_ = 2;
+        payloadCase_ = 2;
         return this;
       }
       /**
@@ -1997,21 +1997,21 @@ public final class MochiProtocol {
        */
       public Builder mergeHelloFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer value) {
         if (helloFromServerBuilder_ == null) {
-          if (msg111Case_ == 2 &&
-              msg111_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance()) {
-            msg111_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_)
+          if (payloadCase_ == 2 &&
+              payload_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance()) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_)
                 .mergeFrom(value).buildPartial();
           } else {
-            msg111_ = value;
+            payload_ = value;
           }
           onChanged();
         } else {
-          if (msg111Case_ == 2) {
+          if (payloadCase_ == 2) {
             helloFromServerBuilder_.mergeFrom(value);
           }
           helloFromServerBuilder_.setMessage(value);
         }
-        msg111Case_ = 2;
+        payloadCase_ = 2;
         return this;
       }
       /**
@@ -2019,15 +2019,15 @@ public final class MochiProtocol {
        */
       public Builder clearHelloFromServer() {
         if (helloFromServerBuilder_ == null) {
-          if (msg111Case_ == 2) {
-            msg111Case_ = 0;
-            msg111_ = null;
+          if (payloadCase_ == 2) {
+            payloadCase_ = 0;
+            payload_ = null;
             onChanged();
           }
         } else {
-          if (msg111Case_ == 2) {
-            msg111Case_ = 0;
-            msg111_ = null;
+          if (payloadCase_ == 2) {
+            payloadCase_ = 0;
+            payload_ = null;
           }
           helloFromServerBuilder_.clear();
         }
@@ -2043,11 +2043,11 @@ public final class MochiProtocol {
        * <code>.edu.stanford.cs244b.mochi.server.messages.HelloFromServer helloFromServer = 2;</code>
        */
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServerOrBuilder getHelloFromServerOrBuilder() {
-        if ((msg111Case_ == 2) && (helloFromServerBuilder_ != null)) {
+        if ((payloadCase_ == 2) && (helloFromServerBuilder_ != null)) {
           return helloFromServerBuilder_.getMessageOrBuilder();
         } else {
-          if (msg111Case_ == 2) {
-            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_;
+          if (payloadCase_ == 2) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_;
           }
           return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
         }
@@ -2059,17 +2059,17 @@ public final class MochiProtocol {
           edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServerOrBuilder> 
           getHelloFromServerFieldBuilder() {
         if (helloFromServerBuilder_ == null) {
-          if (!(msg111Case_ == 2)) {
-            msg111_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
+          if (!(payloadCase_ == 2)) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.getDefaultInstance();
           }
           helloFromServerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServerOrBuilder>(
-                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) msg111_,
+                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer) payload_,
                   getParentForChildren(),
                   isClean());
-          msg111_ = null;
+          payload_ = null;
         }
-        msg111Case_ = 2;
+        payloadCase_ = 2;
         onChanged();;
         return helloFromServerBuilder_;
       }
@@ -2177,12 +2177,12 @@ public final class MochiProtocol {
       "du.stanford.cs244b.mochi.server.messages" +
       "\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloF" +
       "romServer\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(" +
-      "\t\"\333\001\n\017ProtocolMessage\022Q\n\rhelloToServer\030\001" +
+      "\t\"\334\001\n\017ProtocolMessage\022Q\n\rhelloToServer\030\001" +
       " \001(\01328.edu.stanford.cs244b.mochi.server." +
       "messages.HelloToServerH\000\022U\n\017helloFromSer" +
       "ver\030\002 \001(\0132:.edu.stanford.cs244b.mochi.se" +
       "rver.messages.HelloFromServerH\000\022\024\n\014msgTi",
-      "mestamp\030\003 \001(\003B\010\n\006msg111B\002H\001b\006proto3"
+      "mestamp\030\003 \001(\003B\t\n\007payloadB\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2213,7 +2213,7 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor,
-        new java.lang.String[] { "HelloToServer", "HelloFromServer", "MsgTimestamp", "Msg111", });
+        new java.lang.String[] { "HelloToServer", "HelloFromServer", "MsgTimestamp", "Payload", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
