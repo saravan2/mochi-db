@@ -11,10 +11,10 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 public class MochiServerHandler extends SimpleChannelInboundHandler<ProtocolMessage> {
     private final static Logger LOG = LoggerFactory.getLogger(MochiServerHandler.class);
 
-    private final RequestHandlerRegistry requestHandlerRegistry;
+    private final RequestHandlerDispatcher requestHandlerRegistry;
 
-    public MochiServerHandler(RequestHandlerRegistry requestHandlerRegistry) {
-        this.requestHandlerRegistry = requestHandlerRegistry;
+    public MochiServerHandler(RequestHandlerDispatcher requestHandlerDispatcher) {
+        this.requestHandlerRegistry = requestHandlerDispatcher;
     }
     
     @Override

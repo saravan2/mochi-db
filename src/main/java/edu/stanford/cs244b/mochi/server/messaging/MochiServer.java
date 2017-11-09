@@ -37,7 +37,7 @@ public class MochiServer implements Closeable {
     private final long executorKeepAliveTime = 5000;
     private final BlockingQueue<Runnable> exeutorQueue = new LinkedBlockingQueue<Runnable>();
     private final ThreadPoolExecutor workerThreads;
-    private final RequestHandlerRegistry requestHandlerRegistry;
+    private final RequestHandlerDispatcher requestHandlerDispatcher;
 
     public MochiServer() {
         this(DEFAULT_PORT);
@@ -48,7 +48,7 @@ public class MochiServer implements Closeable {
         this.serverId = Utils.getUUID();
         workerThreads = new ThreadPoolExecutor(executorCorePoolSize, executorMaxPoolSize,
                 executorKeepAliveTime, TimeUnit.MILLISECONDS, exeutorQueue);
-        requestHandlerRegistry = new RequestHandlerRegistry(workerThreads);
+        requestHandlerDispatcher = new RequestHandlerDispatcher(workerThreads);
     }
 
     public void start() {
@@ -91,7 +91,7 @@ public class MochiServer implements Closeable {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new MochiServerInitializer(requestHandlerRegistry));
+                    .childHandler(new MochiServerInitializer(requestHandlerDispatcher));
 
             b.bind(BIND_LOCALHOST, serverPort).sync().channel().closeFuture().sync();
         } finally {

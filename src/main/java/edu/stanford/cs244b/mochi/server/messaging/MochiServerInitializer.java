@@ -11,10 +11,10 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol;
 
 public class MochiServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final RequestHandlerRegistry requestHandlerRegistry;
+    private final RequestHandlerDispatcher requestHandlerDispatcher;
 
-    public MochiServerInitializer(RequestHandlerRegistry registry) {
-        requestHandlerRegistry = registry;
+    public MochiServerInitializer(RequestHandlerDispatcher dispatcher) {
+        requestHandlerDispatcher = dispatcher;
     }
 
     @Override
@@ -27,6 +27,6 @@ public class MochiServerInitializer extends ChannelInitializer<SocketChannel> {
         p.addLast(new ProtobufVarint32LengthFieldPrepender());
         p.addLast(new ProtobufEncoder());
 
-        p.addLast(new MochiServerHandler(requestHandlerRegistry));
+        p.addLast(new MochiServerHandler(requestHandlerDispatcher));
     }
 }
