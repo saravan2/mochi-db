@@ -93,7 +93,7 @@ public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMess
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        LOG.error("Caught exception at MochiClientHander:", cause);
         ctx.close();
     }
 
