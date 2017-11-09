@@ -39,6 +39,33 @@ Read pom.xml file to know Java version dependencies before attempting mvn instal
 
 mvn clean install -nsu && ./build_mochi_docker.sh && ./start_mochi_docker.sh
 
+Protobuf 3.4.0 Installation 
+
+
+Ubuntu 16.04
+
+
+curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip
+
+
+unzip protoc-3.4.0-linux-x86_64.zip -d proto3.4
+
+
+sudo mv protoc3.4/bin/* /usr/local/bin/
+
+
+sudo mv protoc3.4/include/* /usr/local/include/
+
+
+protoc --version
+
+
+libprotoc 3.4.0
+
+
+MacOS
+
+
 Install protobuf - https://stackoverflow.com/questions/21775151/installing-google-protocol-buffers-on-mac
 
 Generate proto - /usr/local/bin/protoc ./src/main/java/edu/stanford/cs244b/mochi/server/messages/MochiProtocol.proto --java_out=src/main/java/
