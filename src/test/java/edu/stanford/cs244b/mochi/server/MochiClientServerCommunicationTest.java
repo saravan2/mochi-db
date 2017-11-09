@@ -6,10 +6,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
+import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
 
 public class MochiClientServerCommunicationTest {
     final static Logger LOG = LoggerFactory.getLogger(MochiClientServerCommunicationTest.class);
@@ -68,11 +70,20 @@ public class MochiClientServerCommunicationTest {
             HelloFromServer hfs2 = mm.sayHelloToServer(ms2.toServer());
             Assert.assertTrue(hfs1 != null);
             Assert.assertTrue(hfs2 != null);
+            HelloFromServer2 hfs21 = mm.sayHelloToServer2(ms1.toServer());
+            HelloFromServer2 hfs22 = mm.sayHelloToServer2(ms2.toServer());
+            Assert.assertTrue(hfs21 != null);
+            Assert.assertTrue(hfs22 != null);
 
-            String messageFromClient1 = hfs1.getClientMsg();
-            String messageFromClient2 = hfs2.getClientMsg();
-            Assert.assertEquals(messageFromClient1, MochiMessaging.CLIENT_HELLO_MESSAGE);
-            Assert.assertEquals(messageFromClient2, MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs1.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs2.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs1.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+            Assert.assertEquals(hfs2.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+
+            Assert.assertEquals(hfs21.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs22.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs21.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+            Assert.assertEquals(hfs22.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
         }
 
 

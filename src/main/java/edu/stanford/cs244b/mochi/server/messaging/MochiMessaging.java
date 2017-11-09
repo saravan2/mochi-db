@@ -54,6 +54,7 @@ public class MochiMessaging implements Closeable {
             LOG.error("ExecutionException: ", e);
             throw new RuntimeException("Retry");
         }
+        LOG.debug("Got HelloToServer message: {}", pm);
         return pm.getHelloFromServer();
     }
 
@@ -75,6 +76,7 @@ public class MochiMessaging implements Closeable {
             LOG.error("ExecutionException: ", e);
             throw new RuntimeException("Retry");
         }
+        LOG.debug("Got HelloToServer2 message: {}", pm);
         return pm.getHelloFromServer2();
     }
 

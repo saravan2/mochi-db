@@ -36,6 +36,7 @@ public class RequestHandlerDispatcher {
         if (protocolMessage == null) {
             throw new NullPointerException("protocolMessage should not be null");
         }
+        // TODO: make dynamic
         if (protocolMessage.getHelloToServer() != null) {
             final ServerRequestHandler<HelloToServer> handler = getHandler(HelloToServer.class);
             LOG.debug("Processing helloToServerMessage using handler {}", handler);
@@ -43,6 +44,17 @@ public class RequestHandlerDispatcher {
 
                 public void run() {
                     handler.handle(ctx, protocolMessage, protocolMessage.getHelloToServer());
+                }
+            };
+            submitTaskToHandler(taskHandling);
+
+        } else if (protocolMessage.getHelloToServer2() != null) {
+            final ServerRequestHandler<HelloToServer2> handler = getHandler(HelloToServer2.class);
+            LOG.debug("Processing helloToServerMessage using handler {}", handler);
+            final Runnable taskHandling = new Runnable() {
+
+                public void run() {
+                    handler.handle(ctx, protocolMessage, protocolMessage.getHelloToServer2());
                 }
             };
             submitTaskToHandler(taskHandling);
