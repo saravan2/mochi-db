@@ -21,8 +21,7 @@ public class MochiMessaging implements Closeable {
             } else {
                 MochiClient mc = new MochiClient(serverName, port);
                 clients.put(serverKey, mc);
-                // TODO: better place to start client
-                mc.start();
+                mc.startConnectionThreadIfNeeded();
                 return mc;
             }
         }
