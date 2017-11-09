@@ -21,6 +21,7 @@ import com.google.protobuf.TextFormat;
 import edu.stanford.cs244b.mochi.server.messages.MessagesUtils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 
 public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMessage> {
@@ -59,6 +60,12 @@ public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMess
         return pm.getHelloFromServer();
     }
     
+    public Future<ProtocolMessage> sendAndReceive(com.google.protobuf.GeneratedMessageV3.Builder<Builder> builder) {
+        final Promise<ProtocolMessage> p = GlobalEventExecutor.INSTANCE.newPromise();
+        Future<ProtocolMessage> helloFromServerFuture = sendMessage(MessagesUtils.wrapIntoProtocolMessage(builder), p);
+        return helloFromServerFuture;
+    }
+
     public Future<ProtocolMessage> sendMessage(ProtocolMessage message, Promise<ProtocolMessage> prom) {
         synchronized(this){
             if(messageList == null) {

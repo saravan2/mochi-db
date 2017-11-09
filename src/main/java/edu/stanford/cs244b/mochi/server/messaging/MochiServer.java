@@ -21,10 +21,17 @@ public class MochiServer {
     final static Logger LOG = LoggerFactory.getLogger(MochiServer.class);
 
     private final String serverId;
+    private final int serverPort;
     private Thread mochiServerThread;
-    public static final int PORT = 8081;
+    public static final int DEFAULT_PORT = 8081;
+    private static final String BIND_LOCALHOST = "localhost";
 
     public MochiServer() {
+        this(DEFAULT_PORT);
+    }
+
+    public MochiServer(final int port) {
+        this.serverPort = port;
         this.serverId = Utils.getUUID();
     }
 
@@ -37,6 +44,10 @@ public class MochiServer {
 
     private String getMochiServerThreadName() {
         return String.format("netty-server-%s", serverId);
+    }
+
+    public Server toServer() {
+        return new Server(BIND_LOCALHOST, this.serverPort);
     }
 
     private class MochiServerListener implements Runnable {
@@ -65,7 +76,7 @@ public class MochiServer {
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new MochiServerInitializer());
 
-            b.bind(PORT).sync().channel().closeFuture().sync();
+            b.bind(BIND_LOCALHOST, serverPort).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

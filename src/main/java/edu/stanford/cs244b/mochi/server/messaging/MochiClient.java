@@ -8,11 +8,14 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.Closeable;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 
 public class MochiClient implements Closeable {
     final static Logger LOG = LoggerFactory.getLogger(MochiClient.class);
@@ -35,6 +38,10 @@ public class MochiClient implements Closeable {
         checkChannelIsOpened();
         HelloFromServer hfs = clientHandler.sayHelloToServer();
         return hfs;
+    }
+
+    public Future<ProtocolMessage> sendAndReceive(com.google.protobuf.GeneratedMessageV3.Builder<Builder> builder) {
+        return clientHandler.sendAndReceive(builder);
     }
 
     protected void start() {
@@ -82,6 +89,16 @@ public class MochiClient implements Closeable {
 
         }
 
+    }
+
+    public void waitForConnection() {
+        while (true) {
+            try {
+                checkChannelIsOpened();
+                break;
+            } catch (ConnectionNotReadyException ex) {
+            }
+        }
     }
 
     protected void checkChannelIsOpened() {
