@@ -8,16 +8,27 @@ message HelloToServer {
     string msg = 1;
 }
 
+message HelloToServer2 {
+    string msg = 1;
+}
+
 message HelloFromServer {
     string msg = 1;
     string clientMsg = 2;
 }
 
+message HelloFromServer2 {
+    string msg = 1;
+    string clientMsg = 2;
+}
 
 message ProtocolMessage {
     oneof payload {
         HelloToServer helloToServer = 1;
         HelloFromServer helloFromServer = 2;
+        HelloToServer2 helloToServer2 = 3;
+        HelloFromServer2 helloFromServer2 = 4;
     };
-    int64 msgTimestamp = 3;
+    int64 msgTimestamp = 5;
+    string serverId = 6;
 }

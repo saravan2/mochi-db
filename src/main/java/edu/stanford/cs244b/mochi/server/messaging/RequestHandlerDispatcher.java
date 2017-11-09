@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
 
 public class RequestHandlerDispatcher {
@@ -26,8 +28,8 @@ public class RequestHandlerDispatcher {
     }
     
     private void addHandlers() {
-        final ServerRequestHandler<HelloToServer> helloToServerHandler = new HelloToServerRequestHandler();
-        handlers.put(HelloToServer.class, helloToServerHandler);
+        handlers.put(HelloToServer.class, new HelloToServerRequestHandler());
+        handlers.put(HelloToServer2.class, new HelloToServer2RequestHandler());
     }
 
     public void handle(final ChannelHandlerContext ctx, final ProtocolMessage protocolMessage) {

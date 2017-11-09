@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
-import edu.stanford.cs244b.mochi.server.messaging.MochiClientHandler;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
@@ -37,7 +36,7 @@ public class MochiClientServerCommunicationTest {
             Assert.fail("Connection did not get established");
         }
         String messageFromClient = hfs.getClientMsg();
-        Assert.assertEquals(messageFromClient, MochiClientHandler.CLIENT_HELLO_MESSAGE);
+        Assert.assertEquals(messageFromClient, MochiMessaging.CLIENT_HELLO_MESSAGE);
 
         mm.close();
     }
@@ -72,8 +71,8 @@ public class MochiClientServerCommunicationTest {
 
             String messageFromClient1 = hfs1.getClientMsg();
             String messageFromClient2 = hfs2.getClientMsg();
-            Assert.assertEquals(messageFromClient1, MochiClientHandler.CLIENT_HELLO_MESSAGE);
-            Assert.assertEquals(messageFromClient2, MochiClientHandler.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(messageFromClient1, MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(messageFromClient2, MochiMessaging.CLIENT_HELLO_MESSAGE);
         }
 
 

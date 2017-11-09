@@ -9,13 +9,12 @@ import edu.stanford.cs244b.mochi.server.messaging.ServerRequestHandler;
 
 public class HelloToServerRequestHandler implements ServerRequestHandler<HelloToServer> {
 
+    public static final String HELLO_RESPONSE = "Hello from Server";
 
     public void handle(ChannelHandlerContext ctx, ProtocolMessage protocolMessage, HelloToServer message) {
-        long currentTime = System.currentTimeMillis();
-
         HelloFromServer.Builder builder = HelloFromServer.newBuilder();
         builder.setClientMsg(message.getMsg());
-        builder.setMsg(String.format("Hello from Server: %s", Long.toString(currentTime)));
+        builder.setMsg(HELLO_RESPONSE);
 
         ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(builder));
     }

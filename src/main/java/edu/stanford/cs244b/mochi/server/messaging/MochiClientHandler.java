@@ -9,7 +9,6 @@ import io.netty.util.concurrent.Promise;
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -19,15 +18,10 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.TextFormat;
 
 import edu.stanford.cs244b.mochi.server.messages.MessagesUtils;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 
 public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMessage> {
     final static Logger LOG = LoggerFactory.getLogger(MochiClientHandler.class);
-
-    public static final String CLIENT_HELLO_MESSAGE = "Client hello";
 
     // Stateful properties
     private volatile Channel channel;
@@ -39,30 +33,11 @@ public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMess
         super(false);
     }
 
-    public HelloFromServer sayHelloToServer() {
-        HelloToServer.Builder builder = HelloToServer.newBuilder();
-        builder.setMsg(CLIENT_HELLO_MESSAGE);
 
+    public Future<ProtocolMessage> sendAndReceive(Object messageOrBuilder) {
         final Promise<ProtocolMessage> p = GlobalEventExecutor.INSTANCE.newPromise();
-        Future<ProtocolMessage> helloFromServerFuture = sendMessage(MessagesUtils.wrapIntoProtocolMessage(builder), p);
-
-        ProtocolMessage pm;
-        try {
-            pm = helloFromServerFuture.get();
-        } catch (InterruptedException e) {
-            LOG.info("Interrupted");
-            Thread.currentThread().interrupt();
-            return null;
-        } catch (ExecutionException e) {
-            LOG.error("ExecutionException: ", e);
-            throw new RuntimeException("Retry");
-        }
-        return pm.getHelloFromServer();
-    }
-    
-    public Future<ProtocolMessage> sendAndReceive(com.google.protobuf.GeneratedMessageV3.Builder<Builder> builder) {
-        final Promise<ProtocolMessage> p = GlobalEventExecutor.INSTANCE.newPromise();
-        Future<ProtocolMessage> helloFromServerFuture = sendMessage(MessagesUtils.wrapIntoProtocolMessage(builder), p);
+        Future<ProtocolMessage> helloFromServerFuture = sendMessage(
+                MessagesUtils.wrapIntoProtocolMessage(messageOrBuilder), p);
         return helloFromServerFuture;
     }
 

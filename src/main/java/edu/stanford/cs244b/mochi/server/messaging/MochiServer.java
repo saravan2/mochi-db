@@ -24,7 +24,7 @@ import edu.stanford.cs244b.mochi.server.Utils;
 
 /* Should allow to be instantiated multiple times per JVM */
 public class MochiServer implements Closeable {
-    final static Logger LOG = LoggerFactory.getLogger(MochiServer.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MochiServer.class);
 
     private final String serverId;
     private final int serverPort;

@@ -13,8 +13,6 @@ import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer.Builder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 
 public class MochiClient implements Closeable {
@@ -34,14 +32,9 @@ public class MochiClient implements Closeable {
         this.serverPort = serverPort;
     }
 
-    public HelloFromServer sayHello() {
+    public Future<ProtocolMessage> sendAndReceive(Object messageOrBuilder) {
         checkChannelIsOpened();
-        HelloFromServer hfs = clientHandler.sayHelloToServer();
-        return hfs;
-    }
-
-    public Future<ProtocolMessage> sendAndReceive(com.google.protobuf.GeneratedMessageV3.Builder<Builder> builder) {
-        return clientHandler.sendAndReceive(builder);
+        return clientHandler.sendAndReceive(messageOrBuilder);
     }
 
     protected void start() {
