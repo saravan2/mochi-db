@@ -11,6 +11,12 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol;
 
 public class MochiServerInitializer extends ChannelInitializer<SocketChannel> {
 
+    private final RequestHandlerRegistry requestHandlerRegistry;
+
+    public MochiServerInitializer(RequestHandlerRegistry registry) {
+        requestHandlerRegistry = registry;
+    }
+
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline p = ch.pipeline();
@@ -21,6 +27,6 @@ public class MochiServerInitializer extends ChannelInitializer<SocketChannel> {
         p.addLast(new ProtobufVarint32LengthFieldPrepender());
         p.addLast(new ProtobufEncoder());
 
-        p.addLast(new MochiServerHandler());
+        p.addLast(new MochiServerHandler(requestHandlerRegistry));
     }
 }

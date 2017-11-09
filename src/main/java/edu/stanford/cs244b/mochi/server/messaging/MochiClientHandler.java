@@ -90,6 +90,7 @@ public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMess
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, ProtocolMessage protocolMessage) throws Exception {
+        // TODO: that assumes that message order is correct
         answer.add(protocolMessage);
         synchronized (this) {
             if (messageList != null) {

@@ -7,7 +7,13 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.security.cert.CertificateException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLException;
 
@@ -17,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import edu.stanford.cs244b.mochi.server.Utils;
 
 /* Should allow to be instantiated multiple times per JVM */
-public class MochiServer {
+public class MochiServer implements Closeable {
     final static Logger LOG = LoggerFactory.getLogger(MochiServer.class);
 
     private final String serverId;
@@ -26,6 +32,13 @@ public class MochiServer {
     public static final int DEFAULT_PORT = 8081;
     private static final String BIND_LOCALHOST = "localhost";
 
+    private final int executorCorePoolSize = 3;
+    private final int executorMaxPoolSize = 20;
+    private final long executorKeepAliveTime = 5000;
+    private final BlockingQueue<Runnable> exeutorQueue = new LinkedBlockingQueue<Runnable>();
+    private final ThreadPoolExecutor workerThreads;
+    private final RequestHandlerRegistry requestHandlerRegistry;
+
     public MochiServer() {
         this(DEFAULT_PORT);
     }
@@ -33,6 +46,9 @@ public class MochiServer {
     public MochiServer(final int port) {
         this.serverPort = port;
         this.serverId = Utils.getUUID();
+        workerThreads = new ThreadPoolExecutor(executorCorePoolSize, executorMaxPoolSize,
+                executorKeepAliveTime, TimeUnit.MILLISECONDS, exeutorQueue);
+        requestHandlerRegistry = new RequestHandlerRegistry(workerThreads);
     }
 
     public void start() {
@@ -74,12 +90,17 @@ public class MochiServer {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new MochiServerInitializer());
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new MochiServerInitializer(requestHandlerRegistry));
 
             b.bind(BIND_LOCALHOST, serverPort).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    public void close() throws IOException {
+        workerThreads.shutdownNow();
     }
 }
