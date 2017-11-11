@@ -8,31 +8,26 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
-import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHandler;
-import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
 
 public class RequestHandlerDispatcher {
     private final static Logger LOG = LoggerFactory.getLogger(RequestHandlerDispatcher.class);
 
     private final ThreadPoolExecutor executor;
-    
+    private final MochiContext mochiContext;
     private final ConcurrentHashMap<Class, ServerRequestHandler<?>> handlers = new ConcurrentHashMap<Class, ServerRequestHandler<?>>(
             16);
 
-    public RequestHandlerDispatcher(ThreadPoolExecutor executor) {
+    public RequestHandlerDispatcher(ThreadPoolExecutor executor, final MochiContext mochiContext) {
         this.executor = executor;
-        addHandlers();
+        this.mochiContext = mochiContext;
+        handlers.putAll(mochiContext.getBeanRequestHandlers());
     }
     
-    private void addHandlers() {
-        handlers.put(HelloToServer.class, new HelloToServerRequestHandler());
-        handlers.put(HelloToServer2.class, new HelloToServer2RequestHandler());
-    }
-
     public void handle(final ChannelHandlerContext ctx, final ProtocolMessage protocolMessage) {
         if (protocolMessage == null) {
             throw new NullPointerException("protocolMessage should not be null");

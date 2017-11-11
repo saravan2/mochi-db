@@ -19,7 +19,7 @@ public class MochiClientServerCommunicationTest {
 
     @Test
     public void testHelloToFromServer() throws InterruptedException {
-        MochiServer ms = new MochiServer();
+        MochiServer ms = newMochiServer();
         ms.start();
         LOG.info("Mochi server started");
 
@@ -56,9 +56,9 @@ public class MochiClientServerCommunicationTest {
     public void testHelloToFromServerMultiple() throws InterruptedException {
         final int serverPort1 = 8001;
         final int serverPort2 = 8002;
-        MochiServer ms1 = new MochiServer(serverPort1);
+        MochiServer ms1 = newMochiServer(serverPort1);
         ms1.start();
-        MochiServer ms2 = new MochiServer(serverPort2);
+        MochiServer ms2 = newMochiServer(serverPort2);
         ms2.start();
         LOG.info("Mochi servers started");
 
@@ -88,7 +88,14 @@ public class MochiClientServerCommunicationTest {
             Assert.assertEquals(hfs22.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
         }
 
-
         mm.close();
+    }
+
+    private MochiServer newMochiServer() {
+        return new MochiServer(new MochiContextImpl());
+    }
+
+    private MochiServer newMochiServer(final int serverPort) {
+        return new MochiServer(serverPort, new MochiContextImpl());
     }
 }

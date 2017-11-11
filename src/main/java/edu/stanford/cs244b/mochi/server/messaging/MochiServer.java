@@ -20,6 +20,7 @@ import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.Utils;
 
 /* Should allow to be instantiated multiple times per JVM */
@@ -39,16 +40,19 @@ public class MochiServer implements Closeable {
     private final ThreadPoolExecutor workerThreads;
     private final RequestHandlerDispatcher requestHandlerDispatcher;
 
-    public MochiServer() {
-        this(DEFAULT_PORT);
+    private final MochiContext mochiContext;
+
+    public MochiServer(final MochiContext mochiContext) {
+        this(DEFAULT_PORT, mochiContext);
     }
 
-    public MochiServer(final int port) {
+    public MochiServer(final int port, final MochiContext mochiContext) {
         this.serverPort = port;
         this.serverId = Utils.getUUID();
         workerThreads = new ThreadPoolExecutor(executorCorePoolSize, executorMaxPoolSize,
                 executorKeepAliveTime, TimeUnit.MILLISECONDS, exeutorQueue);
-        requestHandlerDispatcher = new RequestHandlerDispatcher(workerThreads);
+        requestHandlerDispatcher = new RequestHandlerDispatcher(workerThreads, mochiContext);
+        this.mochiContext = mochiContext;
     }
 
     public void start() {
