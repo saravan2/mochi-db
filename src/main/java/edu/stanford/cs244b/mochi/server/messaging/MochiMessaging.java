@@ -22,6 +22,7 @@ public class MochiMessaging implements Closeable {
             CLIENTS_MAP_SIZE);
 
     public static final String CLIENT_HELLO_MESSAGE = "Client hello";
+    public static final String CLIENT_HELLO2_MESSAGE = "Client hello 2";
 
     protected MochiClient getClient(final Server server) {
         synchronized (clients) {
@@ -61,7 +62,7 @@ public class MochiMessaging implements Closeable {
     public HelloFromServer2 sayHelloToServer2(final Server server) {
         // TODO: rewrite that message
         HelloToServer2.Builder builder = HelloToServer2.newBuilder();
-        builder.setMsg(MochiMessaging.CLIENT_HELLO_MESSAGE);
+        builder.setMsg(MochiMessaging.CLIENT_HELLO2_MESSAGE);
 
         Future<ProtocolMessage> helloFromServer2Future = sendAndReceive(server, builder.build());
 

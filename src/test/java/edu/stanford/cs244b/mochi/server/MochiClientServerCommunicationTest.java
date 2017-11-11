@@ -11,6 +11,7 @@ import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
+import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
 
 public class MochiClientServerCommunicationTest {
@@ -66,6 +67,7 @@ public class MochiClientServerCommunicationTest {
         mm.waitForConnectionToBeEstablished(ms2.toServer());
 
         for (int i = 0; i < 5; i++) {
+            LOG.info("testHelloToFromServerMultiple iteration {}", i);
             HelloFromServer hfs1 = mm.sayHelloToServer(ms1.toServer());
             HelloFromServer hfs2 = mm.sayHelloToServer(ms2.toServer());
             Assert.assertTrue(hfs1 != null);
@@ -80,10 +82,10 @@ public class MochiClientServerCommunicationTest {
             Assert.assertEquals(hfs1.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
             Assert.assertEquals(hfs2.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
 
-            Assert.assertEquals(hfs21.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
-            Assert.assertEquals(hfs22.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
-            Assert.assertEquals(hfs21.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
-            Assert.assertEquals(hfs22.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+            Assert.assertEquals(hfs21.getClientMsg(), MochiMessaging.CLIENT_HELLO2_MESSAGE);
+            Assert.assertEquals(hfs22.getClientMsg(), MochiMessaging.CLIENT_HELLO2_MESSAGE);
+            Assert.assertEquals(hfs21.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
+            Assert.assertEquals(hfs22.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
         }
 
 

@@ -2447,6 +2447,26 @@ public final class MochiProtocol {
     com.google.protobuf.ByteString
         getServerIdBytes();
 
+    /**
+     * <code>string msgId = 7;</code>
+     */
+    java.lang.String getMsgId();
+    /**
+     * <code>string msgId = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getMsgIdBytes();
+
+    /**
+     * <code>string replyToMsgId = 8;</code>
+     */
+    java.lang.String getReplyToMsgId();
+    /**
+     * <code>string replyToMsgId = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getReplyToMsgIdBytes();
+
     public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase getPayloadCase();
   }
   /**
@@ -2464,6 +2484,8 @@ public final class MochiProtocol {
     private ProtocolMessage() {
       msgTimestamp_ = 0L;
       serverId_ = "";
+      msgId_ = "";
+      replyToMsgId_ = "";
     }
 
     @java.lang.Override
@@ -2559,6 +2581,18 @@ public final class MochiProtocol {
               java.lang.String s = input.readStringRequireUtf8();
 
               serverId_ = s;
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              msgId_ = s;
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              replyToMsgId_ = s;
               break;
             }
           }
@@ -2774,6 +2808,74 @@ public final class MochiProtocol {
       }
     }
 
+    public static final int MSGID_FIELD_NUMBER = 7;
+    private volatile java.lang.Object msgId_;
+    /**
+     * <code>string msgId = 7;</code>
+     */
+    public java.lang.String getMsgId() {
+      java.lang.Object ref = msgId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        msgId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string msgId = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getMsgIdBytes() {
+      java.lang.Object ref = msgId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        msgId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int REPLYTOMSGID_FIELD_NUMBER = 8;
+    private volatile java.lang.Object replyToMsgId_;
+    /**
+     * <code>string replyToMsgId = 8;</code>
+     */
+    public java.lang.String getReplyToMsgId() {
+      java.lang.Object ref = replyToMsgId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        replyToMsgId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string replyToMsgId = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getReplyToMsgIdBytes() {
+      java.lang.Object ref = replyToMsgId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        replyToMsgId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -2803,6 +2905,12 @@ public final class MochiProtocol {
       }
       if (!getServerIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, serverId_);
+      }
+      if (!getMsgIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, msgId_);
+      }
+      if (!getReplyToMsgIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, replyToMsgId_);
       }
       unknownFields.writeTo(output);
     }
@@ -2835,6 +2943,12 @@ public final class MochiProtocol {
       if (!getServerIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, serverId_);
       }
+      if (!getMsgIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, msgId_);
+      }
+      if (!getReplyToMsgIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, replyToMsgId_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2855,6 +2969,10 @@ public final class MochiProtocol {
           == other.getMsgTimestamp());
       result = result && getServerId()
           .equals(other.getServerId());
+      result = result && getMsgId()
+          .equals(other.getMsgId());
+      result = result && getReplyToMsgId()
+          .equals(other.getReplyToMsgId());
       result = result && getPayloadCase().equals(
           other.getPayloadCase());
       if (!result) return false;
@@ -2894,6 +3012,10 @@ public final class MochiProtocol {
           getMsgTimestamp());
       hash = (37 * hash) + SERVERID_FIELD_NUMBER;
       hash = (53 * hash) + getServerId().hashCode();
+      hash = (37 * hash) + MSGID_FIELD_NUMBER;
+      hash = (53 * hash) + getMsgId().hashCode();
+      hash = (37 * hash) + REPLYTOMSGID_FIELD_NUMBER;
+      hash = (53 * hash) + getReplyToMsgId().hashCode();
       switch (payloadCase_) {
         case 1:
           hash = (37 * hash) + HELLOTOSERVER_FIELD_NUMBER;
@@ -3047,6 +3169,10 @@ public final class MochiProtocol {
 
         serverId_ = "";
 
+        msgId_ = "";
+
+        replyToMsgId_ = "";
+
         payloadCase_ = 0;
         payload_ = null;
         return this;
@@ -3101,6 +3227,8 @@ public final class MochiProtocol {
         }
         result.msgTimestamp_ = msgTimestamp_;
         result.serverId_ = serverId_;
+        result.msgId_ = msgId_;
+        result.replyToMsgId_ = replyToMsgId_;
         result.payloadCase_ = payloadCase_;
         onBuilt();
         return result;
@@ -3148,6 +3276,14 @@ public final class MochiProtocol {
         }
         if (!other.getServerId().isEmpty()) {
           serverId_ = other.serverId_;
+          onChanged();
+        }
+        if (!other.getMsgId().isEmpty()) {
+          msgId_ = other.msgId_;
+          onChanged();
+        }
+        if (!other.getReplyToMsgId().isEmpty()) {
+          replyToMsgId_ = other.replyToMsgId_;
           onChanged();
         }
         switch (other.getPayloadCase()) {
@@ -3851,6 +3987,144 @@ public final class MochiProtocol {
         onChanged();
         return this;
       }
+
+      private java.lang.Object msgId_ = "";
+      /**
+       * <code>string msgId = 7;</code>
+       */
+      public java.lang.String getMsgId() {
+        java.lang.Object ref = msgId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          msgId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string msgId = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMsgIdBytes() {
+        java.lang.Object ref = msgId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          msgId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string msgId = 7;</code>
+       */
+      public Builder setMsgId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        msgId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string msgId = 7;</code>
+       */
+      public Builder clearMsgId() {
+        
+        msgId_ = getDefaultInstance().getMsgId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string msgId = 7;</code>
+       */
+      public Builder setMsgIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        msgId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object replyToMsgId_ = "";
+      /**
+       * <code>string replyToMsgId = 8;</code>
+       */
+      public java.lang.String getReplyToMsgId() {
+        java.lang.Object ref = replyToMsgId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          replyToMsgId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string replyToMsgId = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getReplyToMsgIdBytes() {
+        java.lang.Object ref = replyToMsgId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          replyToMsgId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string replyToMsgId = 8;</code>
+       */
+      public Builder setReplyToMsgId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        replyToMsgId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string replyToMsgId = 8;</code>
+       */
+      public Builder clearReplyToMsgId() {
+        
+        replyToMsgId_ = getDefaultInstance().getReplyToMsgId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string replyToMsgId = 8;</code>
+       */
+      public Builder setReplyToMsgIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        replyToMsgId_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -3941,7 +4215,7 @@ public final class MochiProtocol {
       "oServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFromServer" +
       "\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020Hell" +
       "oFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002" +
-      " \001(\t\"\234\003\n\017ProtocolMessage\022Q\n\rhelloToServe" +
+      " \001(\t\"\301\003\n\017ProtocolMessage\022Q\n\rhelloToServe" +
       "r\030\001 \001(\01328.edu.stanford.cs244b.mochi.serv" +
       "er.messages.HelloToServerH\000\022U\n\017helloFrom",
       "Server\030\002 \001(\0132:.edu.stanford.cs244b.mochi" +
@@ -3951,7 +4225,8 @@ public final class MochiProtocol {
       "W\n\020helloFromServer2\030\004 \001(\0132;.edu.stanford" +
       ".cs244b.mochi.server.messages.HelloFromS" +
       "erver2H\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010server" +
-      "Id\030\006 \001(\tB\t\n\007payloadB\002H\001b\006proto3"
+      "Id\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030" +
+      "\010 \001(\tB\t\n\007payloadB\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3994,7 +4269,7 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor,
-        new java.lang.String[] { "HelloToServer", "HelloFromServer", "HelloToServer2", "HelloFromServer2", "MsgTimestamp", "ServerId", "Payload", });
+        new java.lang.String[] { "HelloToServer", "HelloFromServer", "HelloToServer2", "HelloFromServer2", "MsgTimestamp", "ServerId", "MsgId", "ReplyToMsgId", "Payload", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

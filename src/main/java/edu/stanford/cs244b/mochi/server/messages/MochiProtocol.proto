@@ -31,4 +31,6 @@ message ProtocolMessage {
     };
     int64 msgTimestamp = 5;
     string serverId = 6;
+    string msgId = 7;
+    string replyToMsgId = 8;
 }

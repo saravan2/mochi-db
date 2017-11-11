@@ -16,7 +16,7 @@ public class HelloToServerRequestHandler implements ServerRequestHandler<HelloTo
         builder.setClientMsg(message.getMsg());
         builder.setMsg(HELLO_RESPONSE);
 
-        ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(builder));
+        ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(builder, protocolMessage.getMsgId()));
     }
 
     public Class<HelloToServer> getMessageSupported() {

@@ -1,5 +1,6 @@
 package edu.stanford.cs244b.mochi.server.messages;
 
+import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
@@ -9,6 +10,10 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 public class MessagesUtils {
 
     public static ProtocolMessage wrapIntoProtocolMessage(Object T) {
+        return wrapIntoProtocolMessage(T, null);
+    }
+
+    public static ProtocolMessage wrapIntoProtocolMessage(Object T, String originalMessageUuid) {
         if (T == null) {
             throw new IllegalStateException("wrapIntoProtocolMessage does not support null");
         }
@@ -33,6 +38,10 @@ public class MessagesUtils {
             throw new IllegalStateException(String.format("Invalit message of class %s: %s", T.getClass(), T));
         }
         pmBuilder.setMsgTimestamp(System.currentTimeMillis());
+        pmBuilder.setMsgId(Utils.getUUID());
+        if (originalMessageUuid != null) {
+            pmBuilder.setReplyToMsgId(originalMessageUuid);
+        }
         return pmBuilder.build();
     }
 }

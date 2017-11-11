@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
 
@@ -36,8 +37,10 @@ public class RequestHandlerDispatcher {
         if (protocolMessage == null) {
             throw new NullPointerException("protocolMessage should not be null");
         }
+        final PayloadCase pc = protocolMessage.getPayloadCase();
+        LOG.debug("Decising on payload message with PayloadCase {}", pc);
         // TODO: make dynamic
-        if (protocolMessage.getHelloToServer() != null) {
+        if (pc == PayloadCase.HELLOTOSERVER) {
             final ServerRequestHandler<HelloToServer> handler = getHandler(HelloToServer.class);
             LOG.debug("Processing helloToServerMessage using handler {}", handler);
             final Runnable taskHandling = new Runnable() {
@@ -48,9 +51,9 @@ public class RequestHandlerDispatcher {
             };
             submitTaskToHandler(taskHandling);
 
-        } else if (protocolMessage.getHelloToServer2() != null) {
+        } else if (pc == PayloadCase.HELLOTOSERVER2) {
             final ServerRequestHandler<HelloToServer2> handler = getHandler(HelloToServer2.class);
-            LOG.debug("Processing helloToServerMessage using handler {}", handler);
+            LOG.debug("Processing helloToServerMessage2 using handler {}", handler);
             final Runnable taskHandling = new Runnable() {
 
                 public void run() {
