@@ -38,37 +38,28 @@ public class MochiMessaging implements Closeable {
     }
 
     public HelloFromServer sayHelloToServer(final Server server) {
-        // TODO: rewrite that message
-        HelloToServer.Builder builder = HelloToServer.newBuilder();
+        final HelloToServer.Builder builder = HelloToServer.newBuilder();
         builder.setMsg(MochiMessaging.CLIENT_HELLO_MESSAGE);
 
-        Future<ProtocolMessage> helloFromServerFuture = sendAndReceive(server, builder.build());
+        final ProtocolMessage pm = makeRequestAndWaitForPMFuture(server, builder.build());
 
-        ProtocolMessage pm;
-        try {
-            pm = helloFromServerFuture.get();
-        } catch (InterruptedException e) {
-            LOG.info("Interrupted");
-            Thread.currentThread().interrupt();
-            return null;
-        } catch (ExecutionException e) {
-            LOG.error("ExecutionException: ", e);
-            throw new RuntimeException("Retry");
-        }
-        LOG.debug("Got HelloToServer message: {}", pm);
         return pm.getHelloFromServer();
     }
 
     public HelloFromServer2 sayHelloToServer2(final Server server) {
-        // TODO: rewrite that message
-        HelloToServer2.Builder builder = HelloToServer2.newBuilder();
+        final HelloToServer2.Builder builder = HelloToServer2.newBuilder();
         builder.setMsg(MochiMessaging.CLIENT_HELLO2_MESSAGE);
 
-        Future<ProtocolMessage> helloFromServer2Future = sendAndReceive(server, builder.build());
+        final ProtocolMessage pm = makeRequestAndWaitForPMFuture(server, builder.build());
 
+        return pm.getHelloFromServer2();
+    }
+
+    protected ProtocolMessage makeRequestAndWaitForPMFuture(final Server server, final Object messageOrBuilder) {
+        final Future<ProtocolMessage> responseFromServerFuture = sendAndReceive(server, messageOrBuilder);
         ProtocolMessage pm;
         try {
-            pm = helloFromServer2Future.get();
+            pm = responseFromServerFuture.get();
         } catch (InterruptedException e) {
             LOG.info("Interrupted");
             Thread.currentThread().interrupt();
@@ -77,8 +68,8 @@ public class MochiMessaging implements Closeable {
             LOG.error("ExecutionException: ", e);
             throw new RuntimeException("Retry");
         }
-        LOG.debug("Got HelloToServer2 message: {}", pm);
-        return pm.getHelloFromServer2();
+        LOG.debug("Got message from server {}", pm);
+        return pm;
     }
 
     public Future<ProtocolMessage> sendAndReceive(final Server server, final Object messageOrBuilder) {
