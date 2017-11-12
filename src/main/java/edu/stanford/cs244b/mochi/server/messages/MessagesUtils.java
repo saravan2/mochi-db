@@ -6,6 +6,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 
 public class MessagesUtils {
 
@@ -34,6 +35,10 @@ public class MessagesUtils {
             pmBuilder.setHelloToServer2((HelloToServer2.Builder) T);
         } else if (T instanceof HelloToServer2) {
             pmBuilder.setHelloToServer2((HelloToServer2) T);
+        } else if (T instanceof ReadToServer.Builder) {
+            pmBuilder.setReadToServer((ReadToServer.Builder) T);
+        } else if (T instanceof ReadToServer) {
+            pmBuilder.setReadToServer((ReadToServer) T);
         } else {
             throw new IllegalStateException(String.format("Invalit message of class %s: %s", T.getClass(), T));
         }

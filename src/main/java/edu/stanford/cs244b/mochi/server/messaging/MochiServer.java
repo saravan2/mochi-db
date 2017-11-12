@@ -8,7 +8,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,7 +28,8 @@ public class MochiServer implements Closeable {
 
     private final String serverId;
     private final int serverPort;
-    private Thread mochiServerThread;
+    private volatile Thread mochiServerThread;
+    private volatile boolean closed = false;
     public static final int DEFAULT_PORT = 8081;
     private static final String BIND_LOCALHOST = "localhost";
 
@@ -73,6 +73,10 @@ public class MochiServer implements Closeable {
     private class MochiServerListener implements Runnable {
         public void run() {
             try {
+                if (closed) {
+                    LOG.warn("Server is closed. Nothing to do");
+                    return;
+                }
                 try {
                     startNettyListener();
                 } catch (CertificateException e) {
@@ -104,7 +108,9 @@ public class MochiServer implements Closeable {
         }
     }
 
-    public void close() throws IOException {
+    public void close() {
+        closed = true;
+        mochiServerThread.interrupt();
         workerThreads.shutdownNow();
     }
 }

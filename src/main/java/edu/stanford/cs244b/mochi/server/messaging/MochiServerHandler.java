@@ -30,7 +30,7 @@ public class MochiServerHandler extends SimpleChannelInboundHandler<ProtocolMess
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        LOG.error("Caught exception while processing messages");
+        LOG.error("Caught exception while processing messages:", cause);
         ctx.close();
     }
 

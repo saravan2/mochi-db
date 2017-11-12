@@ -10,13 +10,18 @@ import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
+import edu.stanford.cs244b.mochi.server.testing.InMemoryDSMochiContextImpl;
 
 public class MochiClientServerCommunicationTest {
     final static Logger LOG = LoggerFactory.getLogger(MochiClientServerCommunicationTest.class);
@@ -93,6 +98,8 @@ public class MochiClientServerCommunicationTest {
         }
 
         mm.close();
+        ms1.close();
+        ms2.close();
     }
 
     @Test
@@ -141,6 +148,35 @@ public class MochiClientServerCommunicationTest {
         }
 
         mm.close();
+        ms1.close();
+    }
+
+    @Test
+    public void testReadOperation() throws InterruptedException {
+        final int serverPort1 = 8001;
+        MochiServer ms1 = newMochiServer(serverPort1);
+        ms1.start();
+
+        final MochiMessaging mm = new MochiMessaging();
+        mm.waitForConnectionToBeEstablished(ms1.toServer());
+
+        final ReadToServer.Builder builder = ReadToServer.newBuilder();
+        builder.setClientId(Utils.getUUID());
+        builder.setNonce(Utils.getUUID());
+        
+        
+        final Operation.Builder oBuilder = Operation.newBuilder();
+        oBuilder.setAction(OperationAction.READ);
+        oBuilder.setOperand1("MY_KEY");
+        
+        final Transaction.Builder tBuilder = Transaction.newBuilder();
+        tBuilder.addOperations(oBuilder);
+        
+        builder.setTransaction(tBuilder);
+        mm.sendAndReceive(ms1.toServer(), builder);
+
+        ms1.close();
+        mm.close();
     }
 
     private boolean futureCancelledOrDone(Future<?> f) {
@@ -148,10 +184,10 @@ public class MochiClientServerCommunicationTest {
     }
 
     private MochiServer newMochiServer() {
-        return new MochiServer(new MochiContextImpl());
+        return new MochiServer(new InMemoryDSMochiContextImpl());
     }
 
     private MochiServer newMochiServer(final int serverPort) {
-        return new MochiServer(serverPort, new MochiContextImpl());
+        return new MochiServer(serverPort, new InMemoryDSMochiContextImpl());
     }
 }
