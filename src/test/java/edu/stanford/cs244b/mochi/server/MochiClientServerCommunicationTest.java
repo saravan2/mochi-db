@@ -1,5 +1,8 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -7,6 +10,7 @@ import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -66,7 +70,7 @@ public class MochiClientServerCommunicationTest {
         mm.waitForConnectionToBeEstablished(ms1.toServer());
         mm.waitForConnectionToBeEstablished(ms2.toServer());
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             LOG.info("testHelloToFromServerMultiple iteration {}", i);
             HelloFromServer hfs1 = mm.sayHelloToServer(ms1.toServer());
             HelloFromServer hfs2 = mm.sayHelloToServer(ms2.toServer());
@@ -89,6 +93,58 @@ public class MochiClientServerCommunicationTest {
         }
 
         mm.close();
+    }
+
+    @Test
+    public void testHelloToFromServerAsync() throws InterruptedException, ExecutionException {
+        final int serverPort1 = 8001;
+        MochiServer ms1 = newMochiServer(serverPort1);
+        ms1.start();
+
+        final MochiMessaging mm = new MochiMessaging();
+        mm.waitForConnectionToBeEstablished(ms1.toServer());
+
+        for (int i = 0; i < 2; i++) {
+            LOG.info("testHelloToFromServerMultipleAsync iteration {}", i);
+            Future<ProtocolMessage> hfsFuture1 = mm.sayHelloToServerAsync(ms1.toServer());
+            Future<ProtocolMessage> hfsFuture2 = mm.sayHelloToServerAsync(ms1.toServer());
+            Future<ProtocolMessage> hfsFuture3 = mm.sayHelloToServerAsync(ms1.toServer());
+            Assert.assertTrue(hfsFuture1 != null);
+            Assert.assertTrue(hfsFuture2 != null);
+            Assert.assertTrue(hfsFuture3 != null);
+
+            long waitStart = System.currentTimeMillis();
+            while (true) {
+                if (futureCancelledOrDone(hfsFuture1) && futureCancelledOrDone(hfsFuture2)
+                        && futureCancelledOrDone(hfsFuture3)) {
+                    break;
+                }
+                Thread.sleep(3);
+            }
+            long waitEnd = System.currentTimeMillis();
+            long getStart = System.currentTimeMillis();
+            // Those should be fast since futures were already resolved
+            ProtocolMessage pm1 = hfsFuture1.get();
+            ProtocolMessage pm2 = hfsFuture2.get();
+            ProtocolMessage pm3 = hfsFuture3.get();
+            long getEnd = System.currentTimeMillis();
+
+            HelloFromServer hfs1 = pm1.getHelloFromServer();
+            HelloFromServer hfs2 = pm2.getHelloFromServer();
+            HelloFromServer hfs3 = pm3.getHelloFromServer();
+
+            LOG.info("Got requests from the server. Took {} ms to wait for response and {} ms to get them",
+                    (waitEnd - waitStart), (getEnd - getStart));
+            Assert.assertEquals(hfs1.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs2.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+            Assert.assertEquals(hfs3.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+        }
+
+        mm.close();
+    }
+
+    private boolean futureCancelledOrDone(Future<?> f) {
+        return (f.isCancelled() || f.isDone());
     }
 
     private MochiServer newMochiServer() {

@@ -36,9 +36,9 @@ public class MochiClientHandler extends SimpleChannelInboundHandler<ProtocolMess
 
     public Future<ProtocolMessage> sendAndReceive(Object messageOrBuilder) {
         final Promise<ProtocolMessage> p = GlobalEventExecutor.INSTANCE.newPromise();
-        Future<ProtocolMessage> helloFromServerFuture = sendMessage(
+        Future<ProtocolMessage> serverResponseFuture = sendMessage(
                 MessagesUtils.wrapIntoProtocolMessage(messageOrBuilder), p);
-        return helloFromServerFuture;
+        return serverResponseFuture;
     }
 
     public Future<ProtocolMessage> sendMessage(ProtocolMessage message, Promise<ProtocolMessage> prom) {

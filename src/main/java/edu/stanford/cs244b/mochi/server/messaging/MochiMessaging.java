@@ -46,6 +46,15 @@ public class MochiMessaging implements Closeable {
         return pm.getHelloFromServer();
     }
 
+    public Future<ProtocolMessage> sayHelloToServerAsync(final Server server) {
+        final HelloToServer.Builder builder = HelloToServer.newBuilder();
+        builder.setMsg(MochiMessaging.CLIENT_HELLO_MESSAGE);
+
+        final Future<ProtocolMessage> responseFromServerFuture = sendAndReceive(server, builder);
+
+        return responseFromServerFuture;
+    }
+
     public HelloFromServer2 sayHelloToServer2(final Server server) {
         final HelloToServer2.Builder builder = HelloToServer2.newBuilder();
         builder.setMsg(MochiMessaging.CLIENT_HELLO2_MESSAGE);
