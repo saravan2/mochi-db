@@ -167,13 +167,16 @@ public class MochiClientServerCommunicationTest {
         
         final Operation.Builder oBuilder = Operation.newBuilder();
         oBuilder.setAction(OperationAction.READ);
-        oBuilder.setOperand1("MY_KEY");
+        oBuilder.setOperand1("DEMO_KEY_1");
         
         final Transaction.Builder tBuilder = Transaction.newBuilder();
         tBuilder.addOperations(oBuilder);
         
         builder.setTransaction(tBuilder);
         mm.sendAndReceive(ms1.toServer(), builder);
+        // TODO: we just sending here and do not do anything. Let's introduce a
+        // method into MochiMessaging, so we can re-use that code and as part of
+        // that test we will need to ask to read some keys
 
         ms1.close();
         mm.close();

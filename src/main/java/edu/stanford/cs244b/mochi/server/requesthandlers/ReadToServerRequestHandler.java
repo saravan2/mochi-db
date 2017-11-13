@@ -26,6 +26,8 @@ public class ReadToServerRequestHandler implements ServerRequestHandler<ReadToSe
         final Transaction transactionToExecute = message.getTransaction();
         LOG.debug("Executing read transaction {}", transactionToExecute);
         dataStore.executeTransaction(transactionToExecute, true);
+        // TODO: we will need here to read result and send it back over the wire
+
         // ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(builder,
         // protocolMessage.getMsgId()));
     }

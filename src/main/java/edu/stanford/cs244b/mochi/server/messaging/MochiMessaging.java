@@ -64,6 +64,8 @@ public class MochiMessaging implements Closeable {
         return pm.getHelloFromServer2();
     }
 
+    // TODO: create two new methods to send read request - regular way and async
+
     protected ProtocolMessage makeRequestAndWaitForPMFuture(final Server server, final Object messageOrBuilder) {
         final Future<ProtocolMessage> responseFromServerFuture = sendAndReceive(server, messageOrBuilder);
         ProtocolMessage pm;

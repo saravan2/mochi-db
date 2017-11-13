@@ -30,14 +30,22 @@ message Transaction {
     repeated .edu.stanford.cs244b.mochi.server.messages.Operation operations = 1;
 }
 
+message OperationResult {
+    string result = 1;
+    // TODO: currentC
+}
+
+message TransactionResult {
+    repeated .edu.stanford.cs244b.mochi.server.messages.OperationResult operations = 1;
+}
 
 /*
-Read request hREAD, cid, oid, op, nonceiµcr
+Read request <READ, cid, oid, op, nonce>µcr
 . The
 replica does an upcall to the server code, passing it the
 op. When this call returns it sends the result to the
-client in a message hREAD-ANS, result, nonce, currentC,
-ridiµcr
+client in a message <READ-ANS, result, nonce, currentC,
+rid>µcr
 . The nonce is used to ensure that the answer is
 not a replay.
 */
@@ -45,6 +53,17 @@ message ReadToServer {
     string clientId = 1; // cid
     Transaction transaction = 2; // contains (oid and op)
     string nonce = 3;
+}
+
+/* When this call returns it sends the result to the
+client in a message <READ-ANS, result, nonce, currentC,
+rid>µcr
+*/
+message ReadFromServer {
+    TransactionResult result = 1;
+    string nonce = 2;
+    // Note: currentC is embedded into result
+    string rid = 3;
 }
 
 message HelloToServer {
@@ -72,6 +91,7 @@ message ProtocolMessage {
         HelloToServer2 helloToServer2 = 103;
         HelloFromServer2 helloFromServer2 = 104;
         ReadToServer readToServer = 105;
+        ReadFromServer readFromServer = 106;
     };
     int64 msgTimestamp = 5;
     string serverId = 6;
