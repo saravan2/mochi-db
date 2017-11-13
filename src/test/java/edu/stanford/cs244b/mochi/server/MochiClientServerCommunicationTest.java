@@ -113,9 +113,9 @@ public class MochiClientServerCommunicationTest {
 
         for (int i = 0; i < 2; i++) {
             LOG.info("testHelloToFromServerMultipleAsync iteration {}", i);
-            Future<ProtocolMessage> hfsFuture1 = mm.sayHelloToServerAsync(ms1.toServer());
-            Future<ProtocolMessage> hfsFuture2 = mm.sayHelloToServerAsync(ms1.toServer());
-            Future<ProtocolMessage> hfsFuture3 = mm.sayHelloToServerAsync(ms1.toServer());
+            Future<ProtocolMessage> hfsFuture1 = mm.sayHelloToServerAsync(getServerToTestAgaist(ms1.toServer()));
+            Future<ProtocolMessage> hfsFuture2 = mm.sayHelloToServerAsync(getServerToTestAgaist(ms1.toServer()));
+            Future<ProtocolMessage> hfsFuture3 = mm.sayHelloToServerAsync(getServerToTestAgaist(ms1.toServer()));
             Assert.assertTrue(hfsFuture1 != null);
             Assert.assertTrue(hfsFuture2 != null);
             Assert.assertTrue(hfsFuture3 != null);
@@ -177,6 +177,15 @@ public class MochiClientServerCommunicationTest {
 
         ms1.close();
         mm.close();
+    }
+
+    private Server getServerToTestAgaist(final Server server) {
+        final boolean useRemoteServer = true;
+        if (!useRemoteServer) {
+            return server;
+        } else {
+            return new Server("ec2-54-183-150-113.us-west-1.compute.amazonaws.com", 8081);
+        }
     }
 
     private boolean futureCancelledOrDone(Future<?> f) {
