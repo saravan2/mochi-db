@@ -180,7 +180,7 @@ public class MochiClientServerCommunicationTest {
     }
 
     private Server getServerToTestAgaist(final Server server) {
-        final boolean useRemoteServer = true;
+        final boolean useRemoteServer = false;
         if (!useRemoteServer) {
             return server;
         } else {
