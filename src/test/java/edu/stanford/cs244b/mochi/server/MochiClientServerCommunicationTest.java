@@ -15,6 +15,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -172,6 +173,37 @@ public class MochiClientServerCommunicationTest {
         final Transaction.Builder tBuilder = Transaction.newBuilder();
         tBuilder.addOperations(oBuilder);
         
+        builder.setTransaction(tBuilder);
+        mm.sendAndReceive(ms1.toServer(), builder);
+        // TODO: we just sending here and do not do anything. Let's introduce a
+        // method into MochiMessaging, so we can re-use that code and as part of
+        // that test we will need to ask to read some keys
+
+        ms1.close();
+        mm.close();
+    }
+
+    @Test
+    public void testWriteOperation() throws InterruptedException {
+        final int serverPort1 = 8001;
+        MochiServer ms1 = newMochiServer(serverPort1);
+        ms1.start();
+
+        final MochiMessaging mm = new MochiMessaging();
+        mm.waitForConnectionToBeEstablished(ms1.toServer());
+
+        final Write1ToServer.Builder builder = Write1ToServer.newBuilder();
+        builder.setClientId(Utils.getUUID());
+
+        final Operation.Builder oBuilder = Operation.newBuilder();
+        oBuilder.setAction(OperationAction.WRITE);
+        oBuilder.setOperand1("DEMO_KEY_2");
+        oBuilder.setOperand1("NEW_VALUE_FOR_KEY_2");
+        oBuilder.setOperationNumber(0); // First operation
+
+        final Transaction.Builder tBuilder = Transaction.newBuilder();
+        tBuilder.addOperations(oBuilder);
+
         builder.setTransaction(tBuilder);
         mm.sendAndReceive(ms1.toServer(), builder);
         // TODO: we just sending here and do not do anything. Let's introduce a

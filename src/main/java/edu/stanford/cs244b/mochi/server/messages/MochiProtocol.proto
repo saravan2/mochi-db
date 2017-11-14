@@ -21,9 +21,10 @@ Some examples (in form - {ACTION, OP1, OP2,...}) :
 */
 message Operation {
     OperationAction action = 1;
-    string operand1 = 2;
+    string operand1 = 2;  // object id (oid) is the key 
     string operand2 = 3;
     string operand3 = 4;
+    int64 operationNumber = 5;
 }
 
 message Transaction {
@@ -51,7 +52,7 @@ not a replay.
 */
 message ReadToServer {
     string clientId = 1; // cid
-    Transaction transaction = 2; // contains (oid and op)
+    Transaction transaction = 2; // contains (oid, op#,  op)
     string nonce = 3;
 }
 
@@ -64,6 +65,14 @@ message ReadFromServer {
     string nonce = 2;
     // Note: currentC is embedded into result
     string rid = 3;
+}
+
+
+/* The client sends a <WRITE-1, cid, oid, op#, op>σc
+request to the replicas. */
+message Write1ToServer {
+    string clientId = 1; // cid
+    Transaction transaction = 2; // contains (oid, op#,  op)
 }
 
 message HelloToServer {
@@ -92,6 +101,7 @@ message ProtocolMessage {
         HelloFromServer2 helloFromServer2 = 104;
         ReadToServer readToServer = 105;
         ReadFromServer readFromServer = 106;
+        Write1ToServer write1ToServer = 107;
     };
     int64 msgTimestamp = 5;
     string serverId = 6;
