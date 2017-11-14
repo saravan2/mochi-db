@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
     final static Logger LOG = LoggerFactory.getLogger(MainController.class);
 
-    @RequestMapping("/")
+    @RequestMapping("/json")
     public String index() {
         LOG.info("Inside Main Controller");
         return "Greetings from Spring Boot!";
