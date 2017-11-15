@@ -114,9 +114,9 @@ public class MochiClientServerCommunicationTest {
 
         for (int i = 0; i < 2; i++) {
             LOG.info("testHelloToFromServerMultipleAsync iteration {}", i);
-            Future<ProtocolMessage> hfsFuture1 = mm.sayHelloToServerAsync(getServerToTestAgaist(ms1.toServer()));
-            Future<ProtocolMessage> hfsFuture2 = mm.sayHelloToServerAsync(getServerToTestAgaist(ms1.toServer()));
-            Future<ProtocolMessage> hfsFuture3 = mm.sayHelloToServerAsync(getServerToTestAgaist(ms1.toServer()));
+            Future<ProtocolMessage> hfsFuture1 = mm.sayHelloToServerAsync(getServerToTestAgainst(ms1.toServer()));
+            Future<ProtocolMessage> hfsFuture2 = mm.sayHelloToServerAsync(getServerToTestAgainst(ms1.toServer()));
+            Future<ProtocolMessage> hfsFuture3 = mm.sayHelloToServerAsync(getServerToTestAgainst(ms1.toServer()));
             Assert.assertTrue(hfsFuture1 != null);
             Assert.assertTrue(hfsFuture2 != null);
             Assert.assertTrue(hfsFuture3 != null);
@@ -214,12 +214,16 @@ public class MochiClientServerCommunicationTest {
         mm.close();
     }
 
-    private Server getServerToTestAgaist(final Server server) {
-        final boolean useRemoteServer = false;
-        if (!useRemoteServer) {
+    /*
+     * Specify the remote server via command line argumenet -DremoteServer=######
+     */
+    private Server getServerToTestAgainst(final Server server) {
+	final String remoteServer = String.valueOf(System.getProperty("remoteServer"));
+        if (remoteServer.isEmpty()) {
             return server;
         } else {
-            return new Server("ec2-54-183-150-113.us-west-1.compute.amazonaws.com", 8081);
+	    LOG.info(remoteServer);
+            return new Server(remoteServer, 8081);
         }
     }
 
