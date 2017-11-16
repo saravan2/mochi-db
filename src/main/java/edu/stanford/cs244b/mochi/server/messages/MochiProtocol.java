@@ -5887,6 +5887,800 @@ public final class MochiProtocol {
 
   }
 
+  public interface Write1OkFromServerOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * <pre>
+   * &lt;WRITE-1-OK, grantTS, currentC&gt;µcr, if the replica
+   *granted the next timestamp to this client. 
+   * </pre>
+   *
+   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer}
+   */
+  public  static final class Write1OkFromServer extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer)
+      Write1OkFromServerOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Write1OkFromServer.newBuilder() to construct.
+    private Write1OkFromServer(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Write1OkFromServer() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Write1OkFromServer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer)) {
+        return super.equals(obj);
+      }
+      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * &lt;WRITE-1-OK, grantTS, currentC&gt;µcr, if the replica
+     *granted the next timestamp to this client. 
+     * </pre>
+     *
+     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer)
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder.class);
+      }
+
+      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer getDefaultInstanceForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer build() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer buildPartial() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) {
+          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer other) {
+        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer)
+    }
+
+    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer)
+    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer();
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Write1OkFromServer>
+        PARSER = new com.google.protobuf.AbstractParser<Write1OkFromServer>() {
+      public Write1OkFromServer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Write1OkFromServer(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Write1OkFromServer> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Write1OkFromServer> getParserForType() {
+      return PARSER;
+    }
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface Write1RefusedFromServerOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * <pre>
+   *  &lt;WRITE-1-REFUSED, grantTS, cid, oid, op#, currentC&gt;µcr
+   *, if the replica granted the timestamp to
+   *some other client; the reply contains the grant to
+   *that client, plus the information about this client’s
+   *request (to prevent replays). 
+   * </pre>
+   *
+   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer}
+   */
+  public  static final class Write1RefusedFromServer extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer)
+      Write1RefusedFromServerOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Write1RefusedFromServer.newBuilder() to construct.
+    private Write1RefusedFromServer(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Write1RefusedFromServer() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Write1RefusedFromServer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer)) {
+        return super.equals(obj);
+      }
+      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     *  &lt;WRITE-1-REFUSED, grantTS, cid, oid, op#, currentC&gt;µcr
+     *, if the replica granted the timestamp to
+     *some other client; the reply contains the grant to
+     *that client, plus the information about this client’s
+     *request (to prevent replays). 
+     * </pre>
+     *
+     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer)
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder.class);
+      }
+
+      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer getDefaultInstanceForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer build() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer buildPartial() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) {
+          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer other) {
+        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer)
+    }
+
+    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer)
+    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer();
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Write1RefusedFromServer>
+        PARSER = new com.google.protobuf.AbstractParser<Write1RefusedFromServer>() {
+      public Write1RefusedFromServer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Write1RefusedFromServer(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Write1RefusedFromServer> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Write1RefusedFromServer> getParserForType() {
+      return PARSER;
+    }
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface HelloToServerOrBuilder extends
       // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.HelloToServer)
       com.google.protobuf.MessageOrBuilder {
@@ -8345,6 +9139,32 @@ public final class MochiProtocol {
     edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServerOrBuilder getWrite1ToServerOrBuilder();
 
     /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+     */
+    boolean hasWrite1OkFromServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer getWrite1OkFromServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder getWrite1OkFromServerOrBuilder();
+
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+     */
+    boolean hasWrite1RefusedFromServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer getWrite1RefusedFromServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder getWrite1RefusedFromServerOrBuilder();
+
+    /**
      * <code>int64 msgTimestamp = 5;</code>
      */
     long getMsgTimestamp();
@@ -8549,6 +9369,34 @@ public final class MochiProtocol {
               payloadCase_ = 107;
               break;
             }
+            case 866: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder subBuilder = null;
+              if (payloadCase_ == 108) {
+                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_).toBuilder();
+              }
+              payload_ =
+                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 108;
+              break;
+            }
+            case 874: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder subBuilder = null;
+              if (payloadCase_ == 109) {
+                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_).toBuilder();
+              }
+              payload_ =
+                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 109;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -8584,6 +9432,8 @@ public final class MochiProtocol {
       READTOSERVER(105),
       READFROMSERVER(106),
       WRITE1TOSERVER(107),
+      WRITE1OKFROMSERVER(108),
+      WRITE1REFUSEDFROMSERVER(109),
       PAYLOAD_NOT_SET(0);
       private final int value;
       private PayloadCase(int value) {
@@ -8606,6 +9456,8 @@ public final class MochiProtocol {
           case 105: return READTOSERVER;
           case 106: return READFROMSERVER;
           case 107: return WRITE1TOSERVER;
+          case 108: return WRITE1OKFROMSERVER;
+          case 109: return WRITE1REFUSEDFROMSERVER;
           case 0: return PAYLOAD_NOT_SET;
           default: return null;
         }
@@ -8803,6 +9655,58 @@ public final class MochiProtocol {
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer.getDefaultInstance();
     }
 
+    public static final int WRITE1OKFROMSERVER_FIELD_NUMBER = 108;
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+     */
+    public boolean hasWrite1OkFromServer() {
+      return payloadCase_ == 108;
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer getWrite1OkFromServer() {
+      if (payloadCase_ == 108) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder getWrite1OkFromServerOrBuilder() {
+      if (payloadCase_ == 108) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+    }
+
+    public static final int WRITE1REFUSEDFROMSERVER_FIELD_NUMBER = 109;
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+     */
+    public boolean hasWrite1RefusedFromServer() {
+      return payloadCase_ == 109;
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer getWrite1RefusedFromServer() {
+      if (payloadCase_ == 109) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder getWrite1RefusedFromServerOrBuilder() {
+      if (payloadCase_ == 109) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+    }
+
     public static final int MSGTIMESTAMP_FIELD_NUMBER = 5;
     private long msgTimestamp_;
     /**
@@ -8959,6 +9863,12 @@ public final class MochiProtocol {
       if (payloadCase_ == 107) {
         output.writeMessage(107, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer) payload_);
       }
+      if (payloadCase_ == 108) {
+        output.writeMessage(108, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_);
+      }
+      if (payloadCase_ == 109) {
+        output.writeMessage(109, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -9007,6 +9917,14 @@ public final class MochiProtocol {
       if (payloadCase_ == 107) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(107, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer) payload_);
+      }
+      if (payloadCase_ == 108) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(108, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_);
+      }
+      if (payloadCase_ == 109) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(109, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -9064,6 +9982,14 @@ public final class MochiProtocol {
           result = result && getWrite1ToServer()
               .equals(other.getWrite1ToServer());
           break;
+        case 108:
+          result = result && getWrite1OkFromServer()
+              .equals(other.getWrite1OkFromServer());
+          break;
+        case 109:
+          result = result && getWrite1RefusedFromServer()
+              .equals(other.getWrite1RefusedFromServer());
+          break;
         case 0:
         default:
       }
@@ -9115,6 +10041,14 @@ public final class MochiProtocol {
         case 107:
           hash = (37 * hash) + WRITE1TOSERVER_FIELD_NUMBER;
           hash = (53 * hash) + getWrite1ToServer().hashCode();
+          break;
+        case 108:
+          hash = (37 * hash) + WRITE1OKFROMSERVER_FIELD_NUMBER;
+          hash = (53 * hash) + getWrite1OkFromServer().hashCode();
+          break;
+        case 109:
+          hash = (37 * hash) + WRITE1REFUSEDFROMSERVER_FIELD_NUMBER;
+          hash = (53 * hash) + getWrite1RefusedFromServer().hashCode();
           break;
         case 0:
         default:
@@ -9329,6 +10263,20 @@ public final class MochiProtocol {
             result.payload_ = write1ToServerBuilder_.build();
           }
         }
+        if (payloadCase_ == 108) {
+          if (write1OkFromServerBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = write1OkFromServerBuilder_.build();
+          }
+        }
+        if (payloadCase_ == 109) {
+          if (write1RefusedFromServerBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = write1RefusedFromServerBuilder_.build();
+          }
+        }
         result.msgTimestamp_ = msgTimestamp_;
         result.serverId_ = serverId_;
         result.msgId_ = msgId_;
@@ -9417,6 +10365,14 @@ public final class MochiProtocol {
           }
           case WRITE1TOSERVER: {
             mergeWrite1ToServer(other.getWrite1ToServer());
+            break;
+          }
+          case WRITE1OKFROMSERVER: {
+            mergeWrite1OkFromServer(other.getWrite1OkFromServer());
+            break;
+          }
+          case WRITE1REFUSEDFROMSERVER: {
+            mergeWrite1RefusedFromServer(other.getWrite1RefusedFromServer());
             break;
           }
           case PAYLOAD_NOT_SET: {
@@ -10417,6 +11373,278 @@ public final class MochiProtocol {
         return write1ToServerBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder> write1OkFromServerBuilder_;
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public boolean hasWrite1OkFromServer() {
+        return payloadCase_ == 108;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer getWrite1OkFromServer() {
+        if (write1OkFromServerBuilder_ == null) {
+          if (payloadCase_ == 108) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 108) {
+            return write1OkFromServerBuilder_.getMessage();
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public Builder setWrite1OkFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer value) {
+        if (write1OkFromServerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          write1OkFromServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 108;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public Builder setWrite1OkFromServer(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder builderForValue) {
+        if (write1OkFromServerBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          write1OkFromServerBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 108;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public Builder mergeWrite1OkFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer value) {
+        if (write1OkFromServerBuilder_ == null) {
+          if (payloadCase_ == 108 &&
+              payload_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance()) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 108) {
+            write1OkFromServerBuilder_.mergeFrom(value);
+          }
+          write1OkFromServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 108;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public Builder clearWrite1OkFromServer() {
+        if (write1OkFromServerBuilder_ == null) {
+          if (payloadCase_ == 108) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 108) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          write1OkFromServerBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder getWrite1OkFromServerBuilder() {
+        return getWrite1OkFromServerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder getWrite1OkFromServerOrBuilder() {
+        if ((payloadCase_ == 108) && (write1OkFromServerBuilder_ != null)) {
+          return write1OkFromServerBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 108) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1OkFromServer write1OkFromServer = 108;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder> 
+          getWrite1OkFromServerFieldBuilder() {
+        if (write1OkFromServerBuilder_ == null) {
+          if (!(payloadCase_ == 108)) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance();
+          }
+          write1OkFromServerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServerOrBuilder>(
+                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 108;
+        onChanged();;
+        return write1OkFromServerBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder> write1RefusedFromServerBuilder_;
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public boolean hasWrite1RefusedFromServer() {
+        return payloadCase_ == 109;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer getWrite1RefusedFromServer() {
+        if (write1RefusedFromServerBuilder_ == null) {
+          if (payloadCase_ == 109) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 109) {
+            return write1RefusedFromServerBuilder_.getMessage();
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public Builder setWrite1RefusedFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer value) {
+        if (write1RefusedFromServerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          write1RefusedFromServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 109;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public Builder setWrite1RefusedFromServer(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder builderForValue) {
+        if (write1RefusedFromServerBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          write1RefusedFromServerBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 109;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public Builder mergeWrite1RefusedFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer value) {
+        if (write1RefusedFromServerBuilder_ == null) {
+          if (payloadCase_ == 109 &&
+              payload_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance()) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 109) {
+            write1RefusedFromServerBuilder_.mergeFrom(value);
+          }
+          write1RefusedFromServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 109;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public Builder clearWrite1RefusedFromServer() {
+        if (write1RefusedFromServerBuilder_ == null) {
+          if (payloadCase_ == 109) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 109) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          write1RefusedFromServerBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder getWrite1RefusedFromServerBuilder() {
+        return getWrite1RefusedFromServerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder getWrite1RefusedFromServerOrBuilder() {
+        if ((payloadCase_ == 109) && (write1RefusedFromServerBuilder_ != null)) {
+          return write1RefusedFromServerBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 109) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer write1RefusedFromServer = 109;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder> 
+          getWrite1RefusedFromServerFieldBuilder() {
+        if (write1RefusedFromServerBuilder_ == null) {
+          if (!(payloadCase_ == 109)) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
+          }
+          write1RefusedFromServerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder>(
+                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 109;
+        onChanged();;
+        return write1RefusedFromServerBuilder_;
+      }
+
       private long msgTimestamp_ ;
       /**
        * <code>int64 msgTimestamp = 5;</code>
@@ -10734,6 +11962,16 @@ public final class MochiProtocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -10788,31 +12026,37 @@ public final class MochiProtocol {
       "ransactionResult\022\r\n\005nonce\030\002 \001(\t\022\013\n\003rid\030\003" +
       " \001(\t\"o\n\016Write1ToServer\022\020\n\010clientId\030\001 \001(\t",
       "\022K\n\013transaction\030\002 \001(\01326.edu.stanford.cs2" +
-      "44b.mochi.server.messages.Transaction\"\034\n" +
-      "\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToSe" +
-      "rver2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n" +
-      "\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFr" +
-      "omServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(" +
-      "\t\"\274\005\n\017ProtocolMessage\022Q\n\rhelloToServer\030e" +
-      " \001(\01328.edu.stanford.cs244b.mochi.server." +
-      "messages.HelloToServerH\000\022U\n\017helloFromSer" +
-      "ver\030f \001(\0132:.edu.stanford.cs244b.mochi.se",
-      "rver.messages.HelloFromServerH\000\022S\n\016hello" +
-      "ToServer2\030g \001(\01329.edu.stanford.cs244b.mo" +
-      "chi.server.messages.HelloToServer2H\000\022W\n\020" +
-      "helloFromServer2\030h \001(\0132;.edu.stanford.cs" +
-      "244b.mochi.server.messages.HelloFromServ" +
-      "er2H\000\022O\n\014readToServer\030i \001(\01327.edu.stanfo" +
-      "rd.cs244b.mochi.server.messages.ReadToSe" +
-      "rverH\000\022S\n\016readFromServer\030j \001(\01329.edu.sta" +
-      "nford.cs244b.mochi.server.messages.ReadF" +
-      "romServerH\000\022S\n\016write1ToServer\030k \001(\01329.ed",
-      "u.stanford.cs244b.mochi.server.messages." +
-      "Write1ToServerH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020" +
-      "\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014reply" +
-      "ToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017OperationAct" +
-      "ion\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002B\002H\001" +
-      "b\006proto3"
+      "44b.mochi.server.messages.Transaction\"\024\n" +
+      "\022Write1OkFromServer\"\031\n\027Write1RefusedFrom" +
+      "Server\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"\035\n\016" +
+      "HelloToServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFrom" +
+      "Server\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2" +
+      "\n\020HelloFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclien" +
+      "tMsg\030\002 \001(\t\"\200\007\n\017ProtocolMessage\022Q\n\rhelloT" +
+      "oServer\030e \001(\01328.edu.stanford.cs244b.moch" +
+      "i.server.messages.HelloToServerH\000\022U\n\017hel",
+      "loFromServer\030f \001(\0132:.edu.stanford.cs244b" +
+      ".mochi.server.messages.HelloFromServerH\000" +
+      "\022S\n\016helloToServer2\030g \001(\01329.edu.stanford." +
+      "cs244b.mochi.server.messages.HelloToServ" +
+      "er2H\000\022W\n\020helloFromServer2\030h \001(\0132;.edu.st" +
+      "anford.cs244b.mochi.server.messages.Hell" +
+      "oFromServer2H\000\022O\n\014readToServer\030i \001(\01327.e" +
+      "du.stanford.cs244b.mochi.server.messages" +
+      ".ReadToServerH\000\022S\n\016readFromServer\030j \001(\0132" +
+      "9.edu.stanford.cs244b.mochi.server.messa",
+      "ges.ReadFromServerH\000\022S\n\016write1ToServer\030k" +
+      " \001(\01329.edu.stanford.cs244b.mochi.server." +
+      "messages.Write1ToServerH\000\022[\n\022write1OkFro" +
+      "mServer\030l \001(\0132=.edu.stanford.cs244b.moch" +
+      "i.server.messages.Write1OkFromServerH\000\022e" +
+      "\n\027write1RefusedFromServer\030m \001(\0132B.edu.st" +
+      "anford.cs244b.mochi.server.messages.Writ" +
+      "e1RefusedFromServerH\000\022\024\n\014msgTimestamp\030\005 " +
+      "\001(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014" +
+      "replyToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017Operati",
+      "onAction\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020" +
+      "\002B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -10868,36 +12112,48 @@ public final class MochiProtocol {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_descriptor,
         new java.lang.String[] { "ClientId", "Transaction", });
-    internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor =
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor =
       getDescriptor().getMessageTypes().get(7);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor,
+        new java.lang.String[] { });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor,
+        new java.lang.String[] { });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor =
+      getDescriptor().getMessageTypes().get(9);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor,
         new java.lang.String[] { "Msg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_descriptor,
         new java.lang.String[] { "Msg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_descriptor,
         new java.lang.String[] { "Msg", "ClientMsg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_descriptor,
         new java.lang.String[] { "Msg", "ClientMsg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor,
-        new java.lang.String[] { "HelloToServer", "HelloFromServer", "HelloToServer2", "HelloFromServer2", "ReadToServer", "ReadFromServer", "Write1ToServer", "MsgTimestamp", "ServerId", "MsgId", "ReplyToMsgId", "Payload", });
+        new java.lang.String[] { "HelloToServer", "HelloFromServer", "HelloToServer2", "HelloFromServer2", "ReadToServer", "ReadFromServer", "Write1ToServer", "Write1OkFromServer", "Write1RefusedFromServer", "MsgTimestamp", "ServerId", "MsgId", "ReplyToMsgId", "Payload", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

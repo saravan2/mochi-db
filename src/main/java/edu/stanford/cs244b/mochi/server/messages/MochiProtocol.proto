@@ -75,6 +75,22 @@ message Write1ToServer {
     Transaction transaction = 2; // contains (oid, op#,  op)
 }
 
+
+/* <WRITE-1-OK, grantTS, currentC>µcr, if the replica
+granted the next timestamp to this client. */
+message Write1OkFromServer {
+    // TODO: add other properties
+}
+
+/*  <WRITE-1-REFUSED, grantTS, cid, oid, op#, currentC>µcr
+, if the replica granted the timestamp to
+some other client; the reply contains the grant to
+that client, plus the information about this client’s
+request (to prevent replays). */
+message Write1RefusedFromServer {
+    // TODO: add other properties
+}
+
 message HelloToServer {
     string msg = 1;
 }
@@ -102,6 +118,8 @@ message ProtocolMessage {
         ReadToServer readToServer = 105;
         ReadFromServer readFromServer = 106;
         Write1ToServer write1ToServer = 107;
+        Write1OkFromServer write1OkFromServer = 108;
+        Write1RefusedFromServer write1RefusedFromServer = 109;
     };
     int64 msgTimestamp = 5;
     string serverId = 6;

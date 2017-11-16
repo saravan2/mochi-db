@@ -17,6 +17,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 
 public class RequestHandlerDispatcher {
     private final static Logger LOG = LoggerFactory.getLogger(RequestHandlerDispatcher.class);
@@ -47,6 +48,9 @@ public class RequestHandlerDispatcher {
                     HelloToServer2.class);
         } else if (pc == PayloadCase.READTOSERVER) {
             wrapIntoRunnableAndSubmitTask(ctx, protocolMessage, protocolMessage.getReadToServer(), ReadToServer.class);
+        } else if (pc == PayloadCase.WRITE1TOSERVER) {
+            wrapIntoRunnableAndSubmitTask(ctx, protocolMessage, protocolMessage.getWrite1ToServer(),
+                    Write1ToServer.class);
         } else {
             LOG.error("Did not find message handler for message: {}", protocolMessage);
         }
@@ -60,7 +64,12 @@ public class RequestHandlerDispatcher {
         final Runnable taskHandling = new Runnable() {
 
             public void run() {
-                handler.handle(ctx, protocolMessage, message);
+                try {
+                    handler.handle(ctx, protocolMessage, message);
+                } catch (Exception ex) {
+                    LOG.error("Processing of message {} on handler {} failed with Exception:", protocolMessage,
+                            handler, ex);
+                }
             }
         };
         executor.submit(taskHandling);

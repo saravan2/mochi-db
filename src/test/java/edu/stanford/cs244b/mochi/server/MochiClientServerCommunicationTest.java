@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -184,7 +185,7 @@ public class MochiClientServerCommunicationTest {
     }
 
     @Test
-    public void testWriteOperation() throws InterruptedException {
+    public void testWriteOperation() throws InterruptedException, ExecutionException {
         final int serverPort1 = 8001;
         MochiServer ms1 = newMochiServer(serverPort1);
         ms1.start();
@@ -205,11 +206,8 @@ public class MochiClientServerCommunicationTest {
         tBuilder.addOperations(oBuilder);
 
         builder.setTransaction(tBuilder);
-        mm.sendAndReceive(ms1.toServer(), builder);
-        // TODO: we just sending here and do not do anything. Let's introduce a
-        // method into MochiMessaging, so we can re-use that code and as part of
-        // that test we will need to ask to read some keys
-
+        Future<ProtocolMessage> writeResponseFuture = mm.sendAndReceive(ms1.toServer(), builder);
+        writeResponseFuture.get();
         ms1.close();
         mm.close();
     }
@@ -218,11 +216,12 @@ public class MochiClientServerCommunicationTest {
      * Specify the remote server via command line argumenet -DremoteServer=######
      */
     private Server getServerToTestAgainst(final Server server) {
-        final String remoteServer = String.valueOf(System.getProperty("remoteServer"));
-        if (remoteServer.isEmpty()) {
+        final String remoteServer = System.getProperty("remoteServer", null);
+        if (StringUtils.isEmpty(remoteServer)) {
+            LOG.info("Using default server");
             return server;
         } else {
-            LOG.info(remoteServer);
+            LOG.info("Using remote server: {}", remoteServer);
             return new Server(remoteServer, 8081);
         }
     }
