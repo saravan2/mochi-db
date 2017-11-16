@@ -213,16 +213,24 @@ public class MochiClientServerCommunicationTest {
     }
 
     /*
-     * Specify the remote server via command line argumenet -DremoteServer=######
+     * Specify the remote server, port via command line arguments 
+     * -DremoteServer=######
+     * -DremotePort=####
      */
     private Server getServerToTestAgainst(final Server server) {
         final String remoteServer = System.getProperty("remoteServer", null);
-        if (StringUtils.isEmpty(remoteServer)) {
-            LOG.info("Using default server");
+        final String remotePort = System.getProperty("remotePort", null);
+        if (StringUtils.isEmpty(remoteServer) && StringUtils.isEmpty(remotePort)) {
+            LOG.info("Using default server and port");
             return server;
+        } else if (StringUtils.isEmpty(remotePort)) {
+            LOG.info("Using remote server: {}", remoteServer);
+            LOG.info("Using default port 8081");
+            return new Server(remoteServer, 8081);
         } else {
             LOG.info("Using remote server: {}", remoteServer);
-            return new Server(remoteServer, 8081);
+            LOG.info("Using remote port: {}", remotePort);
+            return new Server(remoteServer, Integer.valueOf(remotePort));
         }
     }
 
