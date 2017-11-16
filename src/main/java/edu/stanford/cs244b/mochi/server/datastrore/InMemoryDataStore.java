@@ -9,12 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantElement;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 
 public class InMemoryDataStore implements DataStore {
@@ -45,7 +48,7 @@ public class InMemoryDataStore implements DataStore {
         return operationResultBuilder.build();
     }
 
-    protected OperationResult processWrite(final Operation op, final String clientId) {
+    protected MultiGrantCertificateElement processWrite(final Operation op, final String clientId) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
@@ -67,17 +70,23 @@ public class InMemoryDataStore implements DataStore {
                 final GrantTimestamp.Builder newGrantTSBuilder = GrantTimestamp.newBuilder();
                 // TODO:
                 storeValue.setGrantTimestamp(newGrantTSBuilder.build());
+
+                final MultiGrantElement.Builder builder = MultiGrantElement.newBuilder();
+                builder.setObjectId(interestedKey);
+                builder.setOperationNumber(op.getOperationNumber());
+                builder.setViewstamp(storeValue.getCurrentVS());
+
+                final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
+                mgceBuilder.setMultiGrantElement(builder.build());
+
+                if (storeValue.getCurrentC() != null) {
+                    mgceBuilder.setCurrentC(storeValue.getCurrentC());
+                }
+
+                return mgceBuilder.build();
             } else {
                 // TODO:
-            }
-
-            if (storeValue.isValueAvailble() == false) {
-                LOG.debug("Value for key {} is being created or was removed", interestedKey);
-                // TODO: check for operation number
-                final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
-                return operationResultBuilder.build();
-            } else {
-                throw new UnsupportedOperationException();
+                return null;
             }
         }
     }
@@ -143,16 +152,18 @@ public class InMemoryDataStore implements DataStore {
         if (operations == null) {
             return null;
         }
-        final List<OperationResult> operationResults = new ArrayList<OperationResult>(operations.size());
+        final List<MultiGrantCertificateElement> mgceList = new ArrayList<MultiGrantCertificateElement>(
+                operations.size());
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.WRITE) {
-                operationResults.add(processWrite(op, write1ToServer.getClientId()));
+                MultiGrantCertificateElement mgce = processWrite(op, write1ToServer.getClientId());
             }
 
         }
-        final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
-        transactionResultBuilder.addAllOperations(operationResults);
-        return transactionResultBuilder.build();
+
+        // TODO Checking whether all grants are ok
+        Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
+        return builder.build();
     }
 
 }

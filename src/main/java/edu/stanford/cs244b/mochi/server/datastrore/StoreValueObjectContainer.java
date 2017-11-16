@@ -75,4 +75,20 @@ public class StoreValueObjectContainer<T> {
     public void setGrantTimestamp(GrantTimestamp grantTimestamp) {
         this.grantTimestamp = grantTimestamp;
     }
+
+    public long getCurrentVS() {
+        return currentVS;
+    }
+
+    public void setCurrentVS(long currentVS) {
+        this.currentVS = currentVS;
+    }
+
+    public ObjectCertificate getCurrentC() {
+        return currentC;
+    }
+
+    public void setCurrentC(ObjectCertificate currentC) {
+        this.currentC = currentC;
+    }
 }

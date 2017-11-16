@@ -84,10 +84,25 @@ message Write1ToServer {
 }
 
 
+message MultiGrantElement {
+    string objectId = 1;
+    int64 operationNumber = 2;
+    int64 timestamp = 3;
+    int64 viewstamp = 4;
+}
+
+message MultiGrantCertificateElement {
+    MultiGrantElement multiGrantElement = 1;
+    ObjectCertificate currentC = 2;
+}
+
+
 /* <WRITE-1-OK, grantTS, currentC>µcr, if the replica
 granted the next timestamp to this client. */
 message Write1OkFromServer {
-    // TODO: add other properties
+    repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList =  1; // <oid, op#, ts> + vs
+    string clientId = 2; // cid
+    string hash = 3;
 }
 
 /*  <WRITE-1-REFUSED, grantTS, cid, oid, op#, currentC>µcr
