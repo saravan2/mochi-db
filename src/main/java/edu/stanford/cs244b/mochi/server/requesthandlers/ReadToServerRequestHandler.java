@@ -9,7 +9,6 @@ import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.datastrore.DataStore;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messaging.ServerRequestHandler;
 
 public class ReadToServerRequestHandler implements ServerRequestHandler<ReadToServer> {
@@ -23,9 +22,8 @@ public class ReadToServerRequestHandler implements ServerRequestHandler<ReadToSe
     }
 
     public void handle(ChannelHandlerContext ctx, ProtocolMessage protocolMessage, ReadToServer message) {
-        final Transaction transactionToExecute = message.getTransaction();
-        LOG.debug("Executing read transaction {}", transactionToExecute);
-        dataStore.executeTransaction(transactionToExecute, true);
+        LOG.debug("Executing ReadToServer {}", message);
+        dataStore.processReadRequest(message);
         // TODO: we will need here to read result and send it back over the wire
 
         // ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(builder,

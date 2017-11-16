@@ -4,6 +4,14 @@ package edu.stanford.cs244b.mochi.server.messages;
 
 option optimize_for = SPEED;
 
+message GrantTimestamp {
+    // TODO
+}
+
+message ObjectCertificate {
+    // TODO
+}
+
 enum OperationAction {
     READ = 0;
     DELETE = 1;

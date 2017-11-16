@@ -9,7 +9,6 @@ import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.datastrore.DataStore;
 import edu.stanford.cs244b.mochi.server.messages.MessagesUtils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messaging.ServerRequestHandler;
@@ -26,9 +25,7 @@ public class Write1ToServerRequestHandler implements ServerRequestHandler<Write1
 
     public void handle(ChannelHandlerContext ctx, ProtocolMessage protocolMessage, Write1ToServer message) {
         LOG.debug("Handling writeToServerMessage: {}", message);
-        final Transaction transactionToExecute = message.getTransaction();
-        LOG.debug("Executing write transaction {}", transactionToExecute);
-        dataStore.executeTransaction(transactionToExecute, false);
+        dataStore.processWrite1ToServer(message);
         // TODO: we will need here to read result and send it back over the wire
 
         // TODO: for now just reply OK
