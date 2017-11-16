@@ -218,11 +218,11 @@ public class MochiClientServerCommunicationTest {
      * Specify the remote server via command line argumenet -DremoteServer=######
      */
     private Server getServerToTestAgainst(final Server server) {
-	final String remoteServer = String.valueOf(System.getProperty("remoteServer"));
+        final String remoteServer = String.valueOf(System.getProperty("remoteServer"));
         if (remoteServer.isEmpty()) {
             return server;
         } else {
-	    LOG.info(remoteServer);
+            LOG.info(remoteServer);
             return new Server(remoteServer, 8081);
         }
     }
