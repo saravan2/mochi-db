@@ -38,7 +38,7 @@ public class RequestHandlerDispatcher {
             throw new NullPointerException("protocolMessage should not be null");
         }
         final PayloadCase pc = protocolMessage.getPayloadCase();
-        LOG.debug("Decising on payload message with PayloadCase {}", pc);
+        LOG.debug("Deciding on payload message with PayloadCase {}", pc);
 
         // TODO: make dynamic
         if (pc == PayloadCase.HELLOTOSERVER) {
