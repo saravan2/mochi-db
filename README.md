@@ -70,3 +70,46 @@ Install protobuf - https://stackoverflow.com/questions/21775151/installing-googl
 
 Generate proto - /usr/local/bin/protoc ./src/main/java/edu/stanford/cs244b/mochi/server/messages/MochiProtocol.proto --java_out=src/main/java/
 
+# Installing JDK, Maven and Eclipse in Windows
+
+# Installing Docker in Windows
+
+# AWS notes
+
+* Install AWS cli on your Mac, Cygwin :
+
+
+pip install awscli
+
+
+* After installing AWS cli, run  "aws configure" and update your access and secret key in the field provided
+
+
+* Then run : aws ecr get-login --region us-west-1
+
+
+* You would an access token that is valid for 12 hours
+
+
+* You would have to docker login using that access token
+
+
+* Once login is successful, we can now create a docker tag that matches our repository
+
+sudo docker tag mochi-db:latest <account-id>.dkr.ecr.us-west-1.amazonaws.com/mochi-db:latest
+
+
+* Push our docker image to AWS repository
+
+
+sudo docker push <account-id>.dkr.ecr.us-west-1.amazonaws.com/mochi-db:latest
+
+
+* On our ECS instance, we have to docker login to our AWS repository following the same steps
+
+
+* Pull our image
+
+docker pull <account-id>.dkr.ecr.us-west-1.amazonaws.com/mochi-db:latest
+
+* Run docker on ECS
