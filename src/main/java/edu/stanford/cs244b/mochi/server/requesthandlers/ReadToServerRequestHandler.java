@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.datastrore.DataStore;
+import edu.stanford.cs244b.mochi.server.messages.MessagesUtils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messaging.ServerRequestHandler;
@@ -23,11 +24,10 @@ public class ReadToServerRequestHandler implements ServerRequestHandler<ReadToSe
 
     public void handle(ChannelHandlerContext ctx, ProtocolMessage protocolMessage, ReadToServer message) {
         LOG.debug("Executing ReadToServer {}", message);
-        dataStore.processReadRequest(message);
-        // TODO: we will need here to read result and send it back over the wire
-
-        // ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(builder,
-        // protocolMessage.getMsgId()));
+        final Object readResponse = dataStore.processReadRequest(message);
+        LOG.debug("Sending back read reply: {}", readResponse);
+        ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(readResponse, protocolMessage.getMsgId()));
+        LOG.debug("Wrote back response");
     }
 
     public Class<ReadToServer> getMessageSupported() {
