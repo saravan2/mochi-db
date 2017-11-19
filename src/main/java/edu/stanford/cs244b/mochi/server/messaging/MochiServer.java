@@ -31,7 +31,7 @@ public class MochiServer implements Closeable {
     private volatile Thread mochiServerThread;
     private volatile boolean closed = false;
     public static final int DEFAULT_PORT = 8081;
-    private static final String BIND_LOCALHOST = "0.0.0.0";
+    private static final String BIND_ON_ALL_HOST = "0.0.0.0";
 
     private final int executorCorePoolSize = 3;
     private final int executorMaxPoolSize = 20;
@@ -67,7 +67,7 @@ public class MochiServer implements Closeable {
     }
 
     public Server toServer() {
-        return new Server(BIND_LOCALHOST, this.serverPort);
+        return new Server(BIND_ON_ALL_HOST, this.serverPort);
     }
 
     private class MochiServerListener implements Runnable {
@@ -78,6 +78,7 @@ public class MochiServer implements Closeable {
                     return;
                 }
                 try {
+                    LOG.info("Mochi Server starting netty listener at {}", BIND_ON_ALL_HOST);
                     startNettyListener();
                 } catch (CertificateException e) {
                     LOG.error("CertificateException when starting netty listener:", e);
@@ -101,7 +102,7 @@ public class MochiServer implements Closeable {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new MochiServerInitializer(requestHandlerDispatcher));
 
-            b.bind(BIND_LOCALHOST, serverPort).sync().channel().closeFuture().sync();
+            b.bind(BIND_ON_ALL_HOST, serverPort).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
