@@ -8,6 +8,11 @@ cp "${DIR}/Dockerfile_server" "${DIR}/target/Dockerfile_server"
 docker build -f "${DIR}/target/Dockerfile_server" -t  "${mochi_docker_tag}" "${DIR}/target"
 docker tag "${mochi_docker_tag}" "mochi-db:latest"
 
+aws_docker="664718736402.dkr.ecr.us-west-1.amazonaws.com/${mochi_docker_tag}"
+docker tag "${mochi_docker_tag}" "${aws_docker}"
+
 echo "Docker image build"
 docker images "${mochi_docker_tag}"
 
+echo "Trying to push"
+docker push "${aws_docker}" || echo "Pushing docker image failed"
