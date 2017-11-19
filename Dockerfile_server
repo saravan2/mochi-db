@@ -1,6 +1,7 @@
 FROM azul/zulu-openjdk:8u144
 
 RUN java -version  && mkdir -pv /opt/mochi-db/ 
+RUN apt-get update && apt-get install telnet netstat
 COPY mochi-db-*.jar /opt/mochi-db/
 RUN ls -la /opt/mochi-db/
 
