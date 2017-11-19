@@ -31,7 +31,7 @@ public class MochiServer implements Closeable {
     private volatile Thread mochiServerThread;
     private volatile boolean closed = false;
     public static final int DEFAULT_PORT = 8081;
-    private static final String BIND_LOCALHOST = "localhost";
+    private static final String BIND_LOCALHOST = "0.0.0.0";
 
     private final int executorCorePoolSize = 3;
     private final int executorMaxPoolSize = 20;
