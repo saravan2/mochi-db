@@ -8,12 +8,20 @@
 			</Pattern>
 		</layout>
 	</appender>
+	
+	<appender name="FILE-DEBUG" class="ch.qos.logback.core.FileAppender">
+		<file>mochi-debug.log</file>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
 
 	<logger name="org.springframework" level="info"></logger>
 	<logger name="org.hibernate" level="info"></logger>
 
 	<root level="debug">
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE-DEBUG" />
 	</root>
 
 </configuration>
