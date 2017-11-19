@@ -10,7 +10,8 @@
 	</appender>
 	
 	<appender name="FILE-DEBUG" class="ch.qos.logback.core.FileAppender">
-		<file>mochi-debug.log</file>
+		<file>log/mochi-debug.log</file>
+		<append>false</append>
 		<encoder>
 			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
