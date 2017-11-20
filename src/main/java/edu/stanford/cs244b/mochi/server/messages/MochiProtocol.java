@@ -121,398 +121,6 @@ public final class MochiProtocol {
     // @@protoc_insertion_point(enum_scope:edu.stanford.cs244b.mochi.server.messages.OperationAction)
   }
 
-  public interface GrantTimestampOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.GrantTimestamp)
-      com.google.protobuf.MessageOrBuilder {
-  }
-  /**
-   * <pre>
-   * TODO
-   * </pre>
-   *
-   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.GrantTimestamp}
-   */
-  public  static final class GrantTimestamp extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.GrantTimestamp)
-      GrantTimestampOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use GrantTimestamp.newBuilder() to construct.
-    private GrantTimestamp(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private GrantTimestamp() {
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private GrantTimestamp(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.Builder.class);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      unknownFields.writeTo(output);
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp)) {
-        return super.equals(obj);
-      }
-      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp) obj;
-
-      boolean result = true;
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * <pre>
-     * TODO
-     * </pre>
-     *
-     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.GrantTimestamp}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.GrantTimestamp)
-        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestampOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.Builder.class);
-      }
-
-      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_descriptor;
-      }
-
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp getDefaultInstanceForType() {
-        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.getDefaultInstance();
-      }
-
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp build() {
-        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp buildPartial() {
-        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp(this);
-        onBuilt();
-        return result;
-      }
-
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp) {
-          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp other) {
-        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.GrantTimestamp)
-    }
-
-    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.GrantTimestamp)
-    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp();
-    }
-
-    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<GrantTimestamp>
-        PARSER = new com.google.protobuf.AbstractParser<GrantTimestamp>() {
-      public GrantTimestamp parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new GrantTimestamp(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<GrantTimestamp> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<GrantTimestamp> getParserForType() {
-      return PARSER;
-    }
-
-    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   public interface ObjectCertificateOrBuilder extends
       // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.ObjectCertificate)
       com.google.protobuf.MessageOrBuilder {
@@ -18290,11 +17898,6 @@ public final class MochiProtocol {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_edu_stanford_cs244b_mochi_server_messages_ObjectCertificate_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -18411,82 +18014,81 @@ public final class MochiProtocol {
       "\nKsrc/main/java/edu/stanford/cs244b/moch" +
       "i/server/messages/MochiProtocol.proto\022)e" +
       "du.stanford.cs244b.mochi.server.messages" +
-      "\"\020\n\016GrantTimestamp\"\023\n\021ObjectCertificate\"" +
-      "\246\001\n\tOperation\022J\n\006action\030\001 \001(\0162:.edu.stan" +
-      "ford.cs244b.mochi.server.messages.Operat" +
-      "ionAction\022\020\n\010operand1\030\002 \001(\t\022\020\n\010operand2\030" +
-      "\003 \001(\t\022\020\n\010operand3\030\004 \001(\t\022\027\n\017operationNumb" +
-      "er\030\005 \001(\003\"W\n\013Transaction\022H\n\noperations\030\001 " +
-      "\003(\01324.edu.stanford.cs244b.mochi.server.m",
-      "essages.Operation\"!\n\017OperationResult\022\016\n\006" +
-      "result\030\001 \001(\t\"c\n\021TransactionResult\022N\n\nope" +
-      "rations\030\001 \003(\0132:.edu.stanford.cs244b.moch" +
-      "i.server.messages.OperationResult\"|\n\014Rea" +
-      "dToServer\022\020\n\010clientId\030\001 \001(\t\022K\n\013transacti" +
-      "on\030\002 \001(\01326.edu.stanford.cs244b.mochi.ser" +
-      "ver.messages.Transaction\022\r\n\005nonce\030\003 \001(\t\"" +
-      "z\n\016ReadFromServer\022L\n\006result\030\001 \001(\0132<.edu." +
-      "stanford.cs244b.mochi.server.messages.Tr" +
-      "ansactionResult\022\r\n\005nonce\030\002 \001(\t\022\013\n\003rid\030\003 ",
-      "\001(\t\"o\n\016Write1ToServer\022\020\n\010clientId\030\001 \001(\t\022" +
-      "K\n\013transaction\030\002 \001(\01326.edu.stanford.cs24" +
-      "4b.mochi.server.messages.Transaction\"n\n\n" +
-      "WriteGrant\022`\n\017multiGrantOList\030\001 \003(\0132G.ed" +
+      "\"\023\n\021ObjectCertificate\"\246\001\n\tOperation\022J\n\006a" +
+      "ction\030\001 \001(\0162:.edu.stanford.cs244b.mochi." +
+      "server.messages.OperationAction\022\020\n\010opera" +
+      "nd1\030\002 \001(\t\022\020\n\010operand2\030\003 \001(\t\022\020\n\010operand3\030" +
+      "\004 \001(\t\022\027\n\017operationNumber\030\005 \001(\003\"W\n\013Transa" +
+      "ction\022H\n\noperations\030\001 \003(\01324.edu.stanford" +
+      ".cs244b.mochi.server.messages.Operation\"",
+      "!\n\017OperationResult\022\016\n\006result\030\001 \001(\t\"c\n\021Tr" +
+      "ansactionResult\022N\n\noperations\030\001 \003(\0132:.ed" +
       "u.stanford.cs244b.mochi.server.messages." +
-      "MultiGrantCertificateElement\"^\n\020WriteCer" +
-      "tificate\022J\n\013writeGrants\030\001 \003(\01325.edu.stan" +
-      "ford.cs244b.mochi.server.messages.WriteG" +
-      "rant\"g\n\016Write2ToServer\022U\n\020writeCertifica" +
-      "te\030\001 \001(\0132;.edu.stanford.cs244b.mochi.ser",
-      "ver.messages.WriteCertificate\"p\n\023Write2A" +
-      "nsFromServer\022L\n\006result\030\001 \001(\0132<.edu.stanf" +
-      "ord.cs244b.mochi.server.messages.Transac" +
-      "tionResult\022\013\n\003rid\030\002 \001(\t\"d\n\021MultiGrantEle" +
-      "ment\022\020\n\010objectId\030\001 \001(\t\022\027\n\017operationNumbe" +
-      "r\030\002 \001(\003\022\021\n\ttimestamp\030\003 \001(\003\022\021\n\tviewstamp\030" +
-      "\004 \001(\003\"\307\001\n\034MultiGrantCertificateElement\022W" +
-      "\n\021multiGrantElement\030\001 \001(\0132<.edu.stanford" +
-      ".cs244b.mochi.server.messages.MultiGrant" +
-      "Element\022N\n\010currentC\030\002 \001(\0132<.edu.stanford",
-      ".cs244b.mochi.server.messages.ObjectCert" +
-      "ificate\"\226\001\n\022Write1OkFromServer\022`\n\017multiG" +
-      "rantOList\030\001 \003(\0132G.edu.stanford.cs244b.mo" +
-      "chi.server.messages.MultiGrantCertificat" +
-      "eElement\022\020\n\010clientId\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t" +
-      "\"\031\n\027Write1RefusedFromServer\"\034\n\rHelloToSe" +
-      "rver\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003m" +
-      "sg\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n\003msg\030\001 \001(\t" +
-      "\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFromServer2\022" +
-      "\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"\264\010\n\017Prot",
-      "ocolMessage\022Q\n\rhelloToServer\030e \001(\01328.edu" +
+      "OperationResult\"|\n\014ReadToServer\022\020\n\010clien" +
+      "tId\030\001 \001(\t\022K\n\013transaction\030\002 \001(\01326.edu.sta" +
+      "nford.cs244b.mochi.server.messages.Trans" +
+      "action\022\r\n\005nonce\030\003 \001(\t\"z\n\016ReadFromServer\022" +
+      "L\n\006result\030\001 \001(\0132<.edu.stanford.cs244b.mo" +
+      "chi.server.messages.TransactionResult\022\r\n" +
+      "\005nonce\030\002 \001(\t\022\013\n\003rid\030\003 \001(\t\"o\n\016Write1ToSer",
+      "ver\022\020\n\010clientId\030\001 \001(\t\022K\n\013transaction\030\002 \001" +
+      "(\01326.edu.stanford.cs244b.mochi.server.me" +
+      "ssages.Transaction\"n\n\nWriteGrant\022`\n\017mult" +
+      "iGrantOList\030\001 \003(\0132G.edu.stanford.cs244b." +
+      "mochi.server.messages.MultiGrantCertific" +
+      "ateElement\"^\n\020WriteCertificate\022J\n\013writeG" +
+      "rants\030\001 \003(\01325.edu.stanford.cs244b.mochi." +
+      "server.messages.WriteGrant\"g\n\016Write2ToSe" +
+      "rver\022U\n\020writeCertificate\030\001 \001(\0132;.edu.sta" +
+      "nford.cs244b.mochi.server.messages.Write",
+      "Certificate\"p\n\023Write2AnsFromServer\022L\n\006re" +
+      "sult\030\001 \001(\0132<.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.TransactionResult\022\013\n\003rid\030" +
+      "\002 \001(\t\"d\n\021MultiGrantElement\022\020\n\010objectId\030\001" +
+      " \001(\t\022\027\n\017operationNumber\030\002 \001(\003\022\021\n\ttimesta" +
+      "mp\030\003 \001(\003\022\021\n\tviewstamp\030\004 \001(\003\"\307\001\n\034MultiGra" +
+      "ntCertificateElement\022W\n\021multiGrantElemen" +
+      "t\030\001 \001(\0132<.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.MultiGrantElement\022N\n\010current" +
+      "C\030\002 \001(\0132<.edu.stanford.cs244b.mochi.serv",
+      "er.messages.ObjectCertificate\"\226\001\n\022Write1" +
+      "OkFromServer\022`\n\017multiGrantOList\030\001 \003(\0132G." +
+      "edu.stanford.cs244b.mochi.server.message" +
+      "s.MultiGrantCertificateElement\022\020\n\010client" +
+      "Id\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t\"\031\n\027Write1RefusedF" +
+      "romServer\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"" +
+      "\035\n\016HelloToServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloF" +
+      "romServer\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(" +
+      "\t\"2\n\020HelloFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tcl" +
+      "ientMsg\030\002 \001(\t\"\264\010\n\017ProtocolMessage\022Q\n\rhel",
+      "loToServer\030e \001(\01328.edu.stanford.cs244b.m" +
+      "ochi.server.messages.HelloToServerH\000\022U\n\017" +
+      "helloFromServer\030f \001(\0132:.edu.stanford.cs2" +
+      "44b.mochi.server.messages.HelloFromServe" +
+      "rH\000\022S\n\016helloToServer2\030g \001(\01329.edu.stanfo" +
+      "rd.cs244b.mochi.server.messages.HelloToS" +
+      "erver2H\000\022W\n\020helloFromServer2\030h \001(\0132;.edu" +
       ".stanford.cs244b.mochi.server.messages.H" +
-      "elloToServerH\000\022U\n\017helloFromServer\030f \001(\0132" +
-      ":.edu.stanford.cs244b.mochi.server.messa" +
-      "ges.HelloFromServerH\000\022S\n\016helloToServer2\030" +
-      "g \001(\01329.edu.stanford.cs244b.mochi.server" +
-      ".messages.HelloToServer2H\000\022W\n\020helloFromS" +
-      "erver2\030h \001(\0132;.edu.stanford.cs244b.mochi" +
-      ".server.messages.HelloFromServer2H\000\022O\n\014r" +
-      "eadToServer\030i \001(\01327.edu.stanford.cs244b.",
-      "mochi.server.messages.ReadToServerH\000\022S\n\016" +
-      "readFromServer\030j \001(\01329.edu.stanford.cs24" +
-      "4b.mochi.server.messages.ReadFromServerH" +
-      "\000\022S\n\016write1ToServer\030k \001(\01329.edu.stanford" +
-      ".cs244b.mochi.server.messages.Write1ToSe" +
-      "rverH\000\022[\n\022write1OkFromServer\030l \001(\0132=.edu" +
+      "elloFromServer2H\000\022O\n\014readToServer\030i \001(\0132" +
+      "7.edu.stanford.cs244b.mochi.server.messa",
+      "ges.ReadToServerH\000\022S\n\016readFromServer\030j \001" +
+      "(\01329.edu.stanford.cs244b.mochi.server.me" +
+      "ssages.ReadFromServerH\000\022S\n\016write1ToServe" +
+      "r\030k \001(\01329.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.Write1ToServerH\000\022[\n\022write1Ok" +
+      "FromServer\030l \001(\0132=.edu.stanford.cs244b.m" +
+      "ochi.server.messages.Write1OkFromServerH" +
+      "\000\022e\n\027write1RefusedFromServer\030m \001(\0132B.edu" +
       ".stanford.cs244b.mochi.server.messages.W" +
-      "rite1OkFromServerH\000\022e\n\027write1RefusedFrom" +
-      "Server\030m \001(\0132B.edu.stanford.cs244b.mochi" +
-      ".server.messages.Write1RefusedFromServer",
-      "H\000\022S\n\016write2ToServer\030n \001(\01329.edu.stanfor" +
-      "d.cs244b.mochi.server.messages.Write2ToS" +
-      "erverH\000\022]\n\023write2AnsFromServer\030o \001(\0132>.e" +
-      "du.stanford.cs244b.mochi.server.messages" +
-      ".Write2AnsFromServerH\000\022\024\n\014msgTimestamp\030\005" +
-      " \001(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n" +
-      "\014replyToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017Operat" +
-      "ionAction\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE" +
-      "\020\002B\002H\001b\006proto3"
+      "rite1RefusedFromServerH\000\022S\n\016write2ToServ",
+      "er\030n \001(\01329.edu.stanford.cs244b.mochi.ser" +
+      "ver.messages.Write2ToServerH\000\022]\n\023write2A" +
+      "nsFromServer\030o \001(\0132>.edu.stanford.cs244b" +
+      ".mochi.server.messages.Write2AnsFromServ" +
+      "erH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010serverId\030\006" +
+      " \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(" +
+      "\tB\t\n\007payload*2\n\017OperationAction\022\010\n\004READ\020" +
+      "\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18500,134 +18102,128 @@ public final class MochiProtocol {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_edu_stanford_cs244b_mochi_server_messages_GrantTimestamp_descriptor,
-        new java.lang.String[] { });
     internal_static_edu_stanford_cs244b_mochi_server_messages_ObjectCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(0);
     internal_static_edu_stanford_cs244b_mochi_server_messages_ObjectCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ObjectCertificate_descriptor,
         new java.lang.String[] { });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Operation_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(1);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Operation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Operation_descriptor,
         new java.lang.String[] { "Action", "Operand1", "Operand2", "Operand3", "OperationNumber", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Transaction_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Transaction_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Transaction_descriptor,
         new java.lang.String[] { "Operations", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_OperationResult_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_edu_stanford_cs244b_mochi_server_messages_OperationResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_OperationResult_descriptor,
         new java.lang.String[] { "Result", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_TransactionResult_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_edu_stanford_cs244b_mochi_server_messages_TransactionResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_TransactionResult_descriptor,
         new java.lang.String[] { "Operations", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_ReadToServer_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_edu_stanford_cs244b_mochi_server_messages_ReadToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ReadToServer_descriptor,
         new java.lang.String[] { "ClientId", "Transaction", "Nonce", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_ReadFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_edu_stanford_cs244b_mochi_server_messages_ReadFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ReadFromServer_descriptor,
         new java.lang.String[] { "Result", "Nonce", "Rid", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_descriptor,
         new java.lang.String[] { "ClientId", "Transaction", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor,
         new java.lang.String[] { "MultiGrantOList", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor,
         new java.lang.String[] { "WriteGrants", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor,
         new java.lang.String[] { "WriteCertificate", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor,
         new java.lang.String[] { "Result", "Rid", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_descriptor,
         new java.lang.String[] { "ObjectId", "OperationNumber", "Timestamp", "Viewstamp", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantCertificateElement_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantCertificateElement_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantCertificateElement_descriptor,
         new java.lang.String[] { "MultiGrantElement", "CurrentC", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor,
         new java.lang.String[] { "MultiGrantOList", "ClientId", "Hash", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor,
         new java.lang.String[] { });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor,
         new java.lang.String[] { "Msg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_descriptor,
         new java.lang.String[] { "Msg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_descriptor,
         new java.lang.String[] { "Msg", "ClientMsg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_descriptor,
         new java.lang.String[] { "Msg", "ClientMsg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor,

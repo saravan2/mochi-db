@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantElement;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
@@ -67,17 +66,17 @@ public class InMemoryDataStore implements DataStore {
             }
             storeValue.addOperationToOps(op);
             if (storeValue.getGrantTimestamp() == null) {
-                final GrantTimestamp.Builder newGrantTSBuilder = GrantTimestamp.newBuilder();
-                // TODO:
-                storeValue.setGrantTimestamp(newGrantTSBuilder.build());
+                /* There is no current grant on that timestamp */
 
                 final MultiGrantElement.Builder builder = MultiGrantElement.newBuilder();
                 builder.setObjectId(interestedKey);
                 builder.setOperationNumber(op.getOperationNumber());
                 builder.setViewstamp(storeValue.getCurrentVS());
 
+                storeValue.setGrantTimestamp(builder.build());
+
                 final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
-                mgceBuilder.setMultiGrantElement(builder.build());
+                mgceBuilder.setMultiGrantElement(storeValue.getGrantTimestamp());
 
                 if (storeValue.getCurrentC() != null) {
                     mgceBuilder.setCurrentC(storeValue.getCurrentC());
@@ -85,13 +84,9 @@ public class InMemoryDataStore implements DataStore {
 
                 return mgceBuilder.build();
             } else {
-                final MultiGrantElement.Builder builder = MultiGrantElement.newBuilder();
-                builder.setObjectId(interestedKey);
-                builder.setOperationNumber(op.getOperationNumber());
-                builder.setViewstamp(storeValue.getCurrentVS());
-
+                /* Somebody else has the grant. Write refuse */
                 final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
-                mgceBuilder.setMultiGrantElement(builder.build());
+                mgceBuilder.setMultiGrantElement(storeValue.getGrantTimestamp());
 
                 if (storeValue.getCurrentC() != null) {
                     mgceBuilder.setCurrentC(storeValue.getCurrentC());
@@ -165,16 +160,21 @@ public class InMemoryDataStore implements DataStore {
         }
         final List<MultiGrantCertificateElement> mgceList = new ArrayList<MultiGrantCertificateElement>(
                 operations.size());
+        boolean allWriteOk = true;
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.WRITE) {
-                MultiGrantCertificateElement mgce = processWrite(op, write1ToServer.getClientId());
+                final MultiGrantCertificateElement mgce = processWrite(op, write1ToServer.getClientId());
+                mgceList.add(mgce);
             }
 
         }
 
         // TODO Checking whether all grants are ok
-        Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
-        return builder.build();
+        if (allWriteOk) {
+            Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
+            return builder.build();
+        }
+        throw new UnsupportedOperationException();
     }
 
 }

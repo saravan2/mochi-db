@@ -16,6 +16,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
@@ -208,7 +209,9 @@ public class MochiClientServerCommunicationTest {
         // Step 1
         builder.setTransaction(tBuilder);
         Future<ProtocolMessage> writeResponseFuture = mm.sendAndReceive(ms1.toServer(), builder);
-        writeResponseFuture.get();
+        ProtocolMessage write1responsePM = writeResponseFuture.get();
+        Write1OkFromServer writeOkFromServer = write1responsePM.getWrite1OkFromServer();
+        Assert.assertNotNull(writeOkFromServer);
 
         // Step 2:
 

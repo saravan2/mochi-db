@@ -10,6 +10,8 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
 
 public class MessagesUtils {
 
@@ -52,12 +54,25 @@ public class MessagesUtils {
             pmBuilder.setWrite1OkFromServer((Write1OkFromServer.Builder) T);
         } else if (T instanceof Write1OkFromServer) {
             pmBuilder.setWrite1OkFromServer((Write1OkFromServer) T);
-        } // ----
+        } // ---- Write1RefusedFromServer
         else if (T instanceof Write1RefusedFromServer.Builder) {
             pmBuilder.setWrite1RefusedFromServer((Write1RefusedFromServer.Builder) T);
         } else if (T instanceof Write1RefusedFromServer) {
             pmBuilder.setWrite1RefusedFromServer((Write1RefusedFromServer) T);
-        } else {
+        }
+        // ---- Write2ToServer
+        else if (T instanceof Write2ToServer.Builder) {
+            pmBuilder.setWrite2ToServer((Write2ToServer.Builder) T);
+        } else if (T instanceof Write2ToServer) {
+            pmBuilder.setWrite2ToServer((Write2ToServer) T);
+        }
+        // ---- Write2AnsFromServer
+        else if (T instanceof Write2AnsFromServer.Builder) {
+            pmBuilder.setWrite2AnsFromServer((Write2AnsFromServer.Builder) T);
+        } else if (T instanceof Write2AnsFromServer) {
+            pmBuilder.setWrite2AnsFromServer((Write2AnsFromServer) T);
+        }// ---
+        else {
             throw new IllegalStateException(String.format("Invalit message of class %s: %s", T.getClass(), T));
         }
         pmBuilder.setMsgTimestamp(System.currentTimeMillis());

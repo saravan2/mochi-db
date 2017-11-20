@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantTimestamp;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantElement;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ObjectCertificate;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 
@@ -15,7 +15,7 @@ public class StoreValueObjectContainer<T> {
     private volatile T value;
     private volatile boolean valueAvailble;
     private volatile ObjectCertificate currentC;
-    private volatile GrantTimestamp grantTimestamp;
+    private volatile MultiGrantElement grantTimestamp;
 
     // TODO: change to Write-1 ??
     private final List<Operation> ops = new ArrayList<Operation>(4);
@@ -68,11 +68,11 @@ public class StoreValueObjectContainer<T> {
         this.ops.add(op);
     }
 
-    public GrantTimestamp getGrantTimestamp() {
+    public MultiGrantElement getGrantTimestamp() {
         return grantTimestamp;
     }
 
-    public void setGrantTimestamp(GrantTimestamp grantTimestamp) {
+    public void setGrantTimestamp(MultiGrantElement grantTimestamp) {
         this.grantTimestamp = grantTimestamp;
     }
 
