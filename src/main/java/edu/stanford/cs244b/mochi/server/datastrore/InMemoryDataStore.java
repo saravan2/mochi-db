@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -47,7 +48,7 @@ public class InMemoryDataStore implements DataStore {
         return operationResultBuilder.build();
     }
 
-    protected MultiGrantCertificateElement processWrite(final Operation op, final String clientId) {
+    protected Pair<MultiGrantCertificateElement, Boolean> processWrite(final Operation op, final String clientId) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
@@ -82,7 +83,7 @@ public class InMemoryDataStore implements DataStore {
                     mgceBuilder.setCurrentC(storeValue.getCurrentC());
                 }
 
-                return mgceBuilder.build();
+                return Pair.with(mgceBuilder.build(), true);
             } else {
                 /* Somebody else has the grant. Write refuse */
                 final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
@@ -92,7 +93,7 @@ public class InMemoryDataStore implements DataStore {
                     mgceBuilder.setCurrentC(storeValue.getCurrentC());
                 }
 
-                return mgceBuilder.build();
+                return Pair.with(mgceBuilder.build(), false);
             }
         }
     }
@@ -163,8 +164,14 @@ public class InMemoryDataStore implements DataStore {
         boolean allWriteOk = true;
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.WRITE) {
-                final MultiGrantCertificateElement mgce = processWrite(op, write1ToServer.getClientId());
+                Pair<MultiGrantCertificateElement, Boolean> wrteResult = processWrite(op, write1ToServer.getClientId());
+                final MultiGrantCertificateElement mgce = wrteResult.getValue0();
+                final boolean grantWasGranted = wrteResult.getValue1();
                 mgceList.add(mgce);
+                if (grantWasGranted == false) {
+                    LOG.debug("GrantWasNot Granted for opeation {}. MultiGrantCertificateElement = {}", op, mgce);
+                    allWriteOk = false;
+                }
             }
 
         }
