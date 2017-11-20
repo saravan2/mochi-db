@@ -6671,6 +6671,2869 @@ public final class MochiProtocol {
 
   }
 
+  public interface WriteGrantOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.WriteGrant)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> 
+        getMultiGrantOListList();
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement getMultiGrantOList(int index);
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    int getMultiGrantOListCount();
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
+        getMultiGrantOListOrBuilderList();
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder getMultiGrantOListOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.WriteGrant}
+   */
+  public  static final class WriteGrant extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.WriteGrant)
+      WriteGrantOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use WriteGrant.newBuilder() to construct.
+    private WriteGrant(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private WriteGrant() {
+      multiGrantOList_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private WriteGrant(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                multiGrantOList_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              multiGrantOList_.add(
+                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          multiGrantOList_ = java.util.Collections.unmodifiableList(multiGrantOList_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder.class);
+    }
+
+    public static final int MULTIGRANTOLIST_FIELD_NUMBER = 1;
+    private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> multiGrantOList_;
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> getMultiGrantOListList() {
+      return multiGrantOList_;
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
+        getMultiGrantOListOrBuilderList() {
+      return multiGrantOList_;
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    public int getMultiGrantOListCount() {
+      return multiGrantOList_.size();
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement getMultiGrantOList(int index) {
+      return multiGrantOList_.get(index);
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder getMultiGrantOListOrBuilder(
+        int index) {
+      return multiGrantOList_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < multiGrantOList_.size(); i++) {
+        output.writeMessage(1, multiGrantOList_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < multiGrantOList_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, multiGrantOList_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant)) {
+        return super.equals(obj);
+      }
+      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant) obj;
+
+      boolean result = true;
+      result = result && getMultiGrantOListList()
+          .equals(other.getMultiGrantOListList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getMultiGrantOListCount() > 0) {
+        hash = (37 * hash) + MULTIGRANTOLIST_FIELD_NUMBER;
+        hash = (53 * hash) + getMultiGrantOListList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.WriteGrant}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.WriteGrant)
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder.class);
+      }
+
+      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getMultiGrantOListFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (multiGrantOListBuilder_ == null) {
+          multiGrantOList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          multiGrantOListBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getDefaultInstanceForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance();
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant build() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant buildPartial() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant(this);
+        int from_bitField0_ = bitField0_;
+        if (multiGrantOListBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            multiGrantOList_ = java.util.Collections.unmodifiableList(multiGrantOList_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.multiGrantOList_ = multiGrantOList_;
+        } else {
+          result.multiGrantOList_ = multiGrantOListBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant) {
+          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant other) {
+        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance()) return this;
+        if (multiGrantOListBuilder_ == null) {
+          if (!other.multiGrantOList_.isEmpty()) {
+            if (multiGrantOList_.isEmpty()) {
+              multiGrantOList_ = other.multiGrantOList_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMultiGrantOListIsMutable();
+              multiGrantOList_.addAll(other.multiGrantOList_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.multiGrantOList_.isEmpty()) {
+            if (multiGrantOListBuilder_.isEmpty()) {
+              multiGrantOListBuilder_.dispose();
+              multiGrantOListBuilder_ = null;
+              multiGrantOList_ = other.multiGrantOList_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              multiGrantOListBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMultiGrantOListFieldBuilder() : null;
+            } else {
+              multiGrantOListBuilder_.addAllMessages(other.multiGrantOList_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> multiGrantOList_ =
+        java.util.Collections.emptyList();
+      private void ensureMultiGrantOListIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          multiGrantOList_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement>(multiGrantOList_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> multiGrantOListBuilder_;
+
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> getMultiGrantOListList() {
+        if (multiGrantOListBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(multiGrantOList_);
+        } else {
+          return multiGrantOListBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public int getMultiGrantOListCount() {
+        if (multiGrantOListBuilder_ == null) {
+          return multiGrantOList_.size();
+        } else {
+          return multiGrantOListBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement getMultiGrantOList(int index) {
+        if (multiGrantOListBuilder_ == null) {
+          return multiGrantOList_.get(index);
+        } else {
+          return multiGrantOListBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder setMultiGrantOList(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement value) {
+        if (multiGrantOListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.set(index, value);
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder setMultiGrantOList(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder builderForValue) {
+        if (multiGrantOListBuilder_ == null) {
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder addMultiGrantOList(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement value) {
+        if (multiGrantOListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.add(value);
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder addMultiGrantOList(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement value) {
+        if (multiGrantOListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.add(index, value);
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder addMultiGrantOList(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder builderForValue) {
+        if (multiGrantOListBuilder_ == null) {
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.add(builderForValue.build());
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder addMultiGrantOList(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder builderForValue) {
+        if (multiGrantOListBuilder_ == null) {
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder addAllMultiGrantOList(
+          java.lang.Iterable<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> values) {
+        if (multiGrantOListBuilder_ == null) {
+          ensureMultiGrantOListIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, multiGrantOList_);
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder clearMultiGrantOList() {
+        if (multiGrantOListBuilder_ == null) {
+          multiGrantOList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public Builder removeMultiGrantOList(int index) {
+        if (multiGrantOListBuilder_ == null) {
+          ensureMultiGrantOListIsMutable();
+          multiGrantOList_.remove(index);
+          onChanged();
+        } else {
+          multiGrantOListBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder getMultiGrantOListBuilder(
+          int index) {
+        return getMultiGrantOListFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder getMultiGrantOListOrBuilder(
+          int index) {
+        if (multiGrantOListBuilder_ == null) {
+          return multiGrantOList_.get(index);  } else {
+          return multiGrantOListBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
+           getMultiGrantOListOrBuilderList() {
+        if (multiGrantOListBuilder_ != null) {
+          return multiGrantOListBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(multiGrantOList_);
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder addMultiGrantOListBuilder() {
+        return getMultiGrantOListFieldBuilder().addBuilder(
+            edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder addMultiGrantOListBuilder(
+          int index) {
+        return getMultiGrantOListFieldBuilder().addBuilder(
+            index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       */
+      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder> 
+           getMultiGrantOListBuilderList() {
+        return getMultiGrantOListFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
+          getMultiGrantOListFieldBuilder() {
+        if (multiGrantOListBuilder_ == null) {
+          multiGrantOListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder>(
+                  multiGrantOList_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          multiGrantOList_ = null;
+        }
+        return multiGrantOListBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.WriteGrant)
+    }
+
+    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.WriteGrant)
+    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant();
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<WriteGrant>
+        PARSER = new com.google.protobuf.AbstractParser<WriteGrant>() {
+      public WriteGrant parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new WriteGrant(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<WriteGrant> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<WriteGrant> getParserForType() {
+      return PARSER;
+    }
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface WriteCertificateOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.WriteCertificate)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant> 
+        getWriteGrantsList();
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getWriteGrants(int index);
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    int getWriteGrantsCount();
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> 
+        getWriteGrantsOrBuilderList();
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder getWriteGrantsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.WriteCertificate}
+   */
+  public  static final class WriteCertificate extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.WriteCertificate)
+      WriteCertificateOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use WriteCertificate.newBuilder() to construct.
+    private WriteCertificate(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private WriteCertificate() {
+      writeGrants_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private WriteCertificate(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                writeGrants_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              writeGrants_.add(
+                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          writeGrants_ = java.util.Collections.unmodifiableList(writeGrants_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder.class);
+    }
+
+    public static final int WRITEGRANTS_FIELD_NUMBER = 1;
+    private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant> writeGrants_;
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant> getWriteGrantsList() {
+      return writeGrants_;
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> 
+        getWriteGrantsOrBuilderList() {
+      return writeGrants_;
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    public int getWriteGrantsCount() {
+      return writeGrants_.size();
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getWriteGrants(int index) {
+      return writeGrants_.get(index);
+    }
+    /**
+     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder getWriteGrantsOrBuilder(
+        int index) {
+      return writeGrants_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < writeGrants_.size(); i++) {
+        output.writeMessage(1, writeGrants_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < writeGrants_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, writeGrants_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate)) {
+        return super.equals(obj);
+      }
+      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate) obj;
+
+      boolean result = true;
+      result = result && getWriteGrantsList()
+          .equals(other.getWriteGrantsList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getWriteGrantsCount() > 0) {
+        hash = (37 * hash) + WRITEGRANTS_FIELD_NUMBER;
+        hash = (53 * hash) + getWriteGrantsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.WriteCertificate}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.WriteCertificate)
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder.class);
+      }
+
+      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getWriteGrantsFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (writeGrantsBuilder_ == null) {
+          writeGrants_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          writeGrantsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getDefaultInstanceForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.getDefaultInstance();
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate build() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate buildPartial() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate(this);
+        int from_bitField0_ = bitField0_;
+        if (writeGrantsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            writeGrants_ = java.util.Collections.unmodifiableList(writeGrants_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.writeGrants_ = writeGrants_;
+        } else {
+          result.writeGrants_ = writeGrantsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate) {
+          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate other) {
+        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.getDefaultInstance()) return this;
+        if (writeGrantsBuilder_ == null) {
+          if (!other.writeGrants_.isEmpty()) {
+            if (writeGrants_.isEmpty()) {
+              writeGrants_ = other.writeGrants_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureWriteGrantsIsMutable();
+              writeGrants_.addAll(other.writeGrants_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.writeGrants_.isEmpty()) {
+            if (writeGrantsBuilder_.isEmpty()) {
+              writeGrantsBuilder_.dispose();
+              writeGrantsBuilder_ = null;
+              writeGrants_ = other.writeGrants_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              writeGrantsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getWriteGrantsFieldBuilder() : null;
+            } else {
+              writeGrantsBuilder_.addAllMessages(other.writeGrants_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant> writeGrants_ =
+        java.util.Collections.emptyList();
+      private void ensureWriteGrantsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          writeGrants_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant>(writeGrants_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> writeGrantsBuilder_;
+
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant> getWriteGrantsList() {
+        if (writeGrantsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(writeGrants_);
+        } else {
+          return writeGrantsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public int getWriteGrantsCount() {
+        if (writeGrantsBuilder_ == null) {
+          return writeGrants_.size();
+        } else {
+          return writeGrantsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getWriteGrants(int index) {
+        if (writeGrantsBuilder_ == null) {
+          return writeGrants_.get(index);
+        } else {
+          return writeGrantsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder setWriteGrants(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant value) {
+        if (writeGrantsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWriteGrantsIsMutable();
+          writeGrants_.set(index, value);
+          onChanged();
+        } else {
+          writeGrantsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder setWriteGrants(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder builderForValue) {
+        if (writeGrantsBuilder_ == null) {
+          ensureWriteGrantsIsMutable();
+          writeGrants_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          writeGrantsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder addWriteGrants(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant value) {
+        if (writeGrantsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWriteGrantsIsMutable();
+          writeGrants_.add(value);
+          onChanged();
+        } else {
+          writeGrantsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder addWriteGrants(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant value) {
+        if (writeGrantsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWriteGrantsIsMutable();
+          writeGrants_.add(index, value);
+          onChanged();
+        } else {
+          writeGrantsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder addWriteGrants(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder builderForValue) {
+        if (writeGrantsBuilder_ == null) {
+          ensureWriteGrantsIsMutable();
+          writeGrants_.add(builderForValue.build());
+          onChanged();
+        } else {
+          writeGrantsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder addWriteGrants(
+          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder builderForValue) {
+        if (writeGrantsBuilder_ == null) {
+          ensureWriteGrantsIsMutable();
+          writeGrants_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          writeGrantsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder addAllWriteGrants(
+          java.lang.Iterable<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant> values) {
+        if (writeGrantsBuilder_ == null) {
+          ensureWriteGrantsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, writeGrants_);
+          onChanged();
+        } else {
+          writeGrantsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder clearWriteGrants() {
+        if (writeGrantsBuilder_ == null) {
+          writeGrants_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          writeGrantsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public Builder removeWriteGrants(int index) {
+        if (writeGrantsBuilder_ == null) {
+          ensureWriteGrantsIsMutable();
+          writeGrants_.remove(index);
+          onChanged();
+        } else {
+          writeGrantsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder getWriteGrantsBuilder(
+          int index) {
+        return getWriteGrantsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder getWriteGrantsOrBuilder(
+          int index) {
+        if (writeGrantsBuilder_ == null) {
+          return writeGrants_.get(index);  } else {
+          return writeGrantsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> 
+           getWriteGrantsOrBuilderList() {
+        if (writeGrantsBuilder_ != null) {
+          return writeGrantsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(writeGrants_);
+        }
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder addWriteGrantsBuilder() {
+        return getWriteGrantsFieldBuilder().addBuilder(
+            edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder addWriteGrantsBuilder(
+          int index) {
+        return getWriteGrantsFieldBuilder().addBuilder(
+            index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants = 1;</code>
+       */
+      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder> 
+           getWriteGrantsBuilderList() {
+        return getWriteGrantsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> 
+          getWriteGrantsFieldBuilder() {
+        if (writeGrantsBuilder_ == null) {
+          writeGrantsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder>(
+                  writeGrants_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          writeGrants_ = null;
+        }
+        return writeGrantsBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.WriteCertificate)
+    }
+
+    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.WriteCertificate)
+    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate();
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<WriteCertificate>
+        PARSER = new com.google.protobuf.AbstractParser<WriteCertificate>() {
+      public WriteCertificate parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new WriteCertificate(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<WriteCertificate> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<WriteCertificate> getParserForType() {
+      return PARSER;
+    }
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface Write2ToServerOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.Write2ToServer)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+     */
+    boolean hasWriteCertificate();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getWriteCertificate();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder getWriteCertificateOrBuilder();
+  }
+  /**
+   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write2ToServer}
+   */
+  public  static final class Write2ToServer extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.Write2ToServer)
+      Write2ToServerOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Write2ToServer.newBuilder() to construct.
+    private Write2ToServer(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Write2ToServer() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Write2ToServer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder subBuilder = null;
+              if (writeCertificate_ != null) {
+                subBuilder = writeCertificate_.toBuilder();
+              }
+              writeCertificate_ = input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(writeCertificate_);
+                writeCertificate_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder.class);
+    }
+
+    public static final int WRITECERTIFICATE_FIELD_NUMBER = 1;
+    private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate writeCertificate_;
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+     */
+    public boolean hasWriteCertificate() {
+      return writeCertificate_ != null;
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getWriteCertificate() {
+      return writeCertificate_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.getDefaultInstance() : writeCertificate_;
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder getWriteCertificateOrBuilder() {
+      return getWriteCertificate();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (writeCertificate_ != null) {
+        output.writeMessage(1, getWriteCertificate());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (writeCertificate_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getWriteCertificate());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer)) {
+        return super.equals(obj);
+      }
+      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) obj;
+
+      boolean result = true;
+      result = result && (hasWriteCertificate() == other.hasWriteCertificate());
+      if (hasWriteCertificate()) {
+        result = result && getWriteCertificate()
+            .equals(other.getWriteCertificate());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasWriteCertificate()) {
+        hash = (37 * hash) + WRITECERTIFICATE_FIELD_NUMBER;
+        hash = (53 * hash) + getWriteCertificate().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write2ToServer}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.Write2ToServer)
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder.class);
+      }
+
+      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (writeCertificateBuilder_ == null) {
+          writeCertificate_ = null;
+        } else {
+          writeCertificate_ = null;
+          writeCertificateBuilder_ = null;
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer getDefaultInstanceForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer build() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer buildPartial() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer(this);
+        if (writeCertificateBuilder_ == null) {
+          result.writeCertificate_ = writeCertificate_;
+        } else {
+          result.writeCertificate_ = writeCertificateBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) {
+          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer other) {
+        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance()) return this;
+        if (other.hasWriteCertificate()) {
+          mergeWriteCertificate(other.getWriteCertificate());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate writeCertificate_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder> writeCertificateBuilder_;
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public boolean hasWriteCertificate() {
+        return writeCertificateBuilder_ != null || writeCertificate_ != null;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getWriteCertificate() {
+        if (writeCertificateBuilder_ == null) {
+          return writeCertificate_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.getDefaultInstance() : writeCertificate_;
+        } else {
+          return writeCertificateBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public Builder setWriteCertificate(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate value) {
+        if (writeCertificateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          writeCertificate_ = value;
+          onChanged();
+        } else {
+          writeCertificateBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public Builder setWriteCertificate(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder builderForValue) {
+        if (writeCertificateBuilder_ == null) {
+          writeCertificate_ = builderForValue.build();
+          onChanged();
+        } else {
+          writeCertificateBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public Builder mergeWriteCertificate(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate value) {
+        if (writeCertificateBuilder_ == null) {
+          if (writeCertificate_ != null) {
+            writeCertificate_ =
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.newBuilder(writeCertificate_).mergeFrom(value).buildPartial();
+          } else {
+            writeCertificate_ = value;
+          }
+          onChanged();
+        } else {
+          writeCertificateBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public Builder clearWriteCertificate() {
+        if (writeCertificateBuilder_ == null) {
+          writeCertificate_ = null;
+          onChanged();
+        } else {
+          writeCertificate_ = null;
+          writeCertificateBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder getWriteCertificateBuilder() {
+        
+        onChanged();
+        return getWriteCertificateFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder getWriteCertificateOrBuilder() {
+        if (writeCertificateBuilder_ != null) {
+          return writeCertificateBuilder_.getMessageOrBuilder();
+        } else {
+          return writeCertificate_ == null ?
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.getDefaultInstance() : writeCertificate_;
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder> 
+          getWriteCertificateFieldBuilder() {
+        if (writeCertificateBuilder_ == null) {
+          writeCertificateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder>(
+                  getWriteCertificate(),
+                  getParentForChildren(),
+                  isClean());
+          writeCertificate_ = null;
+        }
+        return writeCertificateBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.Write2ToServer)
+    }
+
+    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.Write2ToServer)
+    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer();
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Write2ToServer>
+        PARSER = new com.google.protobuf.AbstractParser<Write2ToServer>() {
+      public Write2ToServer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Write2ToServer(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Write2ToServer> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Write2ToServer> getParserForType() {
+      return PARSER;
+    }
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface Write2AnsFromServerOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * currentC in embedded inside result
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+     */
+    boolean hasResult();
+    /**
+     * <pre>
+     * currentC in embedded inside result
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult getResult();
+    /**
+     * <pre>
+     * currentC in embedded inside result
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResultOrBuilder getResultOrBuilder();
+
+    /**
+     * <code>string rid = 2;</code>
+     */
+    java.lang.String getRid();
+    /**
+     * <code>string rid = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getRidBytes();
+  }
+  /**
+   * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer}
+   */
+  public  static final class Write2AnsFromServer extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer)
+      Write2AnsFromServerOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Write2AnsFromServer.newBuilder() to construct.
+    private Write2AnsFromServer(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Write2AnsFromServer() {
+      rid_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Write2AnsFromServer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.Builder subBuilder = null;
+              if (result_ != null) {
+                subBuilder = result_.toBuilder();
+              }
+              result_ = input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(result_);
+                result_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              rid_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder.class);
+    }
+
+    public static final int RESULT_FIELD_NUMBER = 1;
+    private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult result_;
+    /**
+     * <pre>
+     * currentC in embedded inside result
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+     */
+    public boolean hasResult() {
+      return result_ != null;
+    }
+    /**
+     * <pre>
+     * currentC in embedded inside result
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult getResult() {
+      return result_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.getDefaultInstance() : result_;
+    }
+    /**
+     * <pre>
+     * currentC in embedded inside result
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResultOrBuilder getResultOrBuilder() {
+      return getResult();
+    }
+
+    public static final int RID_FIELD_NUMBER = 2;
+    private volatile java.lang.Object rid_;
+    /**
+     * <code>string rid = 2;</code>
+     */
+    public java.lang.String getRid() {
+      java.lang.Object ref = rid_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        rid_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string rid = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRidBytes() {
+      java.lang.Object ref = rid_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        rid_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (result_ != null) {
+        output.writeMessage(1, getResult());
+      }
+      if (!getRidBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, rid_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (result_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getResult());
+      }
+      if (!getRidBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, rid_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer)) {
+        return super.equals(obj);
+      }
+      edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) obj;
+
+      boolean result = true;
+      result = result && (hasResult() == other.hasResult());
+      if (hasResult()) {
+        result = result && getResult()
+            .equals(other.getResult());
+      }
+      result = result && getRid()
+          .equals(other.getRid());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasResult()) {
+        hash = (37 * hash) + RESULT_FIELD_NUMBER;
+        hash = (53 * hash) + getResult().hashCode();
+      }
+      hash = (37 * hash) + RID_FIELD_NUMBER;
+      hash = (53 * hash) + getRid().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer)
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder.class);
+      }
+
+      // Construct using edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (resultBuilder_ == null) {
+          result_ = null;
+        } else {
+          result_ = null;
+          resultBuilder_ = null;
+        }
+        rid_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer getDefaultInstanceForType() {
+        return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer build() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer buildPartial() {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer(this);
+        if (resultBuilder_ == null) {
+          result.result_ = result_;
+        } else {
+          result.result_ = resultBuilder_.build();
+        }
+        result.rid_ = rid_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) {
+          return mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer other) {
+        if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance()) return this;
+        if (other.hasResult()) {
+          mergeResult(other.getResult());
+        }
+        if (!other.getRid().isEmpty()) {
+          rid_ = other.rid_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult result_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResultOrBuilder> resultBuilder_;
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public boolean hasResult() {
+        return resultBuilder_ != null || result_ != null;
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult getResult() {
+        if (resultBuilder_ == null) {
+          return result_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.getDefaultInstance() : result_;
+        } else {
+          return resultBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public Builder setResult(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult value) {
+        if (resultBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          result_ = value;
+          onChanged();
+        } else {
+          resultBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public Builder setResult(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.Builder builderForValue) {
+        if (resultBuilder_ == null) {
+          result_ = builderForValue.build();
+          onChanged();
+        } else {
+          resultBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public Builder mergeResult(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult value) {
+        if (resultBuilder_ == null) {
+          if (result_ != null) {
+            result_ =
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.newBuilder(result_).mergeFrom(value).buildPartial();
+          } else {
+            result_ = value;
+          }
+          onChanged();
+        } else {
+          resultBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public Builder clearResult() {
+        if (resultBuilder_ == null) {
+          result_ = null;
+          onChanged();
+        } else {
+          result_ = null;
+          resultBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.Builder getResultBuilder() {
+        
+        onChanged();
+        return getResultFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResultOrBuilder getResultOrBuilder() {
+        if (resultBuilder_ != null) {
+          return resultBuilder_.getMessageOrBuilder();
+        } else {
+          return result_ == null ?
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.getDefaultInstance() : result_;
+        }
+      }
+      /**
+       * <pre>
+       * currentC in embedded inside result
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.TransactionResult result = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResultOrBuilder> 
+          getResultFieldBuilder() {
+        if (resultBuilder_ == null) {
+          resultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResultOrBuilder>(
+                  getResult(),
+                  getParentForChildren(),
+                  isClean());
+          result_ = null;
+        }
+        return resultBuilder_;
+      }
+
+      private java.lang.Object rid_ = "";
+      /**
+       * <code>string rid = 2;</code>
+       */
+      public java.lang.String getRid() {
+        java.lang.Object ref = rid_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          rid_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string rid = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRidBytes() {
+        java.lang.Object ref = rid_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          rid_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string rid = 2;</code>
+       */
+      public Builder setRid(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        rid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string rid = 2;</code>
+       */
+      public Builder clearRid() {
+        
+        rid_ = getDefaultInstance().getRid();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string rid = 2;</code>
+       */
+      public Builder setRidBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        rid_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer)
+    }
+
+    // @@protoc_insertion_point(class_scope:edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer)
+    private static final edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer();
+    }
+
+    public static edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Write2AnsFromServer>
+        PARSER = new com.google.protobuf.AbstractParser<Write2AnsFromServer>() {
+      public Write2AnsFromServer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Write2AnsFromServer(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Write2AnsFromServer> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Write2AnsFromServer> getParserForType() {
+      return PARSER;
+    }
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface MultiGrantElementOrBuilder extends
       // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.MultiGrantElement)
       com.google.protobuf.MessageOrBuilder {
@@ -12231,6 +15094,32 @@ public final class MochiProtocol {
     edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServerOrBuilder getWrite1RefusedFromServerOrBuilder();
 
     /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+     */
+    boolean hasWrite2ToServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer getWrite2ToServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder getWrite2ToServerOrBuilder();
+
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+     */
+    boolean hasWrite2AnsFromServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer getWrite2AnsFromServer();
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder getWrite2AnsFromServerOrBuilder();
+
+    /**
      * <code>int64 msgTimestamp = 5;</code>
      */
     long getMsgTimestamp();
@@ -12463,6 +15352,34 @@ public final class MochiProtocol {
               payloadCase_ = 109;
               break;
             }
+            case 882: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder subBuilder = null;
+              if (payloadCase_ == 110) {
+                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_).toBuilder();
+              }
+              payload_ =
+                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 110;
+              break;
+            }
+            case 890: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder subBuilder = null;
+              if (payloadCase_ == 111) {
+                subBuilder = ((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_).toBuilder();
+              }
+              payload_ =
+                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 111;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -12500,6 +15417,8 @@ public final class MochiProtocol {
       WRITE1TOSERVER(107),
       WRITE1OKFROMSERVER(108),
       WRITE1REFUSEDFROMSERVER(109),
+      WRITE2TOSERVER(110),
+      WRITE2ANSFROMSERVER(111),
       PAYLOAD_NOT_SET(0);
       private final int value;
       private PayloadCase(int value) {
@@ -12524,6 +15443,8 @@ public final class MochiProtocol {
           case 107: return WRITE1TOSERVER;
           case 108: return WRITE1OKFROMSERVER;
           case 109: return WRITE1REFUSEDFROMSERVER;
+          case 110: return WRITE2TOSERVER;
+          case 111: return WRITE2ANSFROMSERVER;
           case 0: return PAYLOAD_NOT_SET;
           default: return null;
         }
@@ -12773,6 +15694,58 @@ public final class MochiProtocol {
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance();
     }
 
+    public static final int WRITE2TOSERVER_FIELD_NUMBER = 110;
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+     */
+    public boolean hasWrite2ToServer() {
+      return payloadCase_ == 110;
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer getWrite2ToServer() {
+      if (payloadCase_ == 110) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder getWrite2ToServerOrBuilder() {
+      if (payloadCase_ == 110) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+    }
+
+    public static final int WRITE2ANSFROMSERVER_FIELD_NUMBER = 111;
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+     */
+    public boolean hasWrite2AnsFromServer() {
+      return payloadCase_ == 111;
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer getWrite2AnsFromServer() {
+      if (payloadCase_ == 111) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+    }
+    /**
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder getWrite2AnsFromServerOrBuilder() {
+      if (payloadCase_ == 111) {
+         return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_;
+      }
+      return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+    }
+
     public static final int MSGTIMESTAMP_FIELD_NUMBER = 5;
     private long msgTimestamp_;
     /**
@@ -12935,6 +15908,12 @@ public final class MochiProtocol {
       if (payloadCase_ == 109) {
         output.writeMessage(109, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_);
       }
+      if (payloadCase_ == 110) {
+        output.writeMessage(110, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_);
+      }
+      if (payloadCase_ == 111) {
+        output.writeMessage(111, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -12991,6 +15970,14 @@ public final class MochiProtocol {
       if (payloadCase_ == 109) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(109, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) payload_);
+      }
+      if (payloadCase_ == 110) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(110, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_);
+      }
+      if (payloadCase_ == 111) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(111, (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -13056,6 +16043,14 @@ public final class MochiProtocol {
           result = result && getWrite1RefusedFromServer()
               .equals(other.getWrite1RefusedFromServer());
           break;
+        case 110:
+          result = result && getWrite2ToServer()
+              .equals(other.getWrite2ToServer());
+          break;
+        case 111:
+          result = result && getWrite2AnsFromServer()
+              .equals(other.getWrite2AnsFromServer());
+          break;
         case 0:
         default:
       }
@@ -13115,6 +16110,14 @@ public final class MochiProtocol {
         case 109:
           hash = (37 * hash) + WRITE1REFUSEDFROMSERVER_FIELD_NUMBER;
           hash = (53 * hash) + getWrite1RefusedFromServer().hashCode();
+          break;
+        case 110:
+          hash = (37 * hash) + WRITE2TOSERVER_FIELD_NUMBER;
+          hash = (53 * hash) + getWrite2ToServer().hashCode();
+          break;
+        case 111:
+          hash = (37 * hash) + WRITE2ANSFROMSERVER_FIELD_NUMBER;
+          hash = (53 * hash) + getWrite2AnsFromServer().hashCode();
           break;
         case 0:
         default:
@@ -13343,6 +16346,20 @@ public final class MochiProtocol {
             result.payload_ = write1RefusedFromServerBuilder_.build();
           }
         }
+        if (payloadCase_ == 110) {
+          if (write2ToServerBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = write2ToServerBuilder_.build();
+          }
+        }
+        if (payloadCase_ == 111) {
+          if (write2AnsFromServerBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = write2AnsFromServerBuilder_.build();
+          }
+        }
         result.msgTimestamp_ = msgTimestamp_;
         result.serverId_ = serverId_;
         result.msgId_ = msgId_;
@@ -13439,6 +16456,14 @@ public final class MochiProtocol {
           }
           case WRITE1REFUSEDFROMSERVER: {
             mergeWrite1RefusedFromServer(other.getWrite1RefusedFromServer());
+            break;
+          }
+          case WRITE2TOSERVER: {
+            mergeWrite2ToServer(other.getWrite2ToServer());
+            break;
+          }
+          case WRITE2ANSFROMSERVER: {
+            mergeWrite2AnsFromServer(other.getWrite2AnsFromServer());
             break;
           }
           case PAYLOAD_NOT_SET: {
@@ -14711,6 +17736,278 @@ public final class MochiProtocol {
         return write1RefusedFromServerBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder> write2ToServerBuilder_;
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public boolean hasWrite2ToServer() {
+        return payloadCase_ == 110;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer getWrite2ToServer() {
+        if (write2ToServerBuilder_ == null) {
+          if (payloadCase_ == 110) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 110) {
+            return write2ToServerBuilder_.getMessage();
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public Builder setWrite2ToServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer value) {
+        if (write2ToServerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          write2ToServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 110;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public Builder setWrite2ToServer(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder builderForValue) {
+        if (write2ToServerBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          write2ToServerBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 110;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public Builder mergeWrite2ToServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer value) {
+        if (write2ToServerBuilder_ == null) {
+          if (payloadCase_ == 110 &&
+              payload_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance()) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 110) {
+            write2ToServerBuilder_.mergeFrom(value);
+          }
+          write2ToServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 110;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public Builder clearWrite2ToServer() {
+        if (write2ToServerBuilder_ == null) {
+          if (payloadCase_ == 110) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 110) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          write2ToServerBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder getWrite2ToServerBuilder() {
+        return getWrite2ToServerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder getWrite2ToServerOrBuilder() {
+        if ((payloadCase_ == 110) && (write2ToServerBuilder_ != null)) {
+          return write2ToServerBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 110) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2ToServer write2ToServer = 110;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder> 
+          getWrite2ToServerFieldBuilder() {
+        if (write2ToServerBuilder_ == null) {
+          if (!(payloadCase_ == 110)) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance();
+          }
+          write2ToServerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServerOrBuilder>(
+                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 110;
+        onChanged();;
+        return write2ToServerBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder> write2AnsFromServerBuilder_;
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public boolean hasWrite2AnsFromServer() {
+        return payloadCase_ == 111;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer getWrite2AnsFromServer() {
+        if (write2AnsFromServerBuilder_ == null) {
+          if (payloadCase_ == 111) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 111) {
+            return write2AnsFromServerBuilder_.getMessage();
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public Builder setWrite2AnsFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer value) {
+        if (write2AnsFromServerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          write2AnsFromServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 111;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public Builder setWrite2AnsFromServer(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder builderForValue) {
+        if (write2AnsFromServerBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          write2AnsFromServerBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 111;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public Builder mergeWrite2AnsFromServer(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer value) {
+        if (write2AnsFromServerBuilder_ == null) {
+          if (payloadCase_ == 111 &&
+              payload_ != edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance()) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.newBuilder((edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 111) {
+            write2AnsFromServerBuilder_.mergeFrom(value);
+          }
+          write2AnsFromServerBuilder_.setMessage(value);
+        }
+        payloadCase_ = 111;
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public Builder clearWrite2AnsFromServer() {
+        if (write2AnsFromServerBuilder_ == null) {
+          if (payloadCase_ == 111) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 111) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          write2AnsFromServerBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder getWrite2AnsFromServerBuilder() {
+        return getWrite2AnsFromServerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder getWrite2AnsFromServerOrBuilder() {
+        if ((payloadCase_ == 111) && (write2AnsFromServerBuilder_ != null)) {
+          return write2AnsFromServerBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 111) {
+            return (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_;
+          }
+          return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Write2AnsFromServer write2AnsFromServer = 111;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder> 
+          getWrite2AnsFromServerFieldBuilder() {
+        if (write2AnsFromServerBuilder_ == null) {
+          if (!(payloadCase_ == 111)) {
+            payload_ = edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.getDefaultInstance();
+          }
+          write2AnsFromServerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServerOrBuilder>(
+                  (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 111;
+        onChanged();;
+        return write2AnsFromServerBuilder_;
+      }
+
       private long msgTimestamp_ ;
       /**
        * <code>int64 msgTimestamp = 5;</code>
@@ -15038,6 +18335,26 @@ public final class MochiProtocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -15113,48 +18430,63 @@ public final class MochiProtocol {
       "ansactionResult\022\r\n\005nonce\030\002 \001(\t\022\013\n\003rid\030\003 ",
       "\001(\t\"o\n\016Write1ToServer\022\020\n\010clientId\030\001 \001(\t\022" +
       "K\n\013transaction\030\002 \001(\01326.edu.stanford.cs24" +
-      "4b.mochi.server.messages.Transaction\"d\n\021" +
-      "MultiGrantElement\022\020\n\010objectId\030\001 \001(\t\022\027\n\017o" +
-      "perationNumber\030\002 \001(\003\022\021\n\ttimestamp\030\003 \001(\003\022" +
-      "\021\n\tviewstamp\030\004 \001(\003\"\307\001\n\034MultiGrantCertifi" +
-      "cateElement\022W\n\021multiGrantElement\030\001 \001(\0132<" +
-      ".edu.stanford.cs244b.mochi.server.messag" +
-      "es.MultiGrantElement\022N\n\010currentC\030\002 \001(\0132<" +
-      ".edu.stanford.cs244b.mochi.server.messag",
-      "es.ObjectCertificate\"\226\001\n\022Write1OkFromSer" +
-      "ver\022`\n\017multiGrantOList\030\001 \003(\0132G.edu.stanf" +
-      "ord.cs244b.mochi.server.messages.MultiGr" +
-      "antCertificateElement\022\020\n\010clientId\030\002 \001(\t\022" +
-      "\014\n\004hash\030\003 \001(\t\"\031\n\027Write1RefusedFromServer" +
-      "\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloT" +
-      "oServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFromServer" +
-      "\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020Hell" +
-      "oFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002" +
-      " \001(\t\"\200\007\n\017ProtocolMessage\022Q\n\rhelloToServe",
-      "r\030e \001(\01328.edu.stanford.cs244b.mochi.serv" +
-      "er.messages.HelloToServerH\000\022U\n\017helloFrom" +
-      "Server\030f \001(\0132:.edu.stanford.cs244b.mochi" +
-      ".server.messages.HelloFromServerH\000\022S\n\016he" +
-      "lloToServer2\030g \001(\01329.edu.stanford.cs244b" +
-      ".mochi.server.messages.HelloToServer2H\000\022" +
-      "W\n\020helloFromServer2\030h \001(\0132;.edu.stanford" +
-      ".cs244b.mochi.server.messages.HelloFromS" +
-      "erver2H\000\022O\n\014readToServer\030i \001(\01327.edu.sta" +
-      "nford.cs244b.mochi.server.messages.ReadT",
-      "oServerH\000\022S\n\016readFromServer\030j \001(\01329.edu." +
-      "stanford.cs244b.mochi.server.messages.Re" +
-      "adFromServerH\000\022S\n\016write1ToServer\030k \001(\01329" +
-      ".edu.stanford.cs244b.mochi.server.messag" +
-      "es.Write1ToServerH\000\022[\n\022write1OkFromServe" +
-      "r\030l \001(\0132=.edu.stanford.cs244b.mochi.serv" +
-      "er.messages.Write1OkFromServerH\000\022e\n\027writ" +
-      "e1RefusedFromServer\030m \001(\0132B.edu.stanford" +
-      ".cs244b.mochi.server.messages.Write1Refu" +
-      "sedFromServerH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n",
-      "\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyT" +
-      "oMsgId\030\010 \001(\tB\t\n\007payload*2\n\017OperationActi" +
-      "on\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002B\002H\001b" +
-      "\006proto3"
+      "4b.mochi.server.messages.Transaction\"n\n\n" +
+      "WriteGrant\022`\n\017multiGrantOList\030\001 \003(\0132G.ed" +
+      "u.stanford.cs244b.mochi.server.messages." +
+      "MultiGrantCertificateElement\"^\n\020WriteCer" +
+      "tificate\022J\n\013writeGrants\030\001 \003(\01325.edu.stan" +
+      "ford.cs244b.mochi.server.messages.WriteG" +
+      "rant\"g\n\016Write2ToServer\022U\n\020writeCertifica" +
+      "te\030\001 \001(\0132;.edu.stanford.cs244b.mochi.ser",
+      "ver.messages.WriteCertificate\"p\n\023Write2A" +
+      "nsFromServer\022L\n\006result\030\001 \001(\0132<.edu.stanf" +
+      "ord.cs244b.mochi.server.messages.Transac" +
+      "tionResult\022\013\n\003rid\030\002 \001(\t\"d\n\021MultiGrantEle" +
+      "ment\022\020\n\010objectId\030\001 \001(\t\022\027\n\017operationNumbe" +
+      "r\030\002 \001(\003\022\021\n\ttimestamp\030\003 \001(\003\022\021\n\tviewstamp\030" +
+      "\004 \001(\003\"\307\001\n\034MultiGrantCertificateElement\022W" +
+      "\n\021multiGrantElement\030\001 \001(\0132<.edu.stanford" +
+      ".cs244b.mochi.server.messages.MultiGrant" +
+      "Element\022N\n\010currentC\030\002 \001(\0132<.edu.stanford",
+      ".cs244b.mochi.server.messages.ObjectCert" +
+      "ificate\"\226\001\n\022Write1OkFromServer\022`\n\017multiG" +
+      "rantOList\030\001 \003(\0132G.edu.stanford.cs244b.mo" +
+      "chi.server.messages.MultiGrantCertificat" +
+      "eElement\022\020\n\010clientId\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t" +
+      "\"\031\n\027Write1RefusedFromServer\"\034\n\rHelloToSe" +
+      "rver\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003m" +
+      "sg\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n\003msg\030\001 \001(\t" +
+      "\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFromServer2\022" +
+      "\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"\264\010\n\017Prot",
+      "ocolMessage\022Q\n\rhelloToServer\030e \001(\01328.edu" +
+      ".stanford.cs244b.mochi.server.messages.H" +
+      "elloToServerH\000\022U\n\017helloFromServer\030f \001(\0132" +
+      ":.edu.stanford.cs244b.mochi.server.messa" +
+      "ges.HelloFromServerH\000\022S\n\016helloToServer2\030" +
+      "g \001(\01329.edu.stanford.cs244b.mochi.server" +
+      ".messages.HelloToServer2H\000\022W\n\020helloFromS" +
+      "erver2\030h \001(\0132;.edu.stanford.cs244b.mochi" +
+      ".server.messages.HelloFromServer2H\000\022O\n\014r" +
+      "eadToServer\030i \001(\01327.edu.stanford.cs244b.",
+      "mochi.server.messages.ReadToServerH\000\022S\n\016" +
+      "readFromServer\030j \001(\01329.edu.stanford.cs24" +
+      "4b.mochi.server.messages.ReadFromServerH" +
+      "\000\022S\n\016write1ToServer\030k \001(\01329.edu.stanford" +
+      ".cs244b.mochi.server.messages.Write1ToSe" +
+      "rverH\000\022[\n\022write1OkFromServer\030l \001(\0132=.edu" +
+      ".stanford.cs244b.mochi.server.messages.W" +
+      "rite1OkFromServerH\000\022e\n\027write1RefusedFrom" +
+      "Server\030m \001(\0132B.edu.stanford.cs244b.mochi" +
+      ".server.messages.Write1RefusedFromServer",
+      "H\000\022S\n\016write2ToServer\030n \001(\01329.edu.stanfor" +
+      "d.cs244b.mochi.server.messages.Write2ToS" +
+      "erverH\000\022]\n\023write2AnsFromServer\030o \001(\0132>.e" +
+      "du.stanford.cs244b.mochi.server.messages" +
+      ".Write2AnsFromServerH\000\022\024\n\014msgTimestamp\030\005" +
+      " \001(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n" +
+      "\014replyToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017Operat" +
+      "ionAction\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE" +
+      "\020\002B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -15222,60 +18554,84 @@ public final class MochiProtocol {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1ToServer_descriptor,
         new java.lang.String[] { "ClientId", "Transaction", });
-    internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_descriptor =
+    internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor =
       getDescriptor().getMessageTypes().get(9);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_WriteGrant_descriptor,
+        new java.lang.String[] { "MultiGrantOList", });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor,
+        new java.lang.String[] { "WriteGrants", });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor,
+        new java.lang.String[] { "WriteCertificate", });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_Write2AnsFromServer_descriptor,
+        new java.lang.String[] { "Result", "Rid", });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_descriptor =
+      getDescriptor().getMessageTypes().get(13);
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantElement_descriptor,
         new java.lang.String[] { "ObjectId", "OperationNumber", "Timestamp", "Viewstamp", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantCertificateElement_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantCertificateElement_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrantCertificateElement_descriptor,
         new java.lang.String[] { "MultiGrantElement", "CurrentC", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor,
         new java.lang.String[] { "MultiGrantOList", "ClientId", "Hash", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor,
         new java.lang.String[] { });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer_descriptor,
         new java.lang.String[] { "Msg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloToServer2_descriptor,
         new java.lang.String[] { "Msg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer_descriptor,
         new java.lang.String[] { "Msg", "ClientMsg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_HelloFromServer2_descriptor,
         new java.lang.String[] { "Msg", "ClientMsg", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_ProtocolMessage_descriptor,
-        new java.lang.String[] { "HelloToServer", "HelloFromServer", "HelloToServer2", "HelloFromServer2", "ReadToServer", "ReadFromServer", "Write1ToServer", "Write1OkFromServer", "Write1RefusedFromServer", "MsgTimestamp", "ServerId", "MsgId", "ReplyToMsgId", "Payload", });
+        new java.lang.String[] { "HelloToServer", "HelloFromServer", "HelloToServer2", "HelloFromServer2", "ReadToServer", "ReadFromServer", "Write1ToServer", "Write1OkFromServer", "Write1RefusedFromServer", "Write2ToServer", "Write2AnsFromServer", "MsgTimestamp", "ServerId", "MsgId", "ReplyToMsgId", "Payload", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

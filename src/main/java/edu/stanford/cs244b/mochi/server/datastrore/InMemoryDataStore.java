@@ -85,8 +85,19 @@ public class InMemoryDataStore implements DataStore {
 
                 return mgceBuilder.build();
             } else {
-                // TODO:
-                return null;
+                final MultiGrantElement.Builder builder = MultiGrantElement.newBuilder();
+                builder.setObjectId(interestedKey);
+                builder.setOperationNumber(op.getOperationNumber());
+                builder.setViewstamp(storeValue.getCurrentVS());
+
+                final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
+                mgceBuilder.setMultiGrantElement(builder.build());
+
+                if (storeValue.getCurrentC() != null) {
+                    mgceBuilder.setCurrentC(storeValue.getCurrentC());
+                }
+
+                return mgceBuilder.build();
             }
         }
     }

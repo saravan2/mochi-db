@@ -205,9 +205,13 @@ public class MochiClientServerCommunicationTest {
         final Transaction.Builder tBuilder = Transaction.newBuilder();
         tBuilder.addOperations(oBuilder);
 
+        // Step 1
         builder.setTransaction(tBuilder);
         Future<ProtocolMessage> writeResponseFuture = mm.sendAndReceive(ms1.toServer(), builder);
         writeResponseFuture.get();
+
+        // Step 2:
+
         ms1.close();
         mm.close();
     }

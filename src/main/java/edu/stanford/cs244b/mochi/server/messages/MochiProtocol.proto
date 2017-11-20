@@ -83,6 +83,22 @@ message Write1ToServer {
     Transaction transaction = 2; // contains (oid, op#,  op)
 }
 
+message WriteGrant {
+    repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList =  1;
+}
+
+message WriteCertificate {
+    repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants =  1;
+}
+
+message Write2ToServer {
+    WriteCertificate writeCertificate = 1;
+}
+
+message Write2AnsFromServer {
+    TransactionResult result = 1; // currentC in embedded inside result
+    string rid = 2;
+}
 
 message MultiGrantElement {
     string objectId = 1;
@@ -143,6 +159,8 @@ message ProtocolMessage {
         Write1ToServer write1ToServer = 107;
         Write1OkFromServer write1OkFromServer = 108;
         Write1RefusedFromServer write1RefusedFromServer = 109;
+        Write2ToServer write2ToServer = 110;
+        Write2AnsFromServer write2AnsFromServer = 111;
     };
     int64 msgTimestamp = 5;
     string serverId = 6;
