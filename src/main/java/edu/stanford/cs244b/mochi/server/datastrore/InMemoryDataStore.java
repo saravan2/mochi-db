@@ -209,7 +209,7 @@ public class InMemoryDataStore implements DataStore {
         final List<MultiGrantCertificateElement> multiGrantElements = writeGrant.getMultiGrantOListList();
         for (MultiGrantCertificateElement certificateElement : multiGrantElements) {
             final MultiGrantElement multiGrantElement = certificateElement.getMultiGrantElement();
-            if (multiGrantElement.equals(multiGrantElement.getObjectId())) {
+            if (interestedObjectId.equals(multiGrantElement.getObjectId())) {
                 return multiGrantElement;
             }
         }
@@ -240,7 +240,8 @@ public class InMemoryDataStore implements DataStore {
             }
             final MultiGrantElement mgeFromWriteGrant = getMultiGrantElementFromWriteCertificateForWriteGrant(writeGrant, object);
             if (mgeFromWriteGrant == null) {
-                throw new IllegalStateException(String.format("Failed to find MultiGrantElement for '%s'", object));
+                throw new IllegalStateException(String.format("Failed to find MultiGrantElement for '%s' in '%s'",
+                        object, writeGrant));
             }
             final long grantVS = mgeFromWriteGrant.getViewstamp();
             final long grantTS = mgeFromWriteGrant.getTimestamp();
