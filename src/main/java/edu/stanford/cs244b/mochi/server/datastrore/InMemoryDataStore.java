@@ -32,10 +32,6 @@ public class InMemoryDataStore implements DataStore {
 
     @SuppressWarnings("unchecked")
     public InMemoryDataStore() {
-        // TODO: remove that later on
-        data.put("DEMO_KEY_1", new StoreValueObjectContainer<String>("value1", true));
-        data.put("DEMO_KEY_2", new StoreValueObjectContainer<String>("value2", true));
-        data.put("DEMO_KEY_3", new StoreValueObjectContainer<String>("value3", true));
     }
 
     protected OperationResult processRead(final Operation op) {
@@ -79,6 +75,12 @@ public class InMemoryDataStore implements DataStore {
                 builder.setObjectId(interestedKey);
                 builder.setOperationNumber(op.getOperationNumber());
                 builder.setViewstamp(storeValue.getCurrentVS());
+                
+                final MultiGrantElement mgeFromObjectCertificate = storeValue
+                        .getMultiGrantElementFromWriteCertificate();
+                if (mgeFromObjectCertificate != null) {
+                    builder.setTimestamp(mgeFromObjectCertificate.getTimestamp());
+                }
 
                 storeValue.setGrantTimestamp(builder.build());
 
@@ -110,6 +112,7 @@ public class InMemoryDataStore implements DataStore {
             valueContainer = data.get(interestedKey);
         } else {
             final StoreValueObjectContainer<String> possibleStoreValueContainerForThatKey = new StoreValueObjectContainer<String>(
+                    interestedKey,
                     false);
             final StoreValueObjectContainer<String> containerIfWasCreated = data.putIfAbsent(interestedKey,
                     possibleStoreValueContainerForThatKey);
@@ -204,7 +207,7 @@ public class InMemoryDataStore implements DataStore {
         return objectsToLock;
     }
 
-    private MultiGrantElement getMultiGrantElementFromWriteCertificateForWriteGrant(final WriteGrant writeGrant,
+    private MultiGrantElement getMultiGrantElementFromWriteGrant(final WriteGrant writeGrant,
             final String interestedObjectId) {
         final List<MultiGrantCertificateElement> multiGrantElements = writeGrant.getMultiGrantOListList();
         for (MultiGrantCertificateElement certificateElement : multiGrantElements) {
@@ -216,13 +219,27 @@ public class InMemoryDataStore implements DataStore {
         return null;
     }
 
-    private void write2acquireLocksAndCheckViewStamps(final WriteGrant writeGrant) {
+    /*
+     * Attempt to acquire locks on object which are referenced by write grants,
+     * after that we check for timestamp and viewstamp to identify whether there
+     * are new changes that needs to be pulled from other replicas. Also this
+     * method validates whether write grants are the same. If not, it throws an
+     * exception. That is a responsibiloty of the client to make sure that
+     * identical grants are passed in phase 2
+     */
+    private List<String> write2acquireLocksAndCheckViewStamps(List<WriteGrant> writeGrants) {
+        if (writeGrants.size() == 0) {
+            throw new IllegalStateException("There should be at least one grant");
+        }
+        final WriteGrant writeGrant = writeGrants.get(0);
+
         final List<String> objectsToLock = getObjectsToLock(writeGrant);
         for (String object : objectsToLock) {
             final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
             storeValueContianer.acquireObjectLockIfNotHeld();
         }
         LOG.debug("All locks for write grant acquired: {}", objectsToLock);
+        final List<String> listOfObjectsWhoseTimestampIsOld = new ArrayList<String>();
         for (String object : objectsToLock) {
             final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
             final long objectViewStamp = storeValueContianer.getCurrentVS();
@@ -233,22 +250,45 @@ public class InMemoryDataStore implements DataStore {
             } else {
                 objectCertificateGrant = null;
             }
-            final long objectCertificateTimestamp;
+            final Long objectCertificateTS;
+            final Long objectCertificateVS;
             if (objectCertificateGrant != null) {
-                final MultiGrantElement mge = getMultiGrantElementFromWriteCertificateForWriteGrant(objectCertificateGrant, object);
-                objectCertificateTimestamp = mge.getTimestamp();
+                final MultiGrantElement mge = getMultiGrantElementFromWriteGrant(objectCertificateGrant, object);
+                objectCertificateTS = mge.getTimestamp();
+                objectCertificateVS = mge.getViewstamp();
+            } else {
+                objectCertificateTS = null;
+                objectCertificateVS = null;
             }
-            final MultiGrantElement mgeFromWriteGrant = getMultiGrantElementFromWriteCertificateForWriteGrant(writeGrant, object);
+            final MultiGrantElement mgeFromWriteGrant = getMultiGrantElementFromWriteGrant(writeGrant, object);
             if (mgeFromWriteGrant == null) {
                 throw new IllegalStateException(String.format("Failed to find MultiGrantElement for '%s' in '%s'",
                         object, writeGrant));
             }
             final long grantVS = mgeFromWriteGrant.getViewstamp();
             final long grantTS = mgeFromWriteGrant.getTimestamp();
-            // TODO: check timestamps
-        }
-        LOG.debug("Timestamps checked");
+            LOG.debug(
+                    "Got grants and certificate VS and TS in write2acquireLocksAndCheckViewStamps. grant = [TS {}, VS {}], object = [TS {}, VS {}]",
+                    grantTS, grantVS, objectCertificateTS, objectCertificateVS);
 
+            if (objectCertificateTS == null && objectCertificateVS == null) {
+                if (storeValueContianer.isValueAvailble()) {
+                    throw new IllegalStateException(
+                            "objectCertificateTS and objectCertificateVS are null but object value is availble");
+                }
+                continue;
+            }
+            if (objectCertificateVS == grantVS && objectCertificateTS == grantTS - 1) {
+                LOG.debug("Timecheck for object {} is successful", object);
+                continue;
+            }
+            listOfObjectsWhoseTimestampIsOld.add(object);
+        }
+        LOG.debug("Timestamps checked. listOfObjectsWhoseTimestampIsOld = {}", listOfObjectsWhoseTimestampIsOld);
+
+        // TODO: Check writeGrants are the same
+
+        return listOfObjectsWhoseTimestampIsOld;
     }
 
     private void write2releaseLocks(final WriteGrant writeGrant) {
@@ -266,9 +306,9 @@ public class InMemoryDataStore implements DataStore {
         // TODO: check for oldOps for duplicates
 
         final List<WriteGrant> writeGrants = wc.getWriteGrantsList();
-        // TODO: Check writeGrants are the same
         try {
-            write2acquireLocksAndCheckViewStamps(writeGrants.get(0));
+            write2acquireLocksAndCheckViewStamps(writeGrants);
+
         } catch (Exception ex) {
             LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
             throw ex;
