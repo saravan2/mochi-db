@@ -7382,28 +7382,58 @@ public final class MochiProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-     */
-    java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> 
-        getGrantsList();
-    /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-     */
-    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrants(int index);
-    /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
      */
     int getGrantsCount();
     /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
      */
-    java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder> 
-        getGrantsOrBuilderList();
+    boolean containsGrants(
+        java.lang.String key);
     /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+     * Use {@link #getGrantsMap()} instead.
      */
-    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder getGrantsOrBuilder(
-        int index);
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+    getGrants();
+    /**
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
+     */
+    java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+    getGrantsMap();
+    /**
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
+     */
+
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrantsOrDefault(
+        java.lang.String key,
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant defaultValue);
+    /**
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
+     */
+
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrantsOrThrow(
+        java.lang.String key);
 
     /**
      * <pre>
@@ -7468,7 +7498,6 @@ public final class MochiProtocol {
       super(builder);
     }
     private MultiGrant() {
-      grants_ = java.util.Collections.emptyList();
       clientId_ = "";
       hash_ = "";
       serverId_ = "";
@@ -7504,11 +7533,15 @@ public final class MochiProtocol {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                grants_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>();
+                grants_ = com.google.protobuf.MapField.newMapField(
+                    GrantsDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000001;
               }
-              grants_.add(
-                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.parser(), extensionRegistry));
+              com.google.protobuf.MapEntry<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+              grants__ = input.readMessage(
+                  GrantsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              grants_.getMutableMap().put(
+                  grants__.getKey(), grants__.getValue());
               break;
             }
             case 18: {
@@ -7537,9 +7570,6 @@ public final class MochiProtocol {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          grants_ = java.util.Collections.unmodifiableList(grants_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -7549,6 +7579,17 @@ public final class MochiProtocol {
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetGrants();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_fieldAccessorTable
@@ -7558,38 +7599,95 @@ public final class MochiProtocol {
 
     private int bitField0_;
     public static final int GRANTS_FIELD_NUMBER = 1;
-    private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> grants_;
-    /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-     */
-    public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> getGrantsList() {
+    private static final class GrantsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>newDefaultInstance(
+                  edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_GrantsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> grants_;
+    private com.google.protobuf.MapField<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+    internalGetGrants() {
+      if (grants_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            GrantsDefaultEntryHolder.defaultEntry);
+      }
       return grants_;
     }
-    /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-     */
-    public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder> 
-        getGrantsOrBuilderList() {
-      return grants_;
-    }
-    /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-     */
+
     public int getGrantsCount() {
-      return grants_.size();
+      return internalGetGrants().getMap().size();
     }
     /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
      */
-    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrants(int index) {
-      return grants_.get(index);
+
+    public boolean containsGrants(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetGrants().getMap().containsKey(key);
     }
     /**
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+     * Use {@link #getGrantsMap()} instead.
      */
-    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder getGrantsOrBuilder(
-        int index) {
-      return grants_.get(index);
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> getGrants() {
+      return getGrantsMap();
+    }
+    /**
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
+     */
+
+    public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> getGrantsMap() {
+      return internalGetGrants().getMap();
+    }
+    /**
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
+     */
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrantsOrDefault(
+        java.lang.String key,
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> map =
+          internalGetGrants().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Key is that grant is objectId 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
+     */
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrantsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> map =
+          internalGetGrants().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
     }
 
     public static final int CLIENTID_FIELD_NUMBER = 2;
@@ -7722,9 +7820,12 @@ public final class MochiProtocol {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      for (int i = 0; i < grants_.size(); i++) {
-        output.writeMessage(1, grants_.get(i));
-      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetGrants(),
+          GrantsDefaultEntryHolder.defaultEntry,
+          1);
       if (!getClientIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, clientId_);
       }
@@ -7742,9 +7843,15 @@ public final class MochiProtocol {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < grants_.size(); i++) {
+      for (java.util.Map.Entry<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> entry
+           : internalGetGrants().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+        grants__ = GrantsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, grants_.get(i));
+            .computeMessageSize(1, grants__);
       }
       if (!getClientIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, clientId_);
@@ -7771,8 +7878,8 @@ public final class MochiProtocol {
       edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant) obj;
 
       boolean result = true;
-      result = result && getGrantsList()
-          .equals(other.getGrantsList());
+      result = result && internalGetGrants().equals(
+          other.internalGetGrants());
       result = result && getClientId()
           .equals(other.getClientId());
       result = result && getHash()
@@ -7790,9 +7897,9 @@ public final class MochiProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (getGrantsCount() > 0) {
+      if (!internalGetGrants().getMap().isEmpty()) {
         hash = (37 * hash) + GRANTS_FIELD_NUMBER;
-        hash = (53 * hash) + getGrantsList().hashCode();
+        hash = (53 * hash) + internalGetGrants().hashCode();
       }
       hash = (37 * hash) + CLIENTID_FIELD_NUMBER;
       hash = (53 * hash) + getClientId().hashCode();
@@ -7909,6 +8016,28 @@ public final class MochiProtocol {
         return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetGrants();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetMutableGrants();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_fieldAccessorTable
@@ -7929,17 +8058,11 @@ public final class MochiProtocol {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getGrantsFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        if (grantsBuilder_ == null) {
-          grants_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          grantsBuilder_.clear();
-        }
+        internalGetMutableGrants().clear();
         clientId_ = "";
 
         hash_ = "";
@@ -7970,15 +8093,8 @@ public final class MochiProtocol {
         edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        if (grantsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            grants_ = java.util.Collections.unmodifiableList(grants_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.grants_ = grants_;
-        } else {
-          result.grants_ = grantsBuilder_.build();
-        }
+        result.grants_ = internalGetGrants();
+        result.grants_.makeImmutable();
         result.clientId_ = clientId_;
         result.hash_ = hash_;
         result.serverId_ = serverId_;
@@ -8024,32 +8140,8 @@ public final class MochiProtocol {
 
       public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant other) {
         if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.getDefaultInstance()) return this;
-        if (grantsBuilder_ == null) {
-          if (!other.grants_.isEmpty()) {
-            if (grants_.isEmpty()) {
-              grants_ = other.grants_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureGrantsIsMutable();
-              grants_.addAll(other.grants_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.grants_.isEmpty()) {
-            if (grantsBuilder_.isEmpty()) {
-              grantsBuilder_.dispose();
-              grantsBuilder_ = null;
-              grants_ = other.grants_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              grantsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getGrantsFieldBuilder() : null;
-            } else {
-              grantsBuilder_.addAllMessages(other.grants_);
-            }
-          }
-        }
+        internalGetMutableGrants().mergeFrom(
+            other.internalGetGrants());
         if (!other.getClientId().isEmpty()) {
           clientId_ = other.clientId_;
           onChanged();
@@ -8090,244 +8182,155 @@ public final class MochiProtocol {
       }
       private int bitField0_;
 
-      private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> grants_ =
-        java.util.Collections.emptyList();
-      private void ensureGrantsIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          grants_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>(grants_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder> grantsBuilder_;
-
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> getGrantsList() {
-        if (grantsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(grants_);
-        } else {
-          return grantsBuilder_.getMessageList();
+      private com.google.protobuf.MapField<
+          java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> grants_;
+      private com.google.protobuf.MapField<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+      internalGetGrants() {
+        if (grants_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              GrantsDefaultEntryHolder.defaultEntry);
         }
+        return grants_;
       }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
+      private com.google.protobuf.MapField<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+      internalGetMutableGrants() {
+        onChanged();;
+        if (grants_ == null) {
+          grants_ = com.google.protobuf.MapField.newMapField(
+              GrantsDefaultEntryHolder.defaultEntry);
+        }
+        if (!grants_.isMutable()) {
+          grants_ = grants_.copy();
+        }
+        return grants_;
+      }
+
       public int getGrantsCount() {
-        if (grantsBuilder_ == null) {
-          return grants_.size();
-        } else {
-          return grantsBuilder_.getCount();
-        }
+        return internalGetGrants().getMap().size();
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrants(int index) {
-        if (grantsBuilder_ == null) {
-          return grants_.get(index);
-        } else {
-          return grantsBuilder_.getMessage(index);
-        }
+
+      public boolean containsGrants(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetGrants().getMap().containsKey(key);
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * Use {@link #getGrantsMap()} instead.
        */
-      public Builder setGrants(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant value) {
-        if (grantsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureGrantsIsMutable();
-          grants_.set(index, value);
-          onChanged();
-        } else {
-          grantsBuilder_.setMessage(index, value);
-        }
-        return this;
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> getGrants() {
+        return getGrantsMap();
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public Builder setGrants(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder builderForValue) {
-        if (grantsBuilder_ == null) {
-          ensureGrantsIsMutable();
-          grants_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          grantsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
+
+      public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> getGrantsMap() {
+        return internalGetGrants().getMap();
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public Builder addGrants(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant value) {
-        if (grantsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureGrantsIsMutable();
-          grants_.add(value);
-          onChanged();
-        } else {
-          grantsBuilder_.addMessage(value);
-        }
-        return this;
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrantsOrDefault(
+          java.lang.String key,
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> map =
+            internalGetGrants().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public Builder addGrants(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant value) {
-        if (grantsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureGrantsIsMutable();
-          grants_.add(index, value);
-          onChanged();
-        } else {
-          grantsBuilder_.addMessage(index, value);
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant getGrantsOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> map =
+            internalGetGrants().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
         }
-        return this;
+        return map.get(key);
       }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public Builder addGrants(
-          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder builderForValue) {
-        if (grantsBuilder_ == null) {
-          ensureGrantsIsMutable();
-          grants_.add(builderForValue.build());
-          onChanged();
-        } else {
-          grantsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public Builder addGrants(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder builderForValue) {
-        if (grantsBuilder_ == null) {
-          ensureGrantsIsMutable();
-          grants_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          grantsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public Builder addAllGrants(
-          java.lang.Iterable<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> values) {
-        if (grantsBuilder_ == null) {
-          ensureGrantsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, grants_);
-          onChanged();
-        } else {
-          grantsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
+
       public Builder clearGrants() {
-        if (grantsBuilder_ == null) {
-          grants_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          grantsBuilder_.clear();
-        }
+        internalGetMutableGrants().getMutableMap()
+            .clear();
         return this;
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public Builder removeGrants(int index) {
-        if (grantsBuilder_ == null) {
-          ensureGrantsIsMutable();
-          grants_.remove(index);
-          onChanged();
-        } else {
-          grantsBuilder_.remove(index);
-        }
+
+      public Builder removeGrants(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableGrants().getMutableMap()
+            .remove(key);
         return this;
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * Use alternate mutation accessors instead.
        */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder getGrantsBuilder(
-          int index) {
-        return getGrantsFieldBuilder().getBuilder(index);
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant>
+      getMutableGrants() {
+        return internalGetMutableGrants().getMutableMap();
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder getGrantsOrBuilder(
-          int index) {
-        if (grantsBuilder_ == null) {
-          return grants_.get(index);  } else {
-          return grantsBuilder_.getMessageOrBuilder(index);
-        }
+      public Builder putGrants(
+          java.lang.String key,
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableGrants().getMutableMap()
+            .put(key, value);
+        return this;
       }
       /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
+       * <pre>
+       * Key is that grant is objectId 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.Grant&gt; grants = 1;</code>
        */
-      public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder> 
-           getGrantsOrBuilderList() {
-        if (grantsBuilder_ != null) {
-          return grantsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(grants_);
-        }
-      }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder addGrantsBuilder() {
-        return getGrantsFieldBuilder().addBuilder(
-            edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder addGrantsBuilder(
-          int index) {
-        return getGrantsFieldBuilder().addBuilder(
-            index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants = 1;</code>
-       */
-      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder> 
-           getGrantsBuilderList() {
-        return getGrantsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder> 
-          getGrantsFieldBuilder() {
-        if (grantsBuilder_ == null) {
-          grantsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.GrantOrBuilder>(
-                  grants_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          grants_ = null;
-        }
-        return grantsBuilder_;
+
+      public Builder putAllGrants(
+          java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant> values) {
+        internalGetMutableGrants().getMutableMap()
+            .putAll(values);
+        return this;
       }
 
       private java.lang.Object clientId_ = "";
@@ -8665,7 +8668,7 @@ public final class MochiProtocol {
   }
   /**
    * <pre>
-   * Contains MultiGrant per each server which participated in that decision 
+   * Contains MultiGrant per each server which participated in that decision. Grants are signed 
    * </pre>
    *
    * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.WriteCertificate}
@@ -8998,7 +9001,7 @@ public final class MochiProtocol {
     }
     /**
      * <pre>
-     * Contains MultiGrant per each server which participated in that decision 
+     * Contains MultiGrant per each server which participated in that decision. Grants are signed 
      * </pre>
      *
      * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.WriteCertificate}
@@ -17385,6 +17388,11 @@ public final class MochiProtocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_GrantsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_GrantsEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -17475,60 +17483,63 @@ public final class MochiProtocol {
       ".TransactionResult\022\013\n\003rid\030\002 \001(\t\"X\n\005Grant" +
       "\022\020\n\010objectId\030\001 \001(\t\022\027\n\017operationNumber\030\002 " +
       "\001(\003\022\021\n\ttimestamp\030\003 \001(\003\022\021\n\tviewstamp\030\004 \001(" +
-      "\003\"\200\001\n\nMultiGrant\022@\n\006grants\030\001 \003(\01320.edu.s" +
+      "\003\"\362\001\n\nMultiGrant\022Q\n\006grants\030\001 \003(\0132A.edu.s" +
+      "tanford.cs244b.mochi.server.messages.Mul" +
+      "tiGrant.GrantsEntry\022\020\n\010clientId\030\002 \001(\t\022\014\n",
+      "\004hash\030\003 \001(\t\022\020\n\010serverId\030\004 \001(\t\032_\n\013GrantsE" +
+      "ntry\022\013\n\003key\030\001 \001(\t\022?\n\005value\030\002 \001(\01320.edu.s" +
       "tanford.cs244b.mochi.server.messages.Gra" +
-      "nt\022\020\n\010clientId\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t\022\020\n\010se",
-      "rverId\030\004 \001(\t\"\321\001\n\020WriteCertificate\022W\n\006gra" +
-      "nts\030\001 \003(\0132G.edu.stanford.cs244b.mochi.se" +
-      "rver.messages.WriteCertificate.GrantsEnt" +
-      "ry\032d\n\013GrantsEntry\022\013\n\003key\030\001 \001(\t\022D\n\005value\030" +
-      "\002 \001(\01325.edu.stanford.cs244b.mochi.server" +
-      ".messages.MultiGrant:\0028\001\"\355\002\n\022Write1OkFro" +
-      "mServer\022I\n\nmultiGrant\030\001 \001(\01325.edu.stanfo" +
-      "rd.cs244b.mochi.server.messages.MultiGra" +
-      "nt\022s\n\023currentCertificates\030\002 \003(\0132V.edu.st" +
-      "anford.cs244b.mochi.server.messages.Writ",
-      "e1OkFromServer.CurrentCertificatesEntry\022" +
-      "\020\n\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t\032w\n\030Curre" +
-      "ntCertificatesEntry\022\013\n\003key\030\001 \001(\t\022J\n\005valu" +
-      "e\030\002 \001(\0132;.edu.stanford.cs244b.mochi.serv" +
-      "er.messages.WriteCertificate:\0028\001\"g\n\016Writ" +
-      "e2ToServer\022U\n\020writeCertificate\030\001 \001(\0132;.e" +
-      "du.stanford.cs244b.mochi.server.messages" +
-      ".WriteCertificate\"\031\n\027Write1RefusedFromSe" +
-      "rver\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"\035\n\016He" +
-      "lloToServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFromSe",
-      "rver\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020" +
-      "HelloFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientM" +
-      "sg\030\002 \001(\t\"\264\010\n\017ProtocolMessage\022Q\n\rhelloToS" +
-      "erver\030e \001(\01328.edu.stanford.cs244b.mochi." +
-      "server.messages.HelloToServerH\000\022U\n\017hello" +
-      "FromServer\030f \001(\0132:.edu.stanford.cs244b.m" +
-      "ochi.server.messages.HelloFromServerH\000\022S" +
-      "\n\016helloToServer2\030g \001(\01329.edu.stanford.cs" +
-      "244b.mochi.server.messages.HelloToServer" +
-      "2H\000\022W\n\020helloFromServer2\030h \001(\0132;.edu.stan",
-      "ford.cs244b.mochi.server.messages.HelloF" +
-      "romServer2H\000\022O\n\014readToServer\030i \001(\01327.edu" +
-      ".stanford.cs244b.mochi.server.messages.R" +
-      "eadToServerH\000\022S\n\016readFromServer\030j \001(\01329." +
+      "nt:\0028\001\"\321\001\n\020WriteCertificate\022W\n\006grants\030\001 " +
+      "\003(\0132G.edu.stanford.cs244b.mochi.server.m" +
+      "essages.WriteCertificate.GrantsEntry\032d\n\013" +
+      "GrantsEntry\022\013\n\003key\030\001 \001(\t\022D\n\005value\030\002 \001(\0132" +
+      "5.edu.stanford.cs244b.mochi.server.messa" +
+      "ges.MultiGrant:\0028\001\"\355\002\n\022Write1OkFromServe" +
+      "r\022I\n\nmultiGrant\030\001 \001(\01325.edu.stanford.cs2",
+      "44b.mochi.server.messages.MultiGrant\022s\n\023" +
+      "currentCertificates\030\002 \003(\0132V.edu.stanford" +
+      ".cs244b.mochi.server.messages.Write1OkFr" +
+      "omServer.CurrentCertificatesEntry\022\020\n\010cli" +
+      "entId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t\032w\n\030CurrentCert" +
+      "ificatesEntry\022\013\n\003key\030\001 \001(\t\022J\n\005value\030\002 \001(" +
+      "\0132;.edu.stanford.cs244b.mochi.server.mes" +
+      "sages.WriteCertificate:\0028\001\"g\n\016Write2ToSe" +
+      "rver\022U\n\020writeCertificate\030\001 \001(\0132;.edu.sta" +
+      "nford.cs244b.mochi.server.messages.Write",
+      "Certificate\"\031\n\027Write1RefusedFromServer\"\034" +
+      "\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToS" +
+      "erver2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFromServer\022\013" +
+      "\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020HelloF" +
+      "romServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001" +
+      "(\t\"\264\010\n\017ProtocolMessage\022Q\n\rhelloToServer\030" +
+      "e \001(\01328.edu.stanford.cs244b.mochi.server" +
+      ".messages.HelloToServerH\000\022U\n\017helloFromSe" +
+      "rver\030f \001(\0132:.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.HelloFromServerH\000\022S\n\016hell",
+      "oToServer2\030g \001(\01329.edu.stanford.cs244b.m" +
+      "ochi.server.messages.HelloToServer2H\000\022W\n" +
+      "\020helloFromServer2\030h \001(\0132;.edu.stanford.c" +
+      "s244b.mochi.server.messages.HelloFromSer" +
+      "ver2H\000\022O\n\014readToServer\030i \001(\01327.edu.stanf" +
+      "ord.cs244b.mochi.server.messages.ReadToS" +
+      "erverH\000\022S\n\016readFromServer\030j \001(\01329.edu.st" +
+      "anford.cs244b.mochi.server.messages.Read" +
+      "FromServerH\000\022S\n\016write1ToServer\030k \001(\01329.e" +
+      "du.stanford.cs244b.mochi.server.messages",
+      ".Write1ToServerH\000\022[\n\022write1OkFromServer\030" +
+      "l \001(\0132=.edu.stanford.cs244b.mochi.server" +
+      ".messages.Write1OkFromServerH\000\022e\n\027write1" +
+      "RefusedFromServer\030m \001(\0132B.edu.stanford.c" +
+      "s244b.mochi.server.messages.Write1Refuse" +
+      "dFromServerH\000\022S\n\016write2ToServer\030n \001(\01329." +
       "edu.stanford.cs244b.mochi.server.message" +
-      "s.ReadFromServerH\000\022S\n\016write1ToServer\030k \001" +
-      "(\01329.edu.stanford.cs244b.mochi.server.me" +
-      "ssages.Write1ToServerH\000\022[\n\022write1OkFromS" +
-      "erver\030l \001(\0132=.edu.stanford.cs244b.mochi." +
-      "server.messages.Write1OkFromServerH\000\022e\n\027",
-      "write1RefusedFromServer\030m \001(\0132B.edu.stan" +
-      "ford.cs244b.mochi.server.messages.Write1" +
-      "RefusedFromServerH\000\022S\n\016write2ToServer\030n " +
-      "\001(\01329.edu.stanford.cs244b.mochi.server.m" +
-      "essages.Write2ToServerH\000\022]\n\023write2AnsFro" +
-      "mServer\030o \001(\0132>.edu.stanford.cs244b.moch" +
-      "i.server.messages.Write2AnsFromServerH\000\022" +
-      "\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010serverId\030\006 \001(\t\022" +
-      "\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(\tB\t\n\007" +
-      "payload*2\n\017OperationAction\022\010\n\004READ\020\000\022\n\n\006",
-      "DELETE\020\001\022\t\n\005WRITE\020\002B\002H\001b\006proto3"
+      "s.Write2ToServerH\000\022]\n\023write2AnsFromServe" +
+      "r\030o \001(\0132>.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.Write2AnsFromServerH\000\022\024\n\014msg",
+      "Timestamp\030\005 \001(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msg" +
+      "Id\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(\tB\t\n\007payloa" +
+      "d*2\n\017OperationAction\022\010\n\004READ\020\000\022\n\n\006DELETE" +
+      "\020\001\022\t\n\005WRITE\020\002B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -17602,6 +17613,12 @@ public final class MochiProtocol {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_descriptor,
         new java.lang.String[] { "Grants", "ClientId", "Hash", "ServerId", });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_GrantsEntry_descriptor =
+      internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_descriptor.getNestedTypes().get(0);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_GrantsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_GrantsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_edu_stanford_cs244b_mochi_server_messages_WriteCertificate_fieldAccessorTable = new

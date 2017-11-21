@@ -1,23 +1,28 @@
 package edu.stanford.cs244b.mochi.server.datastrore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
 
 public class StoreValueObjectContainer<T> {
 
+    // Key to which that object belongs
     private final String key;
+    // Value if any
     private volatile T value;
+    // For removed and newly created objects `valueAvailble` is false
     private volatile boolean valueAvailble;
+    // How current object happen to be the way it is.
     private volatile WriteCertificate currentC;
+    // Grant on that object if any
     private volatile Grant grantTimestamp;
 
     // TODO: change to Write-1 ??
@@ -95,29 +100,23 @@ public class StoreValueObjectContainer<T> {
 
     public Grant getMultiGrantElementFromWriteCertificate() {
         if (currentC == null) {
+            // if object was just created
             return null;
         }
-        final List<WriteGrant> writeGrants = currentC.getWriteGrantsList();
+        final Map<String, MultiGrant> writeGrants = currentC.getGrantsMap();
         if (writeGrants.size() == 0) {
             throw new IllegalStateException("Write certificate should contain at least one write grant");
         }
         // Note: Write grants should be identical
-        final WriteGrant anyWriteGrant = writeGrants.get(0);
-        final List<MultiGrantCertificateElement> listOfMultiGrantElements = anyWriteGrant.getMultiGrantOListList();
-        if (listOfMultiGrantElements.size() == 0) {
-            throw new IllegalStateException("listOfMultiGrantElements is 0");
+        final Collection<MultiGrant> allGrants = writeGrants.values();
+
+        MultiGrant anyWriteGrant = null;
+        for (MultiGrant mg : allGrants) {
+            anyWriteGrant = mg;
+            break;
         }
-        for (final MultiGrantCertificateElement mgce : listOfMultiGrantElements) {
-            final Grant mge = mgce.getMultiGrantElement();
-            if (mge == null) {
-                throw new IllegalStateException(String.format(
-                        "MultiGrantElement is empty for MultiGrantCertificateElement: %s", mgce));
-            }
-            if (mge.getObjectId().equals(this.key)) {
-                return mge;
-            }
-        }
-        return null;
+        final Grant grant = anyWriteGrant.getGrantsMap().get(this.key);
+        return grant;
     }
 
     public void setCurrentC(WriteCertificate currentC) {

@@ -93,14 +93,15 @@ message Grant {
 
 /* Phase 1, server replies with MultiGrant, which is signed and contains grants */
 message MultiGrant {
-    repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants =  1;
+    /* Key is that grant is objectId */
+    map<string, Grant> grants =  1;
     string clientId = 2; // cid
     string hash = 3;
     string serverId = 4;
     // TODO: add signature
 }
 
-/* Contains MultiGrant per each server which participated in that decision */
+/* Contains MultiGrant per each server which participated in that decision. Grants are signed */
 message WriteCertificate {
     map<string, MultiGrant> grants =  1;
 }
