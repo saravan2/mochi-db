@@ -299,6 +299,10 @@ public class InMemoryDataStore implements DataStore {
         }
     }
 
+    private void write2apply() {
+
+    }
+
     @Override
     public Object processWrite2ToServer(Write2ToServer write2ToServer) {
 
@@ -307,7 +311,13 @@ public class InMemoryDataStore implements DataStore {
 
         final List<WriteGrant> writeGrants = wc.getWriteGrantsList();
         try {
-            write2acquireLocksAndCheckViewStamps(writeGrants);
+            final List<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(writeGrants);
+            if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
+                // TODO: do data loading from remotes
+                throw new UnsupportedOperationException();
+            }
+            LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");
+            write2apply();
 
         } catch (Exception ex) {
             LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
