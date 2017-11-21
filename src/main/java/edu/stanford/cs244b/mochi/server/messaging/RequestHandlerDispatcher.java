@@ -18,6 +18,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
 
 public class RequestHandlerDispatcher {
     private final static Logger LOG = LoggerFactory.getLogger(RequestHandlerDispatcher.class);
@@ -51,6 +52,9 @@ public class RequestHandlerDispatcher {
         } else if (pc == PayloadCase.WRITE1TOSERVER) {
             wrapIntoRunnableAndSubmitTask(ctx, protocolMessage, protocolMessage.getWrite1ToServer(),
                     Write1ToServer.class);
+        } else if (pc == PayloadCase.WRITE2TOSERVER) {
+            wrapIntoRunnableAndSubmitTask(ctx, protocolMessage, protocolMessage.getWrite2ToServer(),
+                    Write2ToServer.class);
         } else {
             LOG.error("Did not find message handler for message: {}", protocolMessage);
         }
@@ -60,6 +64,9 @@ public class RequestHandlerDispatcher {
             final ProtocolMessage protocolMessage, final T message, final Class<T> typeParameterClass) {
         final ServerRequestHandler<T> handler = getHandler(typeParameterClass);
         LOG.debug("Processing {} using handler {}", typeParameterClass, handler);
+        if (handler == null) {
+            throw new IllegalStateException(String.format("Cannot find handler for %s", typeParameterClass.getClass()));
+        }
 
         final Runnable taskHandling = new Runnable() {
 

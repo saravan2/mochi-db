@@ -10638,44 +10638,25 @@ public final class MochiProtocol {
      * &lt;oid, op#, ts&gt; + vs
      * </pre>
      *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
      */
-    java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> 
-        getMultiGrantOListList();
+    boolean hasWriteGrant();
     /**
      * <pre>
      * &lt;oid, op#, ts&gt; + vs
      * </pre>
      *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
      */
-    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement getMultiGrantOList(int index);
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getWriteGrant();
     /**
      * <pre>
      * &lt;oid, op#, ts&gt; + vs
      * </pre>
      *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
      */
-    int getMultiGrantOListCount();
-    /**
-     * <pre>
-     * &lt;oid, op#, ts&gt; + vs
-     * </pre>
-     *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-     */
-    java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
-        getMultiGrantOListOrBuilderList();
-    /**
-     * <pre>
-     * &lt;oid, op#, ts&gt; + vs
-     * </pre>
-     *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-     */
-    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder getMultiGrantOListOrBuilder(
-        int index);
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder getWriteGrantOrBuilder();
 
     /**
      * <pre>
@@ -10723,7 +10704,6 @@ public final class MochiProtocol {
       super(builder);
     }
     private Write1OkFromServer() {
-      multiGrantOList_ = java.util.Collections.emptyList();
       clientId_ = "";
       hash_ = "";
     }
@@ -10757,12 +10737,16 @@ public final class MochiProtocol {
               break;
             }
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                multiGrantOList_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement>();
-                mutable_bitField0_ |= 0x00000001;
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder subBuilder = null;
+              if (writeGrant_ != null) {
+                subBuilder = writeGrant_.toBuilder();
               }
-              multiGrantOList_.add(
-                  input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.parser(), extensionRegistry));
+              writeGrant_ = input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(writeGrant_);
+                writeGrant_ = subBuilder.buildPartial();
+              }
+
               break;
             }
             case 18: {
@@ -10785,9 +10769,6 @@ public final class MochiProtocol {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          multiGrantOList_ = java.util.Collections.unmodifiableList(multiGrantOList_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -10804,60 +10785,37 @@ public final class MochiProtocol {
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.Builder.class);
     }
 
-    private int bitField0_;
-    public static final int MULTIGRANTOLIST_FIELD_NUMBER = 1;
-    private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> multiGrantOList_;
+    public static final int WRITEGRANT_FIELD_NUMBER = 1;
+    private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant writeGrant_;
     /**
      * <pre>
      * &lt;oid, op#, ts&gt; + vs
      * </pre>
      *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
      */
-    public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> getMultiGrantOListList() {
-      return multiGrantOList_;
+    public boolean hasWriteGrant() {
+      return writeGrant_ != null;
     }
     /**
      * <pre>
      * &lt;oid, op#, ts&gt; + vs
      * </pre>
      *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
      */
-    public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
-        getMultiGrantOListOrBuilderList() {
-      return multiGrantOList_;
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getWriteGrant() {
+      return writeGrant_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance() : writeGrant_;
     }
     /**
      * <pre>
      * &lt;oid, op#, ts&gt; + vs
      * </pre>
      *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+     * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
      */
-    public int getMultiGrantOListCount() {
-      return multiGrantOList_.size();
-    }
-    /**
-     * <pre>
-     * &lt;oid, op#, ts&gt; + vs
-     * </pre>
-     *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-     */
-    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement getMultiGrantOList(int index) {
-      return multiGrantOList_.get(index);
-    }
-    /**
-     * <pre>
-     * &lt;oid, op#, ts&gt; + vs
-     * </pre>
-     *
-     * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-     */
-    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder getMultiGrantOListOrBuilder(
-        int index) {
-      return multiGrantOList_.get(index);
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder getWriteGrantOrBuilder() {
+      return getWriteGrant();
     }
 
     public static final int CLIENTID_FIELD_NUMBER = 2;
@@ -10948,8 +10906,8 @@ public final class MochiProtocol {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      for (int i = 0; i < multiGrantOList_.size(); i++) {
-        output.writeMessage(1, multiGrantOList_.get(i));
+      if (writeGrant_ != null) {
+        output.writeMessage(1, getWriteGrant());
       }
       if (!getClientIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, clientId_);
@@ -10965,9 +10923,9 @@ public final class MochiProtocol {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < multiGrantOList_.size(); i++) {
+      if (writeGrant_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, multiGrantOList_.get(i));
+          .computeMessageSize(1, getWriteGrant());
       }
       if (!getClientIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, clientId_);
@@ -10991,8 +10949,11 @@ public final class MochiProtocol {
       edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer) obj;
 
       boolean result = true;
-      result = result && getMultiGrantOListList()
-          .equals(other.getMultiGrantOListList());
+      result = result && (hasWriteGrant() == other.hasWriteGrant());
+      if (hasWriteGrant()) {
+        result = result && getWriteGrant()
+            .equals(other.getWriteGrant());
+      }
       result = result && getClientId()
           .equals(other.getClientId());
       result = result && getHash()
@@ -11008,9 +10969,9 @@ public final class MochiProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (getMultiGrantOListCount() > 0) {
-        hash = (37 * hash) + MULTIGRANTOLIST_FIELD_NUMBER;
-        hash = (53 * hash) + getMultiGrantOListList().hashCode();
+      if (hasWriteGrant()) {
+        hash = (37 * hash) + WRITEGRANT_FIELD_NUMBER;
+        hash = (53 * hash) + getWriteGrant().hashCode();
       }
       hash = (37 * hash) + CLIENTID_FIELD_NUMBER;
       hash = (53 * hash) + getClientId().hashCode();
@@ -11146,16 +11107,15 @@ public final class MochiProtocol {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getMultiGrantOListFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        if (multiGrantOListBuilder_ == null) {
-          multiGrantOList_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+        if (writeGrantBuilder_ == null) {
+          writeGrant_ = null;
         } else {
-          multiGrantOListBuilder_.clear();
+          writeGrant_ = null;
+          writeGrantBuilder_ = null;
         }
         clientId_ = "";
 
@@ -11183,20 +11143,13 @@ public final class MochiProtocol {
 
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer buildPartial() {
         edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (multiGrantOListBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            multiGrantOList_ = java.util.Collections.unmodifiableList(multiGrantOList_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.multiGrantOList_ = multiGrantOList_;
+        if (writeGrantBuilder_ == null) {
+          result.writeGrant_ = writeGrant_;
         } else {
-          result.multiGrantOList_ = multiGrantOListBuilder_.build();
+          result.writeGrant_ = writeGrantBuilder_.build();
         }
         result.clientId_ = clientId_;
         result.hash_ = hash_;
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -11238,31 +11191,8 @@ public final class MochiProtocol {
 
       public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer other) {
         if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer.getDefaultInstance()) return this;
-        if (multiGrantOListBuilder_ == null) {
-          if (!other.multiGrantOList_.isEmpty()) {
-            if (multiGrantOList_.isEmpty()) {
-              multiGrantOList_ = other.multiGrantOList_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureMultiGrantOListIsMutable();
-              multiGrantOList_.addAll(other.multiGrantOList_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.multiGrantOList_.isEmpty()) {
-            if (multiGrantOListBuilder_.isEmpty()) {
-              multiGrantOListBuilder_.dispose();
-              multiGrantOListBuilder_ = null;
-              multiGrantOList_ = other.multiGrantOList_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              multiGrantOListBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getMultiGrantOListFieldBuilder() : null;
-            } else {
-              multiGrantOListBuilder_.addAllMessages(other.multiGrantOList_);
-            }
-          }
+        if (other.hasWriteGrant()) {
+          mergeWriteGrant(other.getWriteGrant());
         }
         if (!other.getClientId().isEmpty()) {
           clientId_ = other.clientId_;
@@ -11298,32 +11228,32 @@ public final class MochiProtocol {
         }
         return this;
       }
-      private int bitField0_;
 
-      private java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> multiGrantOList_ =
-        java.util.Collections.emptyList();
-      private void ensureMultiGrantOListIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          multiGrantOList_ = new java.util.ArrayList<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement>(multiGrantOList_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> multiGrantOListBuilder_;
-
+      private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant writeGrant_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> writeGrantBuilder_;
       /**
        * <pre>
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> getMultiGrantOListList() {
-        if (multiGrantOListBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(multiGrantOList_);
+      public boolean hasWriteGrant() {
+        return writeGrantBuilder_ != null || writeGrant_ != null;
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant getWriteGrant() {
+        if (writeGrantBuilder_ == null) {
+          return writeGrant_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance() : writeGrant_;
         } else {
-          return multiGrantOListBuilder_.getMessageList();
+          return writeGrantBuilder_.getMessage();
         }
       }
       /**
@@ -11331,48 +11261,19 @@ public final class MochiProtocol {
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public int getMultiGrantOListCount() {
-        if (multiGrantOListBuilder_ == null) {
-          return multiGrantOList_.size();
-        } else {
-          return multiGrantOListBuilder_.getCount();
-        }
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement getMultiGrantOList(int index) {
-        if (multiGrantOListBuilder_ == null) {
-          return multiGrantOList_.get(index);
-        } else {
-          return multiGrantOListBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public Builder setMultiGrantOList(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement value) {
-        if (multiGrantOListBuilder_ == null) {
+      public Builder setWriteGrant(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant value) {
+        if (writeGrantBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.set(index, value);
+          writeGrant_ = value;
           onChanged();
         } else {
-          multiGrantOListBuilder_.setMessage(index, value);
+          writeGrantBuilder_.setMessage(value);
         }
+
         return this;
       }
       /**
@@ -11380,17 +11281,17 @@ public final class MochiProtocol {
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public Builder setMultiGrantOList(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder builderForValue) {
-        if (multiGrantOListBuilder_ == null) {
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.set(index, builderForValue.build());
+      public Builder setWriteGrant(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder builderForValue) {
+        if (writeGrantBuilder_ == null) {
+          writeGrant_ = builderForValue.build();
           onChanged();
         } else {
-          multiGrantOListBuilder_.setMessage(index, builderForValue.build());
+          writeGrantBuilder_.setMessage(builderForValue.build());
         }
+
         return this;
       }
       /**
@@ -11398,19 +11299,21 @@ public final class MochiProtocol {
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public Builder addMultiGrantOList(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement value) {
-        if (multiGrantOListBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+      public Builder mergeWriteGrant(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant value) {
+        if (writeGrantBuilder_ == null) {
+          if (writeGrant_ != null) {
+            writeGrant_ =
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.newBuilder(writeGrant_).mergeFrom(value).buildPartial();
+          } else {
+            writeGrant_ = value;
           }
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.add(value);
           onChanged();
         } else {
-          multiGrantOListBuilder_.addMessage(value);
+          writeGrantBuilder_.mergeFrom(value);
         }
+
         return this;
       }
       /**
@@ -11418,20 +11321,17 @@ public final class MochiProtocol {
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public Builder addMultiGrantOList(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement value) {
-        if (multiGrantOListBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.add(index, value);
+      public Builder clearWriteGrant() {
+        if (writeGrantBuilder_ == null) {
+          writeGrant_ = null;
           onChanged();
         } else {
-          multiGrantOListBuilder_.addMessage(index, value);
+          writeGrant_ = null;
+          writeGrantBuilder_ = null;
         }
+
         return this;
       }
       /**
@@ -11439,113 +11339,26 @@ public final class MochiProtocol {
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public Builder addMultiGrantOList(
-          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder builderForValue) {
-        if (multiGrantOListBuilder_ == null) {
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.add(builderForValue.build());
-          onChanged();
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder getWriteGrantBuilder() {
+        
+        onChanged();
+        return getWriteGrantFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder getWriteGrantOrBuilder() {
+        if (writeGrantBuilder_ != null) {
+          return writeGrantBuilder_.getMessageOrBuilder();
         } else {
-          multiGrantOListBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public Builder addMultiGrantOList(
-          int index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder builderForValue) {
-        if (multiGrantOListBuilder_ == null) {
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          multiGrantOListBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public Builder addAllMultiGrantOList(
-          java.lang.Iterable<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement> values) {
-        if (multiGrantOListBuilder_ == null) {
-          ensureMultiGrantOListIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, multiGrantOList_);
-          onChanged();
-        } else {
-          multiGrantOListBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public Builder clearMultiGrantOList() {
-        if (multiGrantOListBuilder_ == null) {
-          multiGrantOList_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          multiGrantOListBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public Builder removeMultiGrantOList(int index) {
-        if (multiGrantOListBuilder_ == null) {
-          ensureMultiGrantOListIsMutable();
-          multiGrantOList_.remove(index);
-          onChanged();
-        } else {
-          multiGrantOListBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder getMultiGrantOListBuilder(
-          int index) {
-        return getMultiGrantOListFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder getMultiGrantOListOrBuilder(
-          int index) {
-        if (multiGrantOListBuilder_ == null) {
-          return multiGrantOList_.get(index);  } else {
-          return multiGrantOListBuilder_.getMessageOrBuilder(index);
+          return writeGrant_ == null ?
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.getDefaultInstance() : writeGrant_;
         }
       }
       /**
@@ -11553,63 +11366,20 @@ public final class MochiProtocol {
        * &lt;oid, op#, ts&gt; + vs
        * </pre>
        *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
+       * <code>.edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrant = 1;</code>
        */
-      public java.util.List<? extends edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
-           getMultiGrantOListOrBuilderList() {
-        if (multiGrantOListBuilder_ != null) {
-          return multiGrantOListBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(multiGrantOList_);
-        }
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder addMultiGrantOListBuilder() {
-        return getMultiGrantOListFieldBuilder().addBuilder(
-            edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder addMultiGrantOListBuilder(
-          int index) {
-        return getMultiGrantOListFieldBuilder().addBuilder(
-            index, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * &lt;oid, op#, ts&gt; + vs
-       * </pre>
-       *
-       * <code>repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList = 1;</code>
-       */
-      public java.util.List<edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder> 
-           getMultiGrantOListBuilderList() {
-        return getMultiGrantOListFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder> 
-          getMultiGrantOListFieldBuilder() {
-        if (multiGrantOListBuilder_ == null) {
-          multiGrantOListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElementOrBuilder>(
-                  multiGrantOList_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder> 
+          getWriteGrantFieldBuilder() {
+        if (writeGrantBuilder_ == null) {
+          writeGrantBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrantOrBuilder>(
+                  getWriteGrant(),
                   getParentForChildren(),
                   isClean());
-          multiGrantOList_ = null;
+          writeGrant_ = null;
         }
-        return multiGrantOListBuilder_;
+        return writeGrantBuilder_;
       }
 
       private java.lang.Object clientId_ = "";
@@ -18051,44 +17821,44 @@ public final class MochiProtocol {
       "t\030\001 \001(\0132<.edu.stanford.cs244b.mochi.serv" +
       "er.messages.MultiGrantElement\022N\n\010current" +
       "C\030\002 \001(\0132<.edu.stanford.cs244b.mochi.serv",
-      "er.messages.ObjectCertificate\"\226\001\n\022Write1" +
-      "OkFromServer\022`\n\017multiGrantOList\030\001 \003(\0132G." +
+      "er.messages.ObjectCertificate\"\177\n\022Write1O" +
+      "kFromServer\022I\n\nwriteGrant\030\001 \001(\01325.edu.st" +
+      "anford.cs244b.mochi.server.messages.Writ" +
+      "eGrant\022\020\n\010clientId\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t\"\031" +
+      "\n\027Write1RefusedFromServer\"\034\n\rHelloToServ" +
+      "er\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003msg" +
+      "\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n\003msg\030\001 \001(\t\022\021" +
+      "\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFromServer2\022\013\n" +
+      "\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"\264\010\n\017Protoc" +
+      "olMessage\022Q\n\rhelloToServer\030e \001(\01328.edu.s",
+      "tanford.cs244b.mochi.server.messages.Hel" +
+      "loToServerH\000\022U\n\017helloFromServer\030f \001(\0132:." +
       "edu.stanford.cs244b.mochi.server.message" +
-      "s.MultiGrantCertificateElement\022\020\n\010client" +
-      "Id\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t\"\031\n\027Write1RefusedF" +
-      "romServer\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"" +
-      "\035\n\016HelloToServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloF" +
-      "romServer\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(" +
-      "\t\"2\n\020HelloFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tcl" +
-      "ientMsg\030\002 \001(\t\"\264\010\n\017ProtocolMessage\022Q\n\rhel",
-      "loToServer\030e \001(\01328.edu.stanford.cs244b.m" +
-      "ochi.server.messages.HelloToServerH\000\022U\n\017" +
-      "helloFromServer\030f \001(\0132:.edu.stanford.cs2" +
-      "44b.mochi.server.messages.HelloFromServe" +
-      "rH\000\022S\n\016helloToServer2\030g \001(\01329.edu.stanfo" +
-      "rd.cs244b.mochi.server.messages.HelloToS" +
-      "erver2H\000\022W\n\020helloFromServer2\030h \001(\0132;.edu" +
-      ".stanford.cs244b.mochi.server.messages.H" +
-      "elloFromServer2H\000\022O\n\014readToServer\030i \001(\0132" +
-      "7.edu.stanford.cs244b.mochi.server.messa",
-      "ges.ReadToServerH\000\022S\n\016readFromServer\030j \001" +
-      "(\01329.edu.stanford.cs244b.mochi.server.me" +
-      "ssages.ReadFromServerH\000\022S\n\016write1ToServe" +
-      "r\030k \001(\01329.edu.stanford.cs244b.mochi.serv" +
-      "er.messages.Write1ToServerH\000\022[\n\022write1Ok" +
-      "FromServer\030l \001(\0132=.edu.stanford.cs244b.m" +
-      "ochi.server.messages.Write1OkFromServerH" +
-      "\000\022e\n\027write1RefusedFromServer\030m \001(\0132B.edu" +
+      "s.HelloFromServerH\000\022S\n\016helloToServer2\030g " +
+      "\001(\01329.edu.stanford.cs244b.mochi.server.m" +
+      "essages.HelloToServer2H\000\022W\n\020helloFromSer" +
+      "ver2\030h \001(\0132;.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.HelloFromServer2H\000\022O\n\014rea" +
+      "dToServer\030i \001(\01327.edu.stanford.cs244b.mo" +
+      "chi.server.messages.ReadToServerH\000\022S\n\016re",
+      "adFromServer\030j \001(\01329.edu.stanford.cs244b" +
+      ".mochi.server.messages.ReadFromServerH\000\022" +
+      "S\n\016write1ToServer\030k \001(\01329.edu.stanford.c" +
+      "s244b.mochi.server.messages.Write1ToServ" +
+      "erH\000\022[\n\022write1OkFromServer\030l \001(\0132=.edu.s" +
+      "tanford.cs244b.mochi.server.messages.Wri" +
+      "te1OkFromServerH\000\022e\n\027write1RefusedFromSe" +
+      "rver\030m \001(\0132B.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.Write1RefusedFromServerH\000" +
+      "\022S\n\016write2ToServer\030n \001(\01329.edu.stanford.",
+      "cs244b.mochi.server.messages.Write2ToSer" +
+      "verH\000\022]\n\023write2AnsFromServer\030o \001(\0132>.edu" +
       ".stanford.cs244b.mochi.server.messages.W" +
-      "rite1RefusedFromServerH\000\022S\n\016write2ToServ",
-      "er\030n \001(\01329.edu.stanford.cs244b.mochi.ser" +
-      "ver.messages.Write2ToServerH\000\022]\n\023write2A" +
-      "nsFromServer\030o \001(\0132>.edu.stanford.cs244b" +
-      ".mochi.server.messages.Write2AnsFromServ" +
-      "erH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010serverId\030\006" +
-      " \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(" +
-      "\tB\t\n\007payload*2\n\017OperationAction\022\010\n\004READ\020" +
-      "\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002B\002H\001b\006proto3"
+      "rite2AnsFromServerH\000\022\024\n\014msgTimestamp\030\005 \001" +
+      "(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014r" +
+      "eplyToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017Operatio" +
+      "nAction\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002" +
+      "B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18191,7 +17961,7 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1OkFromServer_descriptor,
-        new java.lang.String[] { "MultiGrantOList", "ClientId", "Hash", });
+        new java.lang.String[] { "WriteGrant", "ClientId", "Hash", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor =
       getDescriptor().getMessageTypes().get(15);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable = new

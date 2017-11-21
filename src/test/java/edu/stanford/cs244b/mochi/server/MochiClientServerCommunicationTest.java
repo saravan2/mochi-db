@@ -18,6 +18,10 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -191,8 +195,13 @@ public class MochiClientServerCommunicationTest {
         MochiServer ms1 = newMochiServer(serverPort1);
         ms1.start();
 
+        final int serverPort2 = 8002;
+        MochiServer ms2 = newMochiServer(serverPort2);
+        ms2.start();
+
         final MochiMessaging mm = new MochiMessaging();
         mm.waitForConnectionToBeEstablished(ms1.toServer());
+        mm.waitForConnectionToBeEstablished(ms2.toServer());
 
         final Write1ToServer.Builder builder = Write1ToServer.newBuilder();
         builder.setClientId(Utils.getUUID());
@@ -208,13 +217,50 @@ public class MochiClientServerCommunicationTest {
 
         // Step 1
         builder.setTransaction(tBuilder);
-        Future<ProtocolMessage> writeResponseFuture = mm.sendAndReceive(ms1.toServer(), builder);
-        ProtocolMessage write1responsePM = writeResponseFuture.get();
-        Write1OkFromServer writeOkFromServer = write1responsePM.getWrite1OkFromServer();
-        Assert.assertNotNull(writeOkFromServer);
+        final Future<ProtocolMessage> writeResponseFutureServer1 = mm.sendAndReceive(ms1.toServer(), builder);
+        final Future<ProtocolMessage> writeResponseFutureServer2 = mm.sendAndReceive(ms2.toServer(), builder);
+
+        ProtocolMessage write1responsePMFromServer1 = writeResponseFutureServer1.get();
+        ProtocolMessage write1responsePMFromServer2 = writeResponseFutureServer2.get();
+
+        Write1OkFromServer writeOkFromServer1 = write1responsePMFromServer1.getWrite1OkFromServer();
+        Assert.assertNotNull(writeOkFromServer1);
+
+        Write1OkFromServer writeOkFromServer2 = write1responsePMFromServer2.getWrite1OkFromServer();
+        Assert.assertNotNull(writeOkFromServer2);
+
+        final WriteGrant server1WriteGrant = writeOkFromServer1.getWriteGrant();
+        final WriteGrant server2WriteGrant = writeOkFromServer2.getWriteGrant();
+        Assert.assertNotNull(server1WriteGrant);
+        Assert.assertNotNull(server2WriteGrant);
+        LOG.info("Got write gratns from both servers. Progressing to step 2: server1 {}. server2 {}",
+                server1WriteGrant, server2WriteGrant);
 
         // Step 2:
+        
+        final WriteCertificate.Builder wcb = WriteCertificate.newBuilder();
+        
+        wcb.addWriteGrants(server1WriteGrant);
+        wcb.addWriteGrants(server2WriteGrant);
+        
+        final Write2ToServer.Builder write2ToServerBuilder = Write2ToServer.newBuilder();
+        write2ToServerBuilder.setWriteCertificate(wcb);
 
+        final Future<ProtocolMessage> write2ResponseFutureServer1 = mm.sendAndReceive(ms1.toServer(),
+                write2ToServerBuilder);
+        final Future<ProtocolMessage> write2ResponseFutureServer2 = mm.sendAndReceive(ms2.toServer(),
+                write2ToServerBuilder);
+        ProtocolMessage write2responsePMFromServer1 = write2ResponseFutureServer1.get();
+        ProtocolMessage write2responsePMFromServer2 = write2ResponseFutureServer2.get();
+        Assert.assertNotNull(write2responsePMFromServer1);
+        Assert.assertNotNull(write2responsePMFromServer2);
+
+        final Write2AnsFromServer write2AnsFromServer1 = write2responsePMFromServer1.getWrite2AnsFromServer();
+        final Write2AnsFromServer write2AnsFromServer2 = write2responsePMFromServer2.getWrite2AnsFromServer();
+        Assert.assertNotNull(write2AnsFromServer1);
+        Assert.assertNotNull(write2AnsFromServer2);
+
+        ms2.close();
         ms1.close();
         mm.close();
     }

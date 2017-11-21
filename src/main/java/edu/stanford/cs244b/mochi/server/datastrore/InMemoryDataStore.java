@@ -19,6 +19,8 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
 
 public class InMemoryDataStore implements DataStore {
     private final static Logger LOG = LoggerFactory.getLogger(InMemoryDataStore.class);
@@ -176,12 +178,23 @@ public class InMemoryDataStore implements DataStore {
 
         }
 
-        // TODO Checking whether all grants are ok
         if (allWriteOk) {
             Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
             return builder.build();
         }
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object processWrite2ToServer(Write2ToServer write2ToServer) {
+
+        final Write2AnsFromServer.Builder write2AnsFromServerBuilder = Write2AnsFromServer.newBuilder();
+        final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
+
+        // TODO: execute business logic
+
+        write2AnsFromServerBuilder.setResult(transactionResultBuilder);
+        return write2AnsFromServerBuilder.build();
     }
 
 }

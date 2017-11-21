@@ -10,6 +10,7 @@ import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHan
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.ReadToServerRequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.Write1ToServerRequestHandler;
+import edu.stanford.cs244b.mochi.server.requesthandlers.Write2ToServerRequestHandler;
 
 public class MochiContextImpl implements MochiContext {
     private volatile Map<Class, ServerRequestHandler<?>> handlers = null;
@@ -24,6 +25,7 @@ public class MochiContextImpl implements MochiContext {
         addHandler(new HelloToServer2RequestHandler(), handlers);
         addHandler(new ReadToServerRequestHandler(this), handlers);
         addHandler(new Write1ToServerRequestHandler(this), handlers);
+        addHandler(new Write2ToServerRequestHandler(this), handlers);
 
         return handlers;
     }

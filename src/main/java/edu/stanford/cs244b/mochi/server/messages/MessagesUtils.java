@@ -73,7 +73,7 @@ public class MessagesUtils {
             pmBuilder.setWrite2AnsFromServer((Write2AnsFromServer) T);
         }// ---
         else {
-            throw new IllegalStateException(String.format("Invalit message of class %s: %s", T.getClass(), T));
+            throw new IllegalStateException(String.format("Invalid message of class %s: %s", T.getClass(), T));
         }
         pmBuilder.setMsgTimestamp(System.currentTimeMillis());
         pmBuilder.setMsgId(Utils.getUUID());

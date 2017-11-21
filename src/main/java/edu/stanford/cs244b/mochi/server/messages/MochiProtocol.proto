@@ -112,7 +112,7 @@ message MultiGrantCertificateElement {
 /* <WRITE-1-OK, grantTS, currentC>µcr, if the replica
 granted the next timestamp to this client. */
 message Write1OkFromServer {
-    repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList =  1; // <oid, op#, ts> + vs
+    WriteGrant writeGrant =  1; // <oid, op#, ts> + vs
     string clientId = 2; // cid
     string hash = 3;
 }
