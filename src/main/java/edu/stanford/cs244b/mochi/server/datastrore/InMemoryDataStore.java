@@ -21,6 +21,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServe
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
 
 public class InMemoryDataStore implements DataStore {
     private final static Logger LOG = LoggerFactory.getLogger(InMemoryDataStore.class);
@@ -179,7 +180,10 @@ public class InMemoryDataStore implements DataStore {
         }
 
         if (allWriteOk) {
-            Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
+            final Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
+            final WriteGrant.Builder writeGrantBuilder = WriteGrant.newBuilder();
+            writeGrantBuilder.addAllMultiGrantOList(mgceList);
+            builder.setWriteGrant(writeGrantBuilder);
             return builder.build();
         }
         throw new UnsupportedOperationException();

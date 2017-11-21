@@ -26,8 +26,10 @@ public class Write1ToServerRequestHandler implements ServerRequestHandler<Write1
         LOG.debug("Handling writeToServerMessage: {}", message);
         final Object write1response = dataStore.processWrite1ToServer(message);
         LOG.debug("Sending back write reply: {}", write1response);
-        ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(write1response, protocolMessage.getMsgId()));
-        LOG.debug("Wrote back response");
+        final ProtocolMessage pmResponse = MessagesUtils.wrapIntoProtocolMessage(write1response,
+                protocolMessage.getMsgId());
+        ctx.writeAndFlush(pmResponse);
+        LOG.debug("Wrote back response: {}", pmResponse);
     }
 
     public Class<Write1ToServer> getMessageSupported() {
