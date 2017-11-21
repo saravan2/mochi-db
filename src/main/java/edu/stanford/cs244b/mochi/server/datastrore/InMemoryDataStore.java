@@ -1,6 +1,7 @@
 package edu.stanford.cs244b.mochi.server.datastrore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +22,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServe
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
 
 public class InMemoryDataStore implements DataStore {
@@ -54,6 +56,7 @@ public class InMemoryDataStore implements DataStore {
     protected Pair<MultiGrantCertificateElement, Boolean> processWrite(final Operation op, final String clientId) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
+        LOG.debug("Performing processWrite on key: {}", interestedKey);
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
         synchronized (storeValue) {
             final Long oprationNumberInOldOps = storeValue.getOperationNumberInOldOps(clientId);
@@ -189,8 +192,88 @@ public class InMemoryDataStore implements DataStore {
         throw new UnsupportedOperationException();
     }
 
+    private List<String> getObjectsToLock(final WriteGrant writeGrant) {
+        final List<MultiGrantCertificateElement> multiGrantElements = writeGrant.getMultiGrantOListList();
+        final List<String> objectsToLock = new ArrayList<String>(multiGrantElements.size());
+        for (MultiGrantCertificateElement certificateElement : multiGrantElements) {
+            final MultiGrantElement multiGrantElement = certificateElement.getMultiGrantElement();
+            objectsToLock.add(multiGrantElement.getObjectId());
+        }
+        // Need to do in order to avoid deadlock
+        Collections.sort(objectsToLock);
+        return objectsToLock;
+    }
+
+    private MultiGrantElement getMultiGrantElementFromWriteCertificateForWriteGrant(final WriteGrant writeGrant,
+            final String interestedObjectId) {
+        final List<MultiGrantCertificateElement> multiGrantElements = writeGrant.getMultiGrantOListList();
+        for (MultiGrantCertificateElement certificateElement : multiGrantElements) {
+            final MultiGrantElement multiGrantElement = certificateElement.getMultiGrantElement();
+            if (multiGrantElement.equals(multiGrantElement.getObjectId())) {
+                return multiGrantElement;
+            }
+        }
+        return null;
+    }
+
+    private void write2acquireLocksAndCheckViewStamps(final WriteGrant writeGrant) {
+        final List<String> objectsToLock = getObjectsToLock(writeGrant);
+        for (String object : objectsToLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.acquireObjectLockIfNotHeld();
+        }
+        LOG.debug("All locks for write grant acquired: {}", objectsToLock);
+        for (String object : objectsToLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final long objectViewStamp = storeValueContianer.getCurrentVS();
+            final WriteCertificate objectWC = storeValueContianer.getCurrentC();
+            final WriteGrant objectCertificateGrant;
+            if (objectWC != null) {
+                objectCertificateGrant = objectWC.getWriteGrants(0);
+            } else {
+                objectCertificateGrant = null;
+            }
+            final long objectCertificateTimestamp;
+            if (objectCertificateGrant != null) {
+                final MultiGrantElement mge = getMultiGrantElementFromWriteCertificateForWriteGrant(objectCertificateGrant, object);
+                objectCertificateTimestamp = mge.getTimestamp();
+            }
+            final MultiGrantElement mgeFromWriteGrant = getMultiGrantElementFromWriteCertificateForWriteGrant(writeGrant, object);
+            if (mgeFromWriteGrant == null) {
+                throw new IllegalStateException(String.format("Failed to find MultiGrantElement for '%s'", object));
+            }
+            final long grantVS = mgeFromWriteGrant.getViewstamp();
+            final long grantTS = mgeFromWriteGrant.getTimestamp();
+            // TODO: check timestamps
+        }
+        LOG.debug("Timestamps checked");
+
+    }
+
+    private void write2releaseLocks(final WriteGrant writeGrant) {
+        final List<String> objectsToLock = getObjectsToLock(writeGrant);
+        for (String object : objectsToLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.releaseObjectLockIfHeldByCurrent();
+        }
+    }
+
     @Override
     public Object processWrite2ToServer(Write2ToServer write2ToServer) {
+
+        final WriteCertificate wc = write2ToServer.getWriteCertificate();
+        // TODO: check for oldOps for duplicates
+
+        final List<WriteGrant> writeGrants = wc.getWriteGrantsList();
+        // TODO: Check writeGrants are the same
+        try {
+            write2acquireLocksAndCheckViewStamps(writeGrants.get(0));
+        } catch (Exception ex) {
+            LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
+            throw ex;
+        } finally {
+            write2releaseLocks(writeGrants.get(0));
+        }
 
         final Write2AnsFromServer.Builder write2AnsFromServerBuilder = Write2AnsFromServer.newBuilder();
         final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();

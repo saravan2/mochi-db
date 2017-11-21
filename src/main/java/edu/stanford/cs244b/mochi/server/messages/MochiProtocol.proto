@@ -4,10 +4,6 @@ package edu.stanford.cs244b.mochi.server.messages;
 
 option optimize_for = SPEED;
 
-message ObjectCertificate {
-    // TODO
-}
-
 enum OperationAction {
     READ = 0;
     DELETE = 1;
@@ -79,10 +75,14 @@ message Write1ToServer {
     Transaction transaction = 2; // contains (oid, op#,  op)
 }
 
+/* Write grant contains multiple certificate elements - one per each transaction */
 message WriteGrant {
     repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList =  1;
+    // TODO: add server ID
+    // TODO: add signature
 }
 
+/* Contains multiple write grants */
 message WriteCertificate {
     repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants =  1;
 }
@@ -105,7 +105,7 @@ message MultiGrantElement {
 
 message MultiGrantCertificateElement {
     MultiGrantElement multiGrantElement = 1;
-    ObjectCertificate currentC = 2;
+    WriteCertificate currentC = 2;
 }
 
 

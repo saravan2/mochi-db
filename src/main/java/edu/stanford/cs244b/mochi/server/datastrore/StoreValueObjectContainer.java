@@ -4,23 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantElement;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ObjectCertificate;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
-
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 
 public class StoreValueObjectContainer<T> {
 
     private volatile T value;
     private volatile boolean valueAvailble;
-    private volatile ObjectCertificate currentC;
+    private volatile WriteCertificate currentC;
     private volatile MultiGrantElement grantTimestamp;
 
     // TODO: change to Write-1 ??
     private final List<Operation> ops = new ArrayList<Operation>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
-    private volatile long currentVS;
+    private volatile long currentVS = 1;
+    private final ReentrantLock objectLock = new ReentrantLock();
 
     public StoreValueObjectContainer(boolean valueAvailble) {
         this(null, valueAvailble);
@@ -84,11 +85,27 @@ public class StoreValueObjectContainer<T> {
         this.currentVS = currentVS;
     }
 
-    public ObjectCertificate getCurrentC() {
+    public WriteCertificate getCurrentC() {
         return currentC;
     }
 
-    public void setCurrentC(ObjectCertificate currentC) {
+    public void setCurrentC(WriteCertificate currentC) {
         this.currentC = currentC;
+    }
+
+    public void acquireObjectLockIfNotHeld() {
+        if (objectLock.isHeldByCurrentThread() == false) {
+            objectLock.lock();
+        }
+    }
+
+    public void releaseObjectLock() {
+        objectLock.unlock();
+    }
+
+    public void releaseObjectLockIfHeldByCurrent() {
+        if (objectLock.isHeldByCurrentThread()) {
+            objectLock.unlock();
+        }
     }
 }
