@@ -75,21 +75,8 @@ message Write1ToServer {
     Transaction transaction = 2; // contains (oid, op#,  op)
 }
 
-/* Write grant contains multiple certificate elements - one per each transaction */
-message WriteGrant {
-    repeated .edu.stanford.cs244b.mochi.server.messages.MultiGrantCertificateElement multiGrantOList =  1;
-    // TODO: add server ID
-    // TODO: add signature
-}
 
-/* Contains multiple write grants */
-message WriteCertificate {
-    repeated .edu.stanford.cs244b.mochi.server.messages.WriteGrant writeGrants =  1;
-}
 
-message Write2ToServer {
-    WriteCertificate writeCertificate = 1;
-}
 
 message Write2AnsFromServer {
     TransactionResult result = 1; // currentC in embedded inside result
@@ -103,18 +90,35 @@ message Grant {
     int64 viewstamp = 4;
 }
 
-message MultiGrantCertificateElement {
-    Grant multiGrantElement = 1;
-    WriteCertificate currentC = 2;
+
+/* Phase 1, server replies with MultiGrant, which is signed and contains grants */
+message MultiGrant {
+    repeated .edu.stanford.cs244b.mochi.server.messages.Grant grants =  1;
+    string clientId = 2; // cid
+    string hash = 3;
+    string serverId = 4;
+    // TODO: add signature
+}
+
+/* Contains MultiGrant per each server which participated in that decision */
+message WriteCertificate {
+    map<string, MultiGrant> grants =  1;
 }
 
 
 /* <WRITE-1-OK, grantTS, currentC>µcr, if the replica
 granted the next timestamp to this client. */
 message Write1OkFromServer {
-    WriteGrant writeGrant =  1; // <oid, op#, ts> + vs
-    string clientId = 2; // cid
-    string hash = 3;
+    MultiGrant multiGrant = 1; // <oid, op#, ts> + vs
+    /* Map of certificates for the current state of the object. 
+        Key is object, value is certificate for that state of object */
+    map <string, WriteCertificate> currentCertificates = 2;
+    string clientId = 3; // cid
+    string hash = 4;
+}
+
+message Write2ToServer {
+    WriteCertificate writeCertificate = 1;
 }
 
 /*  <WRITE-1-REFUSED, grantTS, cid, oid, op#, currentC>µcr
@@ -125,6 +129,11 @@ request (to prevent replays). */
 message Write1RefusedFromServer {
     // TODO: add other properties
 }
+
+
+
+
+// =============================================== Other messages ======================================
 
 message HelloToServer {
     string msg = 1;
