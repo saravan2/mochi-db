@@ -96,7 +96,7 @@ message Write2AnsFromServer {
     string rid = 2;
 }
 
-message MultiGrantElement {
+message Grant {
     string objectId = 1;
     int64 operationNumber = 2;
     int64 timestamp = 3;
@@ -104,7 +104,7 @@ message MultiGrantElement {
 }
 
 message MultiGrantCertificateElement {
-    MultiGrantElement multiGrantElement = 1;
+    Grant multiGrantElement = 1;
     WriteCertificate currentC = 2;
 }
 

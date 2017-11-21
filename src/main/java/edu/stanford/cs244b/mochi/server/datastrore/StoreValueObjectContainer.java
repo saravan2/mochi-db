@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantElement;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
@@ -18,7 +18,7 @@ public class StoreValueObjectContainer<T> {
     private volatile T value;
     private volatile boolean valueAvailble;
     private volatile WriteCertificate currentC;
-    private volatile MultiGrantElement grantTimestamp;
+    private volatile Grant grantTimestamp;
 
     // TODO: change to Write-1 ??
     private final List<Operation> ops = new ArrayList<Operation>(4);
@@ -73,11 +73,11 @@ public class StoreValueObjectContainer<T> {
         this.ops.add(op);
     }
 
-    public MultiGrantElement getGrantTimestamp() {
+    public Grant getGrantTimestamp() {
         return grantTimestamp;
     }
 
-    public void setGrantTimestamp(MultiGrantElement grantTimestamp) {
+    public void setGrantTimestamp(Grant grantTimestamp) {
         this.grantTimestamp = grantTimestamp;
     }
 
@@ -93,7 +93,7 @@ public class StoreValueObjectContainer<T> {
         return currentC;
     }
 
-    public MultiGrantElement getMultiGrantElementFromWriteCertificate() {
+    public Grant getMultiGrantElementFromWriteCertificate() {
         if (currentC == null) {
             return null;
         }
@@ -108,7 +108,7 @@ public class StoreValueObjectContainer<T> {
             throw new IllegalStateException("listOfMultiGrantElements is 0");
         }
         for (final MultiGrantCertificateElement mgce : listOfMultiGrantElements) {
-            final MultiGrantElement mge = mgce.getMultiGrantElement();
+            final Grant mge = mgce.getMultiGrantElement();
             if (mge == null) {
                 throw new IllegalStateException(String.format(
                         "MultiGrantElement is empty for MultiGrantCertificateElement: %s", mgce));

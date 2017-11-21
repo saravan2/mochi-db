@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantElement;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
@@ -71,12 +71,12 @@ public class InMemoryDataStore implements DataStore {
             if (storeValue.getGrantTimestamp() == null) {
                 /* There is no current grant on that timestamp */
 
-                final MultiGrantElement.Builder builder = MultiGrantElement.newBuilder();
+                final Grant.Builder builder = Grant.newBuilder();
                 builder.setObjectId(interestedKey);
                 builder.setOperationNumber(op.getOperationNumber());
                 builder.setViewstamp(storeValue.getCurrentVS());
                 
-                final MultiGrantElement mgeFromObjectCertificate = storeValue
+                final Grant mgeFromObjectCertificate = storeValue
                         .getMultiGrantElementFromWriteCertificate();
                 if (mgeFromObjectCertificate != null) {
                     builder.setTimestamp(mgeFromObjectCertificate.getTimestamp());
@@ -199,7 +199,7 @@ public class InMemoryDataStore implements DataStore {
         final List<MultiGrantCertificateElement> multiGrantElements = writeGrant.getMultiGrantOListList();
         final List<String> objectsToLock = new ArrayList<String>(multiGrantElements.size());
         for (MultiGrantCertificateElement certificateElement : multiGrantElements) {
-            final MultiGrantElement multiGrantElement = certificateElement.getMultiGrantElement();
+            final Grant multiGrantElement = certificateElement.getMultiGrantElement();
             objectsToLock.add(multiGrantElement.getObjectId());
         }
         // Need to do in order to avoid deadlock
@@ -207,11 +207,11 @@ public class InMemoryDataStore implements DataStore {
         return objectsToLock;
     }
 
-    private MultiGrantElement getMultiGrantElementFromWriteGrant(final WriteGrant writeGrant,
+    private Grant getMultiGrantElementFromWriteGrant(final WriteGrant writeGrant,
             final String interestedObjectId) {
         final List<MultiGrantCertificateElement> multiGrantElements = writeGrant.getMultiGrantOListList();
         for (MultiGrantCertificateElement certificateElement : multiGrantElements) {
-            final MultiGrantElement multiGrantElement = certificateElement.getMultiGrantElement();
+            final Grant multiGrantElement = certificateElement.getMultiGrantElement();
             if (interestedObjectId.equals(multiGrantElement.getObjectId())) {
                 return multiGrantElement;
             }
@@ -253,14 +253,14 @@ public class InMemoryDataStore implements DataStore {
             final Long objectCertificateTS;
             final Long objectCertificateVS;
             if (objectCertificateGrant != null) {
-                final MultiGrantElement mge = getMultiGrantElementFromWriteGrant(objectCertificateGrant, object);
+                final Grant mge = getMultiGrantElementFromWriteGrant(objectCertificateGrant, object);
                 objectCertificateTS = mge.getTimestamp();
                 objectCertificateVS = mge.getViewstamp();
             } else {
                 objectCertificateTS = null;
                 objectCertificateVS = null;
             }
-            final MultiGrantElement mgeFromWriteGrant = getMultiGrantElementFromWriteGrant(writeGrant, object);
+            final Grant mgeFromWriteGrant = getMultiGrantElementFromWriteGrant(writeGrant, object);
             if (mgeFromWriteGrant == null) {
                 throw new IllegalStateException(String.format("Failed to find MultiGrantElement for '%s' in '%s'",
                         object, writeGrant));
