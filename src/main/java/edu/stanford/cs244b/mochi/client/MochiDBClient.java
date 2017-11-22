@@ -1,6 +1,7 @@
 package edu.stanford.cs244b.mochi.client;
 
 import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,29 +57,37 @@ public class MochiDBClient implements Closeable {
         LOG.debug("Resolved write1response futures");
         final List<ProtocolMessage> write1responseProtocalMessages = Utils.getFutures(write1responseFutures);
 
-        Write1OkFromServer writeOkFromServer1 = write1responseProtocalMessages.get(0).getWrite1OkFromServer();
-        Utils.assertNotNull(writeOkFromServer1, "Expected write1ok from the server");
+        final List<Object> messages1FromServers = new ArrayList<Object>(servers.size());
+        boolean allWriteOk = true;
+        for (ProtocolMessage pm : write1responseProtocalMessages) {
+            final Write1OkFromServer writeOkFromServer = pm.getWrite1OkFromServer();
+            if (writeOkFromServer != null) {
+                messages1FromServers.add(writeOkFromServer);
+            } else {
+                allWriteOk = false;
+                // TODO: handle other responses
+                Utils.assertNotNull(writeOkFromServer, "Expected write1ok from the server");
+            }
+        }
 
-        Write1OkFromServer writeOkFromServer2 = write1responseProtocalMessages.get(1).getWrite1OkFromServer();
-        Utils.assertNotNull(writeOkFromServer2, "Expected write1ok from the server");
-
-        final MultiGrant server1MultiGrant = writeOkFromServer1.getMultiGrant();
-        final MultiGrant server2MultiGrant = writeOkFromServer2.getMultiGrant();
-        Utils.assertNotNull(server1MultiGrant, "server1MultiGrant is null");
-        Utils.assertNotNull(server2MultiGrant, "server2MultiGrant is null");
-        LOG.info("Got write gratns from both servers. Progressing to step 2: server1 {}. server2 {}",
-                server1MultiGrant, server2MultiGrant);
-        Utils.assertNotNull(server1MultiGrant.getServerId(), "server1MultiGrant.getServerId() is null");
-        Utils.assertNotNull(server2MultiGrant.getServerId(), "server2MultiGrant.getServerId() is null");
+        final Map<String, MultiGrant> write1mutiGrants = new HashMap<String, MultiGrant>();
+        for (Object messageFromServer : messages1FromServers) {
+            if (messageFromServer instanceof Write1OkFromServer) {
+                final MultiGrant mg = ((Write1OkFromServer) messageFromServer).getMultiGrant();
+                Utils.assertNotNull(mg, "server1MultiGrant is null");
+                Utils.assertNotNull(mg.getServerId(), "serverId is null");
+                write1mutiGrants.put(mg.getServerId(), mg);
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        }
+        LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
+                write1mutiGrants.values());
 
         // Step 2:
 
-        final Map<String, MultiGrant> serverGrants = new HashMap<String, MultiGrant>(2);
-        serverGrants.put(server1MultiGrant.getServerId(), server1MultiGrant);
-        serverGrants.put(server2MultiGrant.getServerId(), server2MultiGrant);
-
         final WriteCertificate.Builder wcb = WriteCertificate.newBuilder();
-        wcb.putAllGrants(serverGrants);
+        wcb.putAllGrants(write1mutiGrants);
 
         final Write2ToServer.Builder write2ToServerBuilder = Write2ToServer.newBuilder();
         write2ToServerBuilder.setWriteCertificate(wcb);
@@ -89,13 +98,15 @@ public class MochiDBClient implements Closeable {
         LOG.debug("Resolved write2response futures");
         final List<ProtocolMessage> write2responseProtocolMessages = Utils.getFutures(write2responseFutures);
 
+        final List<Write2AnsFromServer> write2ansFromServers = new ArrayList<Write2AnsFromServer>(servers.size());
+        for (final ProtocolMessage pm : write2responseProtocolMessages) {
+            final Write2AnsFromServer write2AnsFromServer = pm.getWrite2AnsFromServer();
+            Utils.assertNotNull(write2AnsFromServer, "write2AnsFromServer is null");
+        }
+    }
 
-        final Write2AnsFromServer write2AnsFromServer1 = write2responseProtocolMessages.get(0).getWrite2AnsFromServer();
-        final Write2AnsFromServer write2AnsFromServer2 = write2responseProtocolMessages.get(1).getWrite2AnsFromServer();
-
-        Utils.assertNotNull(write2AnsFromServer1, "write2AnsFromServer1 is null");
-        Utils.assertNotNull(write2AnsFromServer2, "write2AnsFromServer2 is null");
-
+    private void executePhase2() {
+        // TODO
     }
 
     @Override
