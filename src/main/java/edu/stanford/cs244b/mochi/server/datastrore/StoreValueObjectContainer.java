@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
@@ -92,6 +93,31 @@ public class StoreValueObjectContainer<T> {
 
     public void setCurrentVS(long currentVS) {
         this.currentVS = currentVS;
+    }
+
+    public Long getCurrentTimestampFromCurrentCertificate() {
+        if (currentC == null) {
+            return null;
+        }
+        final Map<String, MultiGrant> mutliGrantsMap = currentC.getGrantsMap();
+        Utils.assertNotNull(mutliGrantsMap, "MultiGrants map should not be null");
+        Long timestamp = null;
+        for (final MultiGrant multiGrant : mutliGrantsMap.values()) {
+            final Map<String, Grant> allGrants = multiGrant.getGrantsMap();
+            Utils.assertNotNull(allGrants, "Grants map should not be null");
+            final Grant grantForCurrentKey = allGrants.get(key);
+            Utils.assertNotNull(grantForCurrentKey, "grantForCurrentKey map should not be null");
+            long timestampFromGrant = grantForCurrentKey.getTimestamp();
+            if (timestamp == null) {
+                timestamp = timestampFromGrant;
+            } else {
+                // Checking that is exactly the same
+                if (timestamp != timestampFromGrant) {
+                    throw new IllegalStateException("Timestamp mismatch between grants from different servers");
+                }
+            }
+        }
+        return timestamp;
     }
 
     public WriteCertificate getCurrentC() {

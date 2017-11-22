@@ -13,4 +13,10 @@ public class Utils {
             throw new IllegalStateException("Assertion failed");
         }
     }
+
+    public static void assertNotNull(final Object o, final String msg) {
+        if (o == null) {
+            throw new IllegalStateException(msg);
+        }
+    }
 }

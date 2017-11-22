@@ -10,4 +10,6 @@ public interface MochiContext {
     public Map<Class, ServerRequestHandler<?>> getBeanRequestHandlers();
 
     public DataStore getBeanDataStore();
+
+    public String getServerId();
 }

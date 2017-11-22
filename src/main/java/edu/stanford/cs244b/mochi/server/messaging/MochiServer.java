@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.stanford.cs244b.mochi.server.MochiContext;
-import edu.stanford.cs244b.mochi.server.Utils;
 
 /* Should allow to be instantiated multiple times per JVM */
 public class MochiServer implements Closeable {
@@ -48,7 +47,7 @@ public class MochiServer implements Closeable {
 
     public MochiServer(final int port, final MochiContext mochiContext) {
         this.serverPort = port;
-        this.serverId = Utils.getUUID();
+        this.serverId = mochiContext.getServerId();
         workerThreads = new ThreadPoolExecutor(executorCorePoolSize, executorMaxPoolSize,
                 executorKeepAliveTime, TimeUnit.MILLISECONDS, exeutorQueue);
         requestHandlerDispatcher = new RequestHandlerDispatcher(workerThreads, mochiContext);

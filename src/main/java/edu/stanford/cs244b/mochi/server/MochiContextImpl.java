@@ -13,6 +13,7 @@ import edu.stanford.cs244b.mochi.server.requesthandlers.Write1ToServerRequestHan
 import edu.stanford.cs244b.mochi.server.requesthandlers.Write2ToServerRequestHandler;
 
 public class MochiContextImpl implements MochiContext {
+    private final String serverId = Utils.getUUID();
     private volatile Map<Class, ServerRequestHandler<?>> handlers = null;
     private volatile DataStore dataStore = null;
 
@@ -38,8 +39,13 @@ public class MochiContextImpl implements MochiContext {
         if (dataStore != null) {
             return dataStore;
         }
-        dataStore = new InMemoryDataStore();
+        dataStore = new InMemoryDataStore(this);
         return dataStore;
+    }
+
+    @Override
+    public String getServerId() {
+        return serverId;
     }
 
 }

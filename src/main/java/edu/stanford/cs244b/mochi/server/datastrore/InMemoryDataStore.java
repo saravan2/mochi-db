@@ -2,16 +2,20 @@ package edu.stanford.cs244b.mochi.server.datastrore;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.javatuples.Pair;
+import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
+import edu.stanford.cs244b.mochi.server.MochiContext;
+import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
@@ -23,15 +27,16 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
 
 public class InMemoryDataStore implements DataStore {
     private final static Logger LOG = LoggerFactory.getLogger(InMemoryDataStore.class);
 
     private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> data = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
+    private final MochiContext mochiContext;
 
     @SuppressWarnings("unchecked")
-    public InMemoryDataStore() {
+    public InMemoryDataStore(final MochiContext mochiContext) {
+        this.mochiContext = mochiContext;
     }
 
     protected OperationResult processRead(final Operation op) {
@@ -49,7 +54,7 @@ public class InMemoryDataStore implements DataStore {
         return operationResultBuilder.build();
     }
 
-    protected Pair<MultiGrantCertificateElement, Boolean> processWrite(final Operation op, final String clientId) {
+    protected Triplet<Grant, WriteCertificate, Boolean> processWrite(final Operation op, final String clientId) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
         LOG.debug("Performing processWrite on key: {}", interestedKey);
@@ -71,37 +76,23 @@ public class InMemoryDataStore implements DataStore {
             if (storeValue.getGrantTimestamp() == null) {
                 /* There is no current grant on that timestamp */
 
-                final Grant.Builder builder = Grant.newBuilder();
-                builder.setObjectId(interestedKey);
-                builder.setOperationNumber(op.getOperationNumber());
-                builder.setViewstamp(storeValue.getCurrentVS());
-                
-                final Grant mgeFromObjectCertificate = storeValue
-                        .getMultiGrantElementFromWriteCertificate();
-                if (mgeFromObjectCertificate != null) {
-                    builder.setTimestamp(mgeFromObjectCertificate.getTimestamp());
+                final Grant.Builder grantBuilder = Grant.newBuilder();
+                grantBuilder.setObjectId(interestedKey);
+                grantBuilder.setOperationNumber(op.getOperationNumber());
+                grantBuilder.setViewstamp(storeValue.getCurrentVS());
+
+                Long timestampFromCertificate = storeValue.getCurrentTimestampFromCurrentCertificate();
+                if (timestampFromCertificate != null) {
+                    grantBuilder.setTimestamp(timestampFromCertificate);
                 }
+                final Grant newGrant = grantBuilder.build();
 
-                storeValue.setGrantTimestamp(builder.build());
+                storeValue.setGrantTimestamp(grantBuilder.build());
 
-                final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
-                mgceBuilder.setMultiGrantElement(storeValue.getGrantTimestamp());
-
-                if (storeValue.getCurrentC() != null) {
-                    mgceBuilder.setCurrentC(storeValue.getCurrentC());
-                }
-
-                return Pair.with(mgceBuilder.build(), true);
+                return Triplet.with(newGrant, storeValue.getCurrentC(), true);
             } else {
                 /* Somebody else has the grant. Write refuse */
-                final MultiGrantCertificateElement.Builder mgceBuilder = MultiGrantCertificateElement.newBuilder();
-                mgceBuilder.setMultiGrantElement(storeValue.getGrantTimestamp());
-
-                if (storeValue.getCurrentC() != null) {
-                    mgceBuilder.setCurrentC(storeValue.getCurrentC());
-                }
-
-                return Pair.with(mgceBuilder.build(), false);
+                return Triplet.with(storeValue.getGrantTimestamp(), storeValue.getCurrentC(), false);
             }
         }
     }
@@ -168,17 +159,26 @@ public class InMemoryDataStore implements DataStore {
         if (operations == null) {
             return null;
         }
-        final List<MultiGrantCertificateElement> mgceList = new ArrayList<MultiGrantCertificateElement>(
+        final Map<String, WriteCertificate> currentObjectCertificates = new HashMap<String, WriteCertificate>(
                 operations.size());
+        final Map<String, Grant> grants = new HashMap<String, Grant>();
+        
         boolean allWriteOk = true;
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.WRITE) {
-                Pair<MultiGrantCertificateElement, Boolean> wrteResult = processWrite(op, write1ToServer.getClientId());
-                final MultiGrantCertificateElement mgce = wrteResult.getValue0();
-                final boolean grantWasGranted = wrteResult.getValue1();
-                mgceList.add(mgce);
+                Triplet<Grant, WriteCertificate, Boolean> wrteResult = processWrite(op, write1ToServer.getClientId());
+                final Grant grant = wrteResult.getValue0();
+                Utils.assertNotNull(grant, "Grant cannot be null");
+                final WriteCertificate writeCertificate = wrteResult.getValue1();
+                final boolean grantWasGranted = wrteResult.getValue2();
+                
+                final String objectId = grant.getObjectId();
+                Utils.assertNotNull(objectId, "objectId cannot be null");
+                currentObjectCertificates.put(objectId, writeCertificate);
+                grants.put(objectId, grant);
+                
                 if (grantWasGranted == false) {
-                    LOG.debug("GrantWasNot Granted for opeation {}. MultiGrantCertificateElement = {}", op, mgce);
+                    LOG.debug("GrantWasNot Granted for opeation {}. Grant = {}", op, grant);
                     allWriteOk = false;
                 }
             }
@@ -186,10 +186,14 @@ public class InMemoryDataStore implements DataStore {
         }
 
         if (allWriteOk) {
+            final MultiGrant.Builder mgb = MultiGrant.newBuilder();
+            mgb.setClientId(write1ToServer.getClientId());
+            mgb.setServerId(mochiContext.getServerId());
+            mgb.putAllGrants(grants);
+            
             final Write1OkFromServer.Builder builder = Write1OkFromServer.newBuilder();
-            final WriteGrant.Builder writeGrantBuilder = WriteGrant.newBuilder();
-            writeGrantBuilder.addAllMultiGrantOList(mgceList);
-            builder.setWriteGrant(writeGrantBuilder);
+            builder.setMultiGrant(mgb);
+            builder.putAllCurrentCertificates(currentObjectCertificates);
             return builder.build();
         }
         throw new UnsupportedOperationException();

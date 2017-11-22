@@ -1,5 +1,7 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -11,7 +13,7 @@ import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantCertificateElement;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
@@ -22,7 +24,6 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteGrant;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -171,15 +172,14 @@ public class MochiClientServerCommunicationTest {
         final ReadToServer.Builder builder = ReadToServer.newBuilder();
         builder.setClientId(Utils.getUUID());
         builder.setNonce(Utils.getUUID());
-        
-        
+
         final Operation.Builder oBuilder = Operation.newBuilder();
         oBuilder.setAction(OperationAction.READ);
         oBuilder.setOperand1("DEMO_KEY_1");
-        
+
         final Transaction.Builder tBuilder = Transaction.newBuilder();
         tBuilder.addOperations(oBuilder);
-        
+
         builder.setTransaction(tBuilder);
         mm.sendAndReceive(ms1.toServer(), builder);
         // TODO: we just sending here and do not do anything. Let's introduce a
@@ -237,31 +237,24 @@ public class MochiClientServerCommunicationTest {
         Write1OkFromServer writeOkFromServer2 = write1responsePMFromServer2.getWrite1OkFromServer();
         Assert.assertNotNull(writeOkFromServer2);
 
-        final WriteGrant server1WriteGrant = writeOkFromServer1.getWriteGrant();
-        final WriteGrant server2WriteGrant = writeOkFromServer2.getWriteGrant();
-        Assert.assertNotNull(server1WriteGrant);
-        Assert.assertNotNull(server2WriteGrant);
+        final MultiGrant server1MultiGrant = writeOkFromServer1.getMultiGrant();
+        final MultiGrant server2MultiGrant = writeOkFromServer2.getMultiGrant();
+        Assert.assertNotNull(server1MultiGrant);
+        Assert.assertNotNull(server2MultiGrant);
         LOG.info("Got write gratns from both servers. Progressing to step 2: server1 {}. server2 {}",
-                server1WriteGrant, server2WriteGrant);
-
-        final MultiGrantCertificateElement multiGrantCertificateElement1server1 = server1WriteGrant
-                .getMultiGrantOListList().get(0);
-        final MultiGrantCertificateElement multiGrantCertificateElement1server2 = server2WriteGrant
-                .getMultiGrantOListList().get(0);
-        Assert.assertNotNull(multiGrantCertificateElement1server1);
-        Assert.assertNotNull(multiGrantCertificateElement1server2);
-        final String objectIdServer1 = multiGrantCertificateElement1server1.getMultiGrantElement().getObjectId();
-        final String objectIdServer2 = multiGrantCertificateElement1server2.getMultiGrantElement().getObjectId();
-        Assert.assertNotNull(objectIdServer1);
-        Assert.assertNotNull(objectIdServer2);
+                server1MultiGrant, server2MultiGrant);
+        Assert.assertNotNull(server1MultiGrant.getServerId());
+        Assert.assertNotNull(server2MultiGrant.getServerId());
 
         // Step 2:
-        
+
+        final Map<String, MultiGrant> serverGrants = new HashMap<String, MultiGrant>(2);
+        serverGrants.put(server1MultiGrant.getServerId(), server1MultiGrant);
+        serverGrants.put(server2MultiGrant.getServerId(), server2MultiGrant);
+
         final WriteCertificate.Builder wcb = WriteCertificate.newBuilder();
-        
-        wcb.addWriteGrants(server1WriteGrant);
-        wcb.addWriteGrants(server2WriteGrant);
-        
+        wcb.putAllGrants(serverGrants);
+
         final Write2ToServer.Builder write2ToServerBuilder = Write2ToServer.newBuilder();
         write2ToServerBuilder.setWriteCertificate(wcb);
 
@@ -285,9 +278,8 @@ public class MochiClientServerCommunicationTest {
     }
 
     /*
-     * Specify the remote server, port via command line arguments 
-     * -DremoteServer=######
-     * -DremotePort=####
+     * Specify the remote server, port via command line arguments
+     * -DremoteServer=###### -DremotePort=####
      */
     private Server getServerToTestAgainst(final Server server) {
         final String remoteServer = System.getProperty("remoteServer", null);
