@@ -14,7 +14,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 
 public class StoreValueObjectContainer<T> {
-
+    public static final int VIEWSTAMP_START_NUMBER = 1;
     // Key to which that object belongs
     private final String key;
     // Value if any
@@ -29,7 +29,7 @@ public class StoreValueObjectContainer<T> {
     // TODO: change to Write-1 ??
     private final List<Operation> ops = new ArrayList<Operation>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
-    private volatile long currentVS = 1;
+    private volatile long currentVS = VIEWSTAMP_START_NUMBER;
     private final ReentrantLock objectLock = new ReentrantLock();
 
     public StoreValueObjectContainer(String key, boolean valueAvailble) {

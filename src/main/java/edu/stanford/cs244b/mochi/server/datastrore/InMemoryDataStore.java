@@ -250,9 +250,9 @@ public class InMemoryDataStore implements DataStore {
             final long grantTS = vstsFromGrant.getValue1();
             LOG.debug(
                     "Got grants and certificate VS and TS in write2acquireLocksAndCheckViewStamps. grant = [TS {}, VS {}], object = [TS {}, VS {}]",
-                    grantTS, grantVS, objectVS, objectTS);
+                    grantTS, grantVS, objectTS, objectVS);
 
-            if (objectTS == null && objectVS == 0) {
+            if (objectTS == null && objectVS == StoreValueObjectContainer.VIEWSTAMP_START_NUMBER) {
                 if (storeValueContainer.isValueAvailble()) {
                     throw new IllegalStateException("objectTS and objectTS are null but object value is availble");
                 }
