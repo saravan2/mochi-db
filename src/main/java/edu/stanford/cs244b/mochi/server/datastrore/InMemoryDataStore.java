@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import com.google.protobuf.TextFormat;
+
 import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
@@ -290,16 +292,55 @@ public class InMemoryDataStore implements DataStore {
         return null;
     }
 
-    
+    private OperationResult applyOperation(final Operation op, final WriteCertificate writeCertificateIfAny,
+            final Write1ToServer write1toServerIfAny) {
+        final StoreValueObjectContainer<String> storeValueContainer = data.get(op.getOperand1());
+        Utils.assertNotNull(storeValueContainer, "storeValueCotainer should not be null");
+        if (storeValueContainer.isObjectLockHeldByCurrent() == false) {
+            throw new IllegalStateException("Cannot apply operation since lock is not held");
+        }
+
+        final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
+        if (op.getAction() == OperationAction.WRITE) {
+            final String newValue = op.getOperand2();
+            final String oldValue = storeValueContainer.setValue(newValue);
+            storeValueContainer.setValueAvailble(true);
+
+            // TODO: update oldOps
+            Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
+            storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);
+
+            storeValueContainer.setGrantTimestamp(null);
+
+            Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
+            storeValueContainer.setCurrentC(writeCertificateIfAny);
+            resultBuilder.setCurrentCertificate(writeCertificateIfAny);
+            if (oldValue != null) {
+                resultBuilder.setResult(oldValue);
+            }
+        } else {
+            // TODO: handle other operations, such as delete for example
+            throw new UnsupportedOperationException();
+        }
+
+        return resultBuilder.build();
+    }
     
     private void write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
         final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
         for (final String object : grantsToExecute.keySet()) {
             final StoreValueObjectContainer<String> storeValueCotainer = data.get(object);
             final Grant grantForObject = grantsToExecute.get(object);
-            // TODO: Tigran
-            // storeValueCotainer.locateRequestInOps(multiGrant.getClientId(),
-            // operationNumberToMatch)
+            final Pair<Write1ToServer, Operation> requestToExecuteWithOp = storeValueCotainer.locateRequestInOps(
+                    multiGrant.getClientId(), grantForObject.getOperationNumber());
+            Utils.assertNotNull(requestToExecuteWithOp, "requestToExecuteWithOp is null. logic error");
+            final Write1ToServer write1request = requestToExecuteWithOp.getValue0();
+            final Operation opToExecute = requestToExecuteWithOp.getValue1();
+            Utils.assertNotNull(write1request, "Failed to find write1 request. Something is wrong");
+            LOG.debug("Executing operation {} from {}", TextFormat.shortDebugString(opToExecute),
+                    TextFormat.shortDebugString(write1request));
+            final OperationResult operationResult = applyOperation(opToExecute, write2ToServer.getWriteCertificate(),
+                    write1request);
         }
     }
 

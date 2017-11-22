@@ -4,6 +4,18 @@ package edu.stanford.cs244b.mochi.server.messages;
 
 option optimize_for = SPEED;
 
+/*
+---- Communication protocol ----
+WRITE:
+  operand 1       - key
+  operand 2       - new value
+  
+  return result   - old value for key. null if was not present
+
+
+
+*/
+
 enum OperationAction {
     READ = 0;
     DELETE = 1;
@@ -33,7 +45,7 @@ message Transaction {
 
 message OperationResult {
     string result = 1;
-    // TODO: currentC
+    WriteCertificate currentCertificate = 2;
 }
 
 message TransactionResult {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,11 +50,15 @@ public class StoreValueObjectContainer<T> {
     }
 
     public T getValue() {
+        // TODO: assert that lock is held before operation with values
         return value;
     }
 
-    public void setValue(T value) {
+    public T setValue(T value) {
+        // TODO: assert that lock is held before operation with values
+        final T oldValue = this.value;
         this.value = value;
+        return oldValue;
     }
 
     public boolean isValueAvailble() {
@@ -85,8 +90,17 @@ public class StoreValueObjectContainer<T> {
         this.ops.add(writeToServer);
     }
 
-    public Write1ToServer locateRequestInOps(final String clientIdToMatch, final long operationNumberToMatch) {
+    public void overrideOpsWithOneElement(final Write1ToServer writeToServer) {
+        synchronized (this.ops) {
+            this.ops.clear();
+            this.ops.add(writeToServer);
+        }
+    }
+
+    public Pair<Write1ToServer, Operation> locateRequestInOps(final String clientIdToMatch,
+            final long operationNumberToMatch) {
         Write1ToServer foundWrite1ToServer = null;
+        Operation opToExecute = null;
         for (final Write1ToServer writeToServerFromOps : ops) {
             final String clientId = writeToServerFromOps.getClientId();
             final Transaction transaction = writeToServerFromOps.getTransaction();
@@ -104,11 +118,12 @@ public class StoreValueObjectContainer<T> {
                         throw new IllegalStateException();
                     }
                     foundWrite1ToServer = writeToServerFromOps;
+                    opToExecute = op;
                     break; // No point to check for that transaction
                 }
             }
         }
-        return foundWrite1ToServer;
+        return Pair.with(foundWrite1ToServer, opToExecute);
     }
 
     public Grant getGrantTimestamp() {
@@ -195,5 +210,9 @@ public class StoreValueObjectContainer<T> {
         if (objectLock.isHeldByCurrentThread()) {
             objectLock.unlock();
         }
+    }
+
+    public boolean isObjectLockHeldByCurrent() {
+        return objectLock.isHeldByCurrentThread();
     }
 }
