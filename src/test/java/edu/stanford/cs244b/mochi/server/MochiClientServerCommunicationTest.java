@@ -23,7 +23,8 @@ import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServer2RequestHandler;
 import edu.stanford.cs244b.mochi.server.requesthandlers.HelloToServerRequestHandler;
-import edu.stanford.cs244b.mochi.server.testing.InMemoryDSMochiContextImpl;
+import edu.stanford.cs244b.mochi.testingframework.InMemoryDSMochiContextImpl;
+import edu.stanford.cs244b.mochi.testingframework.MochiVirtualCluster;
 
 public class MochiClientServerCommunicationTest {
     final static Logger LOG = LoggerFactory.getLogger(MochiClientServerCommunicationTest.class);
@@ -55,7 +56,7 @@ public class MochiClientServerCommunicationTest {
         mm.close();
     }
 
-    @Test(expectedExceptions = ConnectionNotReadyException.class)
+    @Test(expectedExceptions = { ConnectionNotReadyException.class, java.net.UnknownHostException.class })
     public void testConnectionNotKnownServer() {
         final MochiMessaging mm = new MochiMessaging();
         final HelloFromServer hfs = mm.sayHelloToServer(new Server("some_unknown_host", MochiServer.DEFAULT_PORT));
@@ -185,16 +186,12 @@ public class MochiClientServerCommunicationTest {
 
     @Test
     public void testWriteOperation() throws InterruptedException, ExecutionException {
-        final int serverPort1 = 8001;
-        MochiServer ms1 = newMochiServer(serverPort1);
-        ms1.start();
-
-        final int serverPort2 = 8002;
-        MochiServer ms2 = newMochiServer(serverPort2);
-        ms2.start();
+        final int numberOfServersToTest = 2;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();
-        mochiDBclient.addServers(ms1.toServer(), ms2.toServer());
+        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
         final Operation.Builder oBuilder1 = Operation.newBuilder();
@@ -215,8 +212,7 @@ public class MochiClientServerCommunicationTest {
 
         mochiDBclient.executeWriteTransaction(tBuilder.build());
 
-        ms2.close();
-        ms1.close();
+        mochiVirtualCluster.close();
         mochiDBclient.close();
     }
 

@@ -2,6 +2,7 @@ package edu.stanford.cs244b.mochi.client;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,12 @@ public class MochiDBClient implements Closeable {
     };
     
     public void addServers(final Server... servers) {
+        for (final Server s : servers) {
+            this.servers.add(s);
+        }
+    }
+
+    public void addServers(final Collection<Server> servers) {
         for (final Server s : servers) {
             this.servers.add(s);
         }

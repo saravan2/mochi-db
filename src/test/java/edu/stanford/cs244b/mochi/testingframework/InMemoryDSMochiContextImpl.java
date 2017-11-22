@@ -1,4 +1,4 @@
-package edu.stanford.cs244b.mochi.server.testing;
+package edu.stanford.cs244b.mochi.testingframework;
 
 import edu.stanford.cs244b.mochi.server.MochiContextImpl;
 
