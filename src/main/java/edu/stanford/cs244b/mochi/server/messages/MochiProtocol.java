@@ -8633,10 +8633,18 @@ public final class MochiProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
     int getGrantsCount();
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
     boolean containsGrants(
@@ -8648,11 +8656,19 @@ public final class MochiProtocol {
     java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant>
     getGrants();
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
     java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant>
     getGrantsMap();
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
 
@@ -8660,6 +8676,10 @@ public final class MochiProtocol {
         java.lang.String key,
         edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant defaultValue);
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
 
@@ -8788,6 +8808,10 @@ public final class MochiProtocol {
       return internalGetGrants().getMap().size();
     }
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
 
@@ -8804,6 +8828,10 @@ public final class MochiProtocol {
       return getGrantsMap();
     }
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
 
@@ -8811,6 +8839,10 @@ public final class MochiProtocol {
       return internalGetGrants().getMap();
     }
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
 
@@ -8823,6 +8855,10 @@ public final class MochiProtocol {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
+     * <pre>
+     * Key - serverId 
+     * </pre>
+     *
      * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
      */
 
@@ -9185,6 +9221,10 @@ public final class MochiProtocol {
         return internalGetGrants().getMap().size();
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
 
@@ -9201,6 +9241,10 @@ public final class MochiProtocol {
         return getGrantsMap();
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
 
@@ -9208,6 +9252,10 @@ public final class MochiProtocol {
         return internalGetGrants().getMap();
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
 
@@ -9220,6 +9268,10 @@ public final class MochiProtocol {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
 
@@ -9240,6 +9292,10 @@ public final class MochiProtocol {
         return this;
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
 
@@ -9259,6 +9315,10 @@ public final class MochiProtocol {
         return internalGetMutableGrants().getMutableMap();
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
       public Builder putGrants(
@@ -9271,6 +9331,10 @@ public final class MochiProtocol {
         return this;
       }
       /**
+       * <pre>
+       * Key - serverId 
+       * </pre>
+       *
        * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.MultiGrant&gt; grants = 1;</code>
        */
 

@@ -103,6 +103,7 @@ message MultiGrant {
 
 /* Contains MultiGrant per each server which participated in that decision. Grants are signed */
 message WriteCertificate {
+    /* Key - serverId */
     map<string, MultiGrant> grants =  1;
 }
 
