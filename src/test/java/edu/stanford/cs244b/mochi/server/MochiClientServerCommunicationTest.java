@@ -1,7 +1,5 @@
 package edu.stanford.cs244b.mochi.server;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -11,19 +9,14 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import edu.stanford.cs244b.mochi.client.MochiDBClient;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -200,12 +193,9 @@ public class MochiClientServerCommunicationTest {
         MochiServer ms2 = newMochiServer(serverPort2);
         ms2.start();
 
-        final MochiMessaging mm = new MochiMessaging();
-        mm.waitForConnectionToBeEstablished(ms1.toServer());
-        mm.waitForConnectionToBeEstablished(ms2.toServer());
-
-        final Write1ToServer.Builder builder = Write1ToServer.newBuilder();
-        builder.setClientId(Utils.getUUID());
+        final MochiDBClient mochiDBclient = new MochiDBClient();
+        mochiDBclient.addServers(ms1.toServer(), ms2.toServer());
+        mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
         final Operation.Builder oBuilder1 = Operation.newBuilder();
         oBuilder1.setAction(OperationAction.WRITE);
@@ -223,58 +213,11 @@ public class MochiClientServerCommunicationTest {
         tBuilder.addOperations(oBuilder1);
         tBuilder.addOperations(oBuilder2);
 
-        // Step 1
-        builder.setTransaction(tBuilder);
-        final Future<ProtocolMessage> writeResponseFutureServer1 = mm.sendAndReceive(ms1.toServer(), builder);
-        final Future<ProtocolMessage> writeResponseFutureServer2 = mm.sendAndReceive(ms2.toServer(), builder);
-
-        ProtocolMessage write1responsePMFromServer1 = writeResponseFutureServer1.get();
-        ProtocolMessage write1responsePMFromServer2 = writeResponseFutureServer2.get();
-
-        Write1OkFromServer writeOkFromServer1 = write1responsePMFromServer1.getWrite1OkFromServer();
-        Assert.assertNotNull(writeOkFromServer1);
-
-        Write1OkFromServer writeOkFromServer2 = write1responsePMFromServer2.getWrite1OkFromServer();
-        Assert.assertNotNull(writeOkFromServer2);
-
-        final MultiGrant server1MultiGrant = writeOkFromServer1.getMultiGrant();
-        final MultiGrant server2MultiGrant = writeOkFromServer2.getMultiGrant();
-        Assert.assertNotNull(server1MultiGrant);
-        Assert.assertNotNull(server2MultiGrant);
-        LOG.info("Got write gratns from both servers. Progressing to step 2: server1 {}. server2 {}",
-                server1MultiGrant, server2MultiGrant);
-        Assert.assertNotNull(server1MultiGrant.getServerId());
-        Assert.assertNotNull(server2MultiGrant.getServerId());
-
-        // Step 2:
-
-        final Map<String, MultiGrant> serverGrants = new HashMap<String, MultiGrant>(2);
-        serverGrants.put(server1MultiGrant.getServerId(), server1MultiGrant);
-        serverGrants.put(server2MultiGrant.getServerId(), server2MultiGrant);
-
-        final WriteCertificate.Builder wcb = WriteCertificate.newBuilder();
-        wcb.putAllGrants(serverGrants);
-
-        final Write2ToServer.Builder write2ToServerBuilder = Write2ToServer.newBuilder();
-        write2ToServerBuilder.setWriteCertificate(wcb);
-
-        final Future<ProtocolMessage> write2ResponseFutureServer1 = mm.sendAndReceive(ms1.toServer(),
-                write2ToServerBuilder);
-        final Future<ProtocolMessage> write2ResponseFutureServer2 = mm.sendAndReceive(ms2.toServer(),
-                write2ToServerBuilder);
-        ProtocolMessage write2responsePMFromServer1 = write2ResponseFutureServer1.get();
-        ProtocolMessage write2responsePMFromServer2 = write2ResponseFutureServer2.get();
-        Assert.assertNotNull(write2responsePMFromServer1);
-        Assert.assertNotNull(write2responsePMFromServer2);
-
-        final Write2AnsFromServer write2AnsFromServer1 = write2responsePMFromServer1.getWrite2AnsFromServer();
-        final Write2AnsFromServer write2AnsFromServer2 = write2responsePMFromServer2.getWrite2AnsFromServer();
-        Assert.assertNotNull(write2AnsFromServer1);
-        Assert.assertNotNull(write2AnsFromServer2);
+        mochiDBclient.executeWriteTransaction(tBuilder.build());
 
         ms2.close();
         ms1.close();
-        mm.close();
+        mochiDBclient.close();
     }
 
     /*
