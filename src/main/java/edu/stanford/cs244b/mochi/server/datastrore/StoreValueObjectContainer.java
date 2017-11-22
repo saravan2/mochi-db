@@ -7,13 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 
 public class StoreValueObjectContainer<T> {
+    final static Logger LOG = LoggerFactory.getLogger(StoreValueObjectContainer.class);
+
     public static final int VIEWSTAMP_START_NUMBER = 1;
     // Key to which that object belongs
     private final String key;
@@ -26,8 +33,7 @@ public class StoreValueObjectContainer<T> {
     // Grant on that object if any
     private volatile Grant grantTimestamp;
 
-    // TODO: change to Write-1 ??
-    private final List<Operation> ops = new ArrayList<Operation>(4);
+    private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
     private volatile long currentVS = VIEWSTAMP_START_NUMBER;
     private final ReentrantLock objectLock = new ReentrantLock();
@@ -66,17 +72,43 @@ public class StoreValueObjectContainer<T> {
         return clientOldOpsEntry.getOperationNumber();
     }
 
-    public boolean isOperationInOps(final Operation op) {
-        for (final Operation opFromOps : ops) {
-            if (opFromOps.getOperationNumber() == op.getOperationNumber()) {
+    public boolean isRequestInOps(final Write1ToServer writeToServer) {
+        for (final Write1ToServer writeFromOps : ops) {
+            if (writeFromOps.equals(writeToServer)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void addOperationToOps(final Operation op) {
-        this.ops.add(op);
+    public void addRequestToOps(final Write1ToServer writeToServer) {
+        this.ops.add(writeToServer);
+    }
+
+    public Write1ToServer locateRequestInOps(final String clientIdToMatch, final long operationNumberToMatch) {
+        Write1ToServer foundWrite1ToServer = null;
+        for (final Write1ToServer writeToServerFromOps : ops) {
+            final String clientId = writeToServerFromOps.getClientId();
+            final Transaction transaction = writeToServerFromOps.getTransaction();
+            final List<Operation> transactionOps = transaction.getOperationsList();
+            for (final Operation op : transactionOps) {
+                final String operand1 = op.getOperand1();
+                if (operand1.equals(this.key) == false) {
+                    continue;
+                }
+                final long operationNumber = op.getOperationNumber();
+                if (operationNumber == operationNumberToMatch && clientIdToMatch.equals(clientId)) {
+                    LOG.debug("Found match in ops for clientIdToMatch = {} and operationNumberToMatch = {}",
+                            clientIdToMatch, operationNumberToMatch);
+                    if (foundWrite1ToServer != null) {
+                        throw new IllegalStateException();
+                    }
+                    foundWrite1ToServer = writeToServerFromOps;
+                    break; // No point to check for that transaction
+                }
+            }
+        }
+        return foundWrite1ToServer;
     }
 
     public Grant getGrantTimestamp() {

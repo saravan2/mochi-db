@@ -57,7 +57,8 @@ public class InMemoryDataStore implements DataStore {
         return operationResultBuilder.build();
     }
 
-    protected Triplet<Grant, WriteCertificate, Boolean> processWrite(final Operation op, final String clientId) {
+    protected Triplet<Grant, WriteCertificate, Boolean> processWrite(final Operation op, final String clientId,
+            final Write1ToServer writeToServer) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
         LOG.debug("Performing processWrite on key: {}", interestedKey);
@@ -71,11 +72,11 @@ public class InMemoryDataStore implements DataStore {
                 // TODO: reply old
                 throw new UnsupportedOperationException();
             }
-            if (storeValue.isOperationInOps(op)) {
+            if (storeValue.isRequestInOps(writeToServer)) {
                 // TODO: reply previous value
                 throw new UnsupportedOperationException();
             }
-            storeValue.addOperationToOps(op);
+            storeValue.addRequestToOps(writeToServer);
             if (storeValue.getGrantTimestamp() == null) {
                 /* There is no current grant on that timestamp */
 
@@ -154,7 +155,7 @@ public class InMemoryDataStore implements DataStore {
     }
 
     @Override
-    public Object processWrite1ToServer(Write1ToServer write1ToServer) {
+    public Object processWrite1ToServer(final Write1ToServer write1ToServer) {
         final Transaction transaction = write1ToServer.getTransaction();
         LOG.debug("Executing  write transaction: {}", transaction);
         final List<Operation> operations = transaction.getOperationsList();
@@ -168,7 +169,8 @@ public class InMemoryDataStore implements DataStore {
         boolean allWriteOk = true;
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.WRITE) {
-                Triplet<Grant, WriteCertificate, Boolean> wrteResult = processWrite(op, write1ToServer.getClientId());
+                Triplet<Grant, WriteCertificate, Boolean> wrteResult = processWrite(op, write1ToServer.getClientId(),
+                        write1ToServer);
                 final Grant grant = wrteResult.getValue0();
                 Utils.assertNotNull(grant, "Grant cannot be null");
                 final WriteCertificate writeCertificate = wrteResult.getValue1();
@@ -277,10 +279,6 @@ public class InMemoryDataStore implements DataStore {
         }
     }
 
-    private void write2apply() {
-
-    }
-
     public <V, K> V getFirst(final Map<K, V> map) {
         if (map == null) {
             return null;
@@ -292,8 +290,21 @@ public class InMemoryDataStore implements DataStore {
         return null;
     }
 
+    
+    
+    private void write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
+        final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
+        for (final String object : grantsToExecute.keySet()) {
+            final StoreValueObjectContainer<String> storeValueCotainer = data.get(object);
+            final Grant grantForObject = grantsToExecute.get(object);
+            // TODO: Tigran
+            // storeValueCotainer.locateRequestInOps(multiGrant.getClientId(),
+            // operationNumberToMatch)
+        }
+    }
+
     @Override
-    public Object processWrite2ToServer(Write2ToServer write2ToServer) {
+    public Object processWrite2ToServer(final Write2ToServer write2ToServer) {
 
         final WriteCertificate wc = write2ToServer.getWriteCertificate();
         // TODO: check for oldOps for duplicates
@@ -309,7 +320,7 @@ public class InMemoryDataStore implements DataStore {
                 throw new UnsupportedOperationException();
             }
             LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");
-            write2apply();
+            write2apply(multiGrant, write2ToServer);
 
         } catch (Exception ex) {
             LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
