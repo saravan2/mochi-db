@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import edu.stanford.cs244b.mochi.server.messaging.Server;
 public class MochiDBClient implements Closeable {
     final static Logger LOG = LoggerFactory.getLogger(MochiDBClient.class);
 
+    private final AtomicLong operationNumberCounter = new AtomicLong(1);
     private final String mochiDBClientID = Utils.getUUIDwithPref(Utils.UUID_PREFIXES.CLIENT);
     private final MochiMessaging mochiMessaging = new MochiMessaging();
     private final Set<Server> servers = new HashSet<Server>();
@@ -54,7 +56,12 @@ public class MochiDBClient implements Closeable {
         }
     }
 
+    public long getNextOperationNumber() {
+        return operationNumberCounter.getAndIncrement();
+    }
+
     public void executeWriteTransaction(final Transaction transactionToExecute) {
+
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
         write1toServerBuilder.setTransaction(transactionToExecute);
 

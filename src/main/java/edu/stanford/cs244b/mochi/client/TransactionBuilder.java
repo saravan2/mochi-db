@@ -9,15 +9,17 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 
 public class TransactionBuilder {
     private final List<Operation> operations = new ArrayList<Operation>();
+    private final long operationNumber;
     
-    private TransactionBuilder() {
+    private TransactionBuilder(long operationNumber) {
+        this.operationNumber = operationNumber;
     }
 
-    public static TransactionBuilder startNewTransaction() {
-        return new TransactionBuilder();
+    public static TransactionBuilder startNewTransaction(long operationNumber) {
+        return new TransactionBuilder(operationNumber);
     }
 
-    public TransactionBuilder addWriteOperation(final String key, final String value, int operationNumber) {
+    public TransactionBuilder addWriteOperation(final String key, final String value) {
         final Operation.Builder oBuilder = Operation.newBuilder();
         oBuilder.setAction(OperationAction.WRITE);
         oBuilder.setOperand1(key);

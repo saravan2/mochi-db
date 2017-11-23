@@ -195,9 +195,9 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
-        final TransactionBuilder tb = TransactionBuilder.startNewTransaction()
-                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1a", 1)
-                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2b", 1);
+        final TransactionBuilder tb = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1a")
+                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2b");
         
         mochiDBclient.executeWriteTransaction(tb.build());
 
