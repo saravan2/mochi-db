@@ -208,10 +208,15 @@ public class MochiClientServerCommunicationTest {
         final List<OperationResult> operationList = transaction1result.getOperationsList();
         Assert.assertNotNull(operationList);
         Assert.assertTrue(operationList.size() == 2);
-        final OperationResult or1tr1 = operationList.get(0);
-        final OperationResult or2tr1 = operationList.get(1);
+        final OperationResult or1tr1 = Utils.getOperationResult(transaction1result, 0);
+        final OperationResult or2tr1 = Utils.getOperationResult(transaction1result, 1);
         Assert.assertNotNull(or1tr1);
         Assert.assertNotNull(or2tr1);
+
+        Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
+        Assert.assertNotNull(or2tr1.getCurrentCertificate(), "write ceritificate for op2 in transaction 1 is null");
+        Assert.assertNull(or1tr1.getResult(), "result of op1 in transaction 1 is not null");
+        Assert.assertNull(or2tr1.getResult(), "result of op2 in transaction 1 is not null");
 
         mochiVirtualCluster.close();
         mochiDBclient.close();
