@@ -11,7 +11,9 @@ import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
 
@@ -101,5 +103,15 @@ public class Utils {
             responseFutures.add(responseFuture);
         }
         return responseFutures;
+    }
+
+    public static OperationResult getOperationResult(final TransactionResult transaction1result, int position) {
+        final List<OperationResult> operationList = transaction1result.getOperationsList();
+        Utils.assertNotNull(operationList, "operationList is null");
+        if (operationList.size() <= position) {
+            throw new IllegalArgumentException("position is outOfBound");
+        }
+        final OperationResult or = operationList.get(position);
+        return or;
     }
 }

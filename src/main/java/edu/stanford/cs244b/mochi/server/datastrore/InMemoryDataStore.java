@@ -19,6 +19,7 @@ import com.google.protobuf.TextFormat;
 
 import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.Utils;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.FailureMessageType;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
@@ -26,6 +27,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.RequestFailedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
@@ -74,10 +76,14 @@ public class InMemoryDataStore implements DataStore {
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
         synchronized (storeValue) {
             final Long oprationNumberInOldOps = storeValue.getOperationNumberInOldOps(clientId);
-            if (oprationNumberInOldOps != null && oprationNumberInOldOps < op.getOperationNumber()) {
-                throw new TooOldRequestException();
+            LOG.debug("Got oprationNumberInOldOps = {}", oprationNumberInOldOps);
+            if (oprationNumberInOldOps != null && oprationNumberInOldOps > op.getOperationNumber()) {
+                throw new TooOldRequestException(op.getOperationNumber(), oprationNumberInOldOps);
             }
             if (oprationNumberInOldOps != null && oprationNumberInOldOps == op.getOperationNumber()) {
+                LOG.debug(
+                        "oprationNumberInOldOps is not null ({}) and that is equal to existing number in the message: {}",
+                        oprationNumberInOldOps, op.getOperationNumber());
                 // TODO: reply old
                 throw new UnsupportedOperationException();
             }
@@ -96,7 +102,7 @@ public class InMemoryDataStore implements DataStore {
 
                 Long timestampFromCertificate = storeValue.getCurrentTimestampFromCurrentCertificate();
                 if (timestampFromCertificate != null) {
-                    grantBuilder.setTimestamp(timestampFromCertificate);
+                    grantBuilder.setTimestamp(timestampFromCertificate + 1);
                 }
                 final Grant newGrant = grantBuilder.build();
 
@@ -168,8 +174,7 @@ public class InMemoryDataStore implements DataStore {
         return readFromServerBuilder.build(); 
     }
 
-    @Override
-    public Object processWrite1ToServer(final Write1ToServer write1ToServer) {
+    public Object tryProcessWriteRegularly(final Write1ToServer write1ToServer) {
         final Transaction transaction = write1ToServer.getTransaction();
         LOG.debug("Executing  write transaction: {}", transaction);
         final List<Operation> operations = transaction.getOperationsList();
@@ -220,6 +225,21 @@ public class InMemoryDataStore implements DataStore {
             return builder.build();
         }
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object processWrite1ToServer(final Write1ToServer write1ToServer) {
+        try {
+            Object messageResponse = tryProcessWriteRegularly(write1ToServer);
+            return messageResponse;
+        } catch (TooOldRequestException ex) {
+            LOG.info(
+                    "Write1 request is too old. Denying it. Write operation number = {}, old ops operation number = {}",
+                    ex.getProvidedOperationNumber(), ex.getObjectOperationNumber());
+            RequestFailedFromServer.Builder rfsBuilder = RequestFailedFromServer.newBuilder();
+            rfsBuilder.setType(FailureMessageType.OLD_REQUEST);
+            return rfsBuilder.build();
+        }
     }
 
     private List<String> getObjectsToLock(final MultiGrant multiGrant) {
@@ -316,9 +336,13 @@ public class InMemoryDataStore implements DataStore {
         if (op.getAction() == OperationAction.WRITE) {
             final String newValue = op.getOperand2();
             final String oldValue = storeValueContainer.setValue(newValue);
-            storeValueContainer.setValueAvailble(true);
+            final boolean wasAvailable = storeValueContainer.setValueAvailble(true);
 
-            // TODO: update oldOps
+            final OldOpsEntry newOldOpsEntry = new OldOpsEntry();
+            newOldOpsEntry.setOperationNumber(op.getOperationNumber());
+            // More stuff into old entries is added at the end
+            
+            storeValueContainer.updateOldOps(write1toServerIfAny.getClientId(), newOldOpsEntry);
             Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
             storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);
 
@@ -327,19 +351,22 @@ public class InMemoryDataStore implements DataStore {
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
             resultBuilder.setCurrentCertificate(writeCertificateIfAny);
+            resultBuilder.setExisted(wasAvailable);
             if (oldValue != null) {
                 resultBuilder.setResult(oldValue);
             }
+            final OperationResult oprationResult = resultBuilder.build();
+            newOldOpsEntry.setOperationResult(oprationResult);
+            return oprationResult;
         } else {
             // TODO: handle other operations, such as delete for example
             throw new UnsupportedOperationException();
         }
-
-        return resultBuilder.build();
     }
     
-    private void write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
+    private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
         final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
+        final List<OperationResult> operationResults = new ArrayList<OperationResult>(grantsToExecute.size());
         for (final String object : grantsToExecute.keySet()) {
             final StoreValueObjectContainer<String> storeValueCotainer = data.get(object);
             final Grant grantForObject = grantsToExecute.get(object);
@@ -353,7 +380,9 @@ public class InMemoryDataStore implements DataStore {
                     TextFormat.shortDebugString(write1request));
             final OperationResult operationResult = applyOperation(opToExecute, write2ToServer.getWriteCertificate(),
                     write1request);
+            operationResults.add(operationResult);
         }
+        return operationResults;
     }
 
     @Override
@@ -366,14 +395,16 @@ public class InMemoryDataStore implements DataStore {
         final Map<String, MultiGrant> multiGrants = wc.getGrantsMap();
         final MultiGrant multiGrant = getFirst(multiGrants);
 
+        final List<OperationResult> operationResults;
         try {
             final List<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(multiGrant);
             if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
+                LOG.debug("Found objects whose timestamps are old: {}", listOfObjectsWhoseTimestampIsOld);
                 // TODO: do data loading from remotes
                 throw new UnsupportedOperationException();
             }
             LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");
-            write2apply(multiGrant, write2ToServer);
+            operationResults = write2apply(multiGrant, write2ToServer);
 
         } catch (Exception ex) {
             LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
@@ -384,9 +415,7 @@ public class InMemoryDataStore implements DataStore {
 
         final Write2AnsFromServer.Builder write2AnsFromServerBuilder = Write2AnsFromServer.newBuilder();
         final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
-
-        // TODO: execute business logic
-
+        transactionResultBuilder.addAllOperations(operationResults);
         write2AnsFromServerBuilder.setResult(transactionResultBuilder);
         return write2AnsFromServerBuilder.build();
     }

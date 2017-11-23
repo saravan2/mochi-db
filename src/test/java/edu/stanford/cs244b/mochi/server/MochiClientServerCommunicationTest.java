@@ -1,5 +1,6 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -10,14 +11,18 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.client.MochiDBClient;
+import edu.stanford.cs244b.mochi.client.RequestFailedException;
+import edu.stanford.cs244b.mochi.client.TransactionBuilder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -195,26 +200,89 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
-        final Operation.Builder oBuilder1 = Operation.newBuilder();
-        oBuilder1.setAction(OperationAction.WRITE);
-        oBuilder1.setOperand1("DEMO_KEY_1");
-        oBuilder1.setOperand2("NEW_VALUE_FOR_KEY_1");
-        oBuilder1.setOperationNumber(1); // First operation
+        final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_1")
+                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_1");
+        
+        final TransactionResult transaction1result = mochiDBclient.executeWriteTransaction(tb1.build());
+        Assert.assertNotNull(transaction1result);
 
-        final Operation.Builder oBuilder2 = Operation.newBuilder();
-        oBuilder2.setAction(OperationAction.WRITE);
-        oBuilder2.setOperand1("DEMO_KEY_2");
-        oBuilder2.setOperand2("NEW_VALUE_FOR_KEY_2");
-        oBuilder2.setOperationNumber(1); // Second operation
+        final List<OperationResult> operationList = transaction1result.getOperationsList();
+        Assert.assertNotNull(operationList);
+        Assert.assertTrue(operationList.size() == 2);
+        final OperationResult or1tr1 = Utils.getOperationResult(transaction1result, 0);
+        final OperationResult or2tr1 = Utils.getOperationResult(transaction1result, 1);
+        Assert.assertNotNull(or1tr1);
+        Assert.assertNotNull(or2tr1);
 
-        final Transaction.Builder tBuilder = Transaction.newBuilder();
-        tBuilder.addOperations(oBuilder1);
-        tBuilder.addOperations(oBuilder2);
+        Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
+        Assert.assertNotNull(or2tr1.getCurrentCertificate(), "write ceritificate for op2 in transaction 1 is null");
+        Assert.assertTrue(StringUtils.isEmpty(or1tr1.getResult()));
+        Assert.assertFalse(or1tr1.getExisted());
+        Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
+        Assert.assertFalse(or2tr1.getExisted());
 
-        mochiDBclient.executeWriteTransaction(tBuilder.build());
+        LOG.info("First write transaction executed successfully. Executing second write transaction");
+        final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_2")
+                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_2");
+
+        final TransactionResult transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
+        Assert.assertNotNull(transaction2result);
+        final List<OperationResult> operationList2 = transaction2result.getOperationsList();
+        Assert.assertNotNull(operationList2);
+        Assert.assertTrue(operationList2.size() == 2,
+                String.format("Wrong size of operation list = %s", operationList2.size()));
+        final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
+        final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
+        Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+        Assert.assertTrue(or1tr2.getExisted());
+        Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
+        Assert.assertTrue(or2tr2.getExisted());
+
+        LOG.info("Second write transaction executed succesfully. Executing read transaction");
+
+        // TODO: @Saravana, please, create read transaction that will read two
+        // keys and check the content
 
         mochiVirtualCluster.close();
         mochiDBclient.close();
+    }
+
+    @Test(expectedExceptions = RequestFailedException.class)
+    public void testWriteOperationTooOld() throws InterruptedException, ExecutionException {
+        final int numberOfServersToTest = 1;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        mochiVirtualCluster.startAllServers();
+
+        final MochiDBClient mochiDBclient = new MochiDBClient();
+        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+        mochiDBclient.waitForConnectionToBeEstablishedToServers();
+
+        try {
+            final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction(
+                    mochiDBclient.getNextOperationNumber()).addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_1");
+
+            final TransactionResult transaction1result = mochiDBclient.executeWriteTransaction(tb1.build());
+            Assert.assertNotNull(transaction1result);
+
+            final List<OperationResult> operationList = transaction1result.getOperationsList();
+            Assert.assertTrue(operationList.size() == 1);
+            final OperationResult or1tr1 = Utils.getOperationResult(transaction1result, 0);
+            Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
+
+            LOG.info("First write transaction executed successfully. "
+                    + " Executing second write transaction which should raise exception");
+            final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(
+                    mochiDBclient.getNextOperationNumber() - 2).addWriteOperation("DEMO_KEY_1",
+                    "NEW_VALUE_FOR_KEY_1_TR_2");
+
+            final TransactionResult transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
+
+        } finally {
+            mochiVirtualCluster.close();
+            mochiDBclient.close();
+        }
     }
 
     /*

@@ -65,8 +65,10 @@ public class StoreValueObjectContainer<T> {
         return valueAvailble;
     }
 
-    public void setValueAvailble(boolean valueAvailble) {
+    public boolean setValueAvailble(boolean valueAvailble) {
+        final boolean oldAvailable = this.valueAvailble;
         this.valueAvailble = valueAvailble;
+        return oldAvailable;
     }
 
     public Long getOperationNumberInOldOps(final String clientId) {
@@ -75,6 +77,10 @@ public class StoreValueObjectContainer<T> {
             return null;
         }
         return clientOldOpsEntry.getOperationNumber();
+    }
+
+    public void updateOldOps(final String clientId, final OldOpsEntry entry) {
+        oldOps.put(clientId, entry);
     }
 
     public boolean isRequestInOps(final Write1ToServer writeToServer) {

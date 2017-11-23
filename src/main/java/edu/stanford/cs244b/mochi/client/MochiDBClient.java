@@ -9,14 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcabi.aspects.Loggable;
+
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
@@ -28,6 +33,7 @@ import edu.stanford.cs244b.mochi.server.messaging.Server;
 public class MochiDBClient implements Closeable {
     final static Logger LOG = LoggerFactory.getLogger(MochiDBClient.class);
 
+    private final AtomicLong operationNumberCounter = new AtomicLong(1);
     private final String mochiDBClientID = Utils.getUUIDwithPref(Utils.UUID_PREFIXES.CLIENT);
     private final MochiMessaging mochiMessaging = new MochiMessaging();
     private final Set<Server> servers = new HashSet<Server>();
@@ -54,7 +60,13 @@ public class MochiDBClient implements Closeable {
         }
     }
 
-    public void executeWriteTransaction(final Transaction transactionToExecute) {
+    public long getNextOperationNumber() {
+        return operationNumberCounter.getAndIncrement();
+    }
+
+    @Loggable()
+    public TransactionResult executeWriteTransaction(final Transaction transactionToExecute) {
+
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
         write1toServerBuilder.setTransaction(transactionToExecute);
 
@@ -65,11 +77,15 @@ public class MochiDBClient implements Closeable {
         final List<ProtocolMessage> write1responseProtocalMessages = Utils.getFutures(write1responseFutures);
 
         final List<Object> messages1FromServers = new ArrayList<Object>(servers.size());
+        // TODO: consider majority of votes
         boolean allWriteOk = true;
         for (ProtocolMessage pm : write1responseProtocalMessages) {
             final Write1OkFromServer writeOkFromServer = pm.getWrite1OkFromServer();
-            if (writeOkFromServer != null) {
+            if (pm.getPayloadCase() == PayloadCase.WRITE1OKFROMSERVER) {
                 messages1FromServers.add(writeOkFromServer);
+            } else if (pm.getPayloadCase() == PayloadCase.REQUESTFAILEDFROMSERVER) {
+                allWriteOk = false;
+                throw new RequestFailedException();
             } else {
                 allWriteOk = false;
                 // TODO: handle other responses
@@ -109,7 +125,13 @@ public class MochiDBClient implements Closeable {
         for (final ProtocolMessage pm : write2responseProtocolMessages) {
             final Write2AnsFromServer write2AnsFromServer = pm.getWrite2AnsFromServer();
             Utils.assertNotNull(write2AnsFromServer, "write2AnsFromServer is null");
+            write2ansFromServers.add(write2AnsFromServer);
         }
+
+        // To get transaction result, we can select any write2ansFromServers
+        final Write2AnsFromServer someWrite2AnsFromServer = write2ansFromServers.get(0);
+        final TransactionResult transactionResult = someWrite2AnsFromServer.getResult();
+        return transactionResult;
     }
 
     private void executePhase2() {

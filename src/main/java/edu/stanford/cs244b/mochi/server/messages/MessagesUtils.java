@@ -8,6 +8,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloToServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.RequestFailedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
@@ -74,6 +75,12 @@ public class MessagesUtils {
             pmBuilder.setWrite2AnsFromServer((Write2AnsFromServer.Builder) T);
         } else if (T instanceof Write2AnsFromServer) {
             pmBuilder.setWrite2AnsFromServer((Write2AnsFromServer) T);
+        }
+        // ---- RequestFailedFromServer
+        else if (T instanceof RequestFailedFromServer.Builder) {
+            pmBuilder.setRequestFailedFromServer((RequestFailedFromServer.Builder) T);
+        } else if (T instanceof RequestFailedFromServer) {
+            pmBuilder.setRequestFailedFromServer((RequestFailedFromServer) T);
         }// ---
         else {
             throw new IllegalStateException(String.format("Invalid message of class %s: %s", T.getClass(), T));

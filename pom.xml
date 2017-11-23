@@ -55,6 +55,16 @@
 		    <version>3.7</version>
 		</dependency>
 		<dependency>
+		    <groupId>com.jcabi</groupId>
+		    <artifactId>jcabi-aspects</artifactId>
+		    <version>0.22.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjrt</artifactId>
+		    <version>1.8.13</version>
+		</dependency>
+		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>6.11</version>
@@ -73,6 +83,33 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.jcabi</groupId>
+				<artifactId>jcabi-maven-plugin</artifactId>
+				<version>0.14.1</version>
+				<executions>
+				    <execution>
+				        <id>modify src classes</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>ajc</goal>
+                        </goals>
+                        <configuration>
+                            <classesDirectory>target/classes/</classesDirectory>
+                        </configuration>
+                    </execution>
+					<execution>
+					    <id>modify test classes</id>
+					    <phase>test-compile</phase>
+						<goals>
+							<goal>ajc</goal>
+						</goals>
+						<configuration>
+							<classesDirectory>target/test-classes/</classesDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
