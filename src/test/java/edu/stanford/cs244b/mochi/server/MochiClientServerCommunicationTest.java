@@ -220,6 +220,19 @@ public class MochiClientServerCommunicationTest {
         Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
         Assert.assertFalse(or2tr1.getExisted());
 
+        LOG.info("Executing second transaction");
+        final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_2")
+                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_2");
+
+        final TransactionResult transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
+        Assert.assertNotNull(transaction2result);
+        final List<OperationResult> operationList2 = transaction2result.getOperationsList();
+        Assert.assertNotNull(operationList2);
+        Assert.assertTrue(operationList2.size() == 2);
+        final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
+        final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
+
         mochiVirtualCluster.close();
         mochiDBclient.close();
     }

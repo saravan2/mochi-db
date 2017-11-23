@@ -89,7 +89,7 @@ public class InMemoryDataStore implements DataStore {
 
                 Long timestampFromCertificate = storeValue.getCurrentTimestampFromCurrentCertificate();
                 if (timestampFromCertificate != null) {
-                    grantBuilder.setTimestamp(timestampFromCertificate);
+                    grantBuilder.setTimestamp(timestampFromCertificate + 1);
                 }
                 final Grant newGrant = grantBuilder.build();
 
@@ -362,6 +362,7 @@ public class InMemoryDataStore implements DataStore {
         try {
             final List<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(multiGrant);
             if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
+                LOG.debug("Found objects whose timestamps are old: {}", listOfObjectsWhoseTimestampIsOld);
                 // TODO: do data loading from remotes
                 throw new UnsupportedOperationException();
             }
