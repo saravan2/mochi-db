@@ -10,6 +10,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.client.MochiDBClient;
+import edu.stanford.cs244b.mochi.client.TransactionBuilder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
@@ -194,23 +195,11 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
-        final Operation.Builder oBuilder1 = Operation.newBuilder();
-        oBuilder1.setAction(OperationAction.WRITE);
-        oBuilder1.setOperand1("DEMO_KEY_1");
-        oBuilder1.setOperand2("NEW_VALUE_FOR_KEY_1");
-        oBuilder1.setOperationNumber(1); // First operation
-
-        final Operation.Builder oBuilder2 = Operation.newBuilder();
-        oBuilder2.setAction(OperationAction.WRITE);
-        oBuilder2.setOperand1("DEMO_KEY_2");
-        oBuilder2.setOperand2("NEW_VALUE_FOR_KEY_2");
-        oBuilder2.setOperationNumber(1); // Second operation
-
-        final Transaction.Builder tBuilder = Transaction.newBuilder();
-        tBuilder.addOperations(oBuilder1);
-        tBuilder.addOperations(oBuilder2);
-
-        mochiDBclient.executeWriteTransaction(tBuilder.build());
+        final TransactionBuilder tb = TransactionBuilder.startNewTransaction()
+                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1a", 1)
+                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2b", 1);
+        
+        mochiDBclient.executeWriteTransaction(tb.build());
 
         mochiVirtualCluster.close();
         mochiDBclient.close();
