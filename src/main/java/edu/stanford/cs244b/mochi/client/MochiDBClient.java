@@ -19,7 +19,9 @@ import com.jcabi.aspects.Loggable;
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
@@ -62,6 +64,32 @@ public class MochiDBClient implements Closeable {
 
     public long getNextOperationNumber() {
         return operationNumberCounter.getAndIncrement();
+    }
+    
+    @Loggable()
+    public TransactionResult executeReadTransaction(final Transaction transactionToExecute) {
+        final ReadToServer.Builder rbuilder = ReadToServer.newBuilder();
+        rbuilder.setClientId(Utils.getUUID());
+        rbuilder.setNonce(Utils.getUUID());
+        rbuilder.setTransaction(transactionToExecute);
+        
+        final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder,
+                servers, mochiMessaging);
+        Utils.busyWaitForFutures(readResponseFutures);
+        LOG.debug("Resolved readResponse futures");
+        final List<ProtocolMessage> readResponseProtocalMessages = Utils.getFutures(readResponseFutures);
+        
+        final List<ReadFromServer> readFromServers = new ArrayList<ReadFromServer>(servers.size());
+        for (final ProtocolMessage pm : readResponseProtocalMessages) {
+            final ReadFromServer readFromServer = pm.getReadFromServer();
+            Utils.assertNotNull(readFromServer, "readFromServer is null");
+            readFromServers.add(readFromServer);
+        }
+        // To get transaction result, we can select any readFromServers
+        final ReadFromServer someReadFromServer = readFromServers.get(0);
+        final TransactionResult transactionResult = someReadFromServer.getResult();
+        return transactionResult;
+        
     }
 
     @Loggable()

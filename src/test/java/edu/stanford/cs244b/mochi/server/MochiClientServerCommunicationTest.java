@@ -162,32 +162,56 @@ public class MochiClientServerCommunicationTest {
 
     @Test
     public void testReadOperation() throws InterruptedException, ExecutionException {
-        // TODO: Use Mochi Testing Framework
-        final int serverPort1 = 8001;
-        MochiServer ms1 = newMochiServer(serverPort1);
-        ms1.start();
+        
+        final int numberOfServersToTest = 2;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        mochiVirtualCluster.startAllServers();
 
-        final MochiMessaging mm = new MochiMessaging();
-        mm.waitForConnectionToBeEstablished(ms1.toServer());
+        final MochiDBClient mochiDBclient = new MochiDBClient();
+        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+        mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
-        final ReadToServer.Builder rbuilder = ReadToServer.newBuilder();
-        rbuilder.setClientId(Utils.getUUID());
-        rbuilder.setNonce(Utils.getUUID());
+        final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addWriteOperation("DEMO_READ_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_1")
+                .addWriteOperation("DEMO_READ_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_1");
+        
+        final TransactionResult transaction1result = mochiDBclient.executeWriteTransaction(tb1.build());
+        Assert.assertNotNull(transaction1result);
 
-        final Operation.Builder orBuilder = Operation.newBuilder();
-        orBuilder.setAction(OperationAction.READ);
-        orBuilder.setOperand1("DEMO_KEY_1");
+        final List<OperationResult> operationList = transaction1result.getOperationsList();
+        Assert.assertNotNull(operationList);
+        Assert.assertTrue(operationList.size() == 2);
+        final OperationResult or1tr1 = Utils.getOperationResult(transaction1result, 0);
+        final OperationResult or2tr1 = Utils.getOperationResult(transaction1result, 1);
+        Assert.assertNotNull(or1tr1);
+        Assert.assertNotNull(or2tr1);
 
-        final Transaction.Builder trBuilder = Transaction.newBuilder();
-        trBuilder.addOperations(orBuilder);
+        Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
+        Assert.assertNotNull(or2tr1.getCurrentCertificate(), "write ceritificate for op2 in transaction 1 is null");
+        Assert.assertTrue(StringUtils.isEmpty(or1tr1.getResult()));
+        Assert.assertFalse(or1tr1.getExisted());
+        Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
+        Assert.assertFalse(or2tr1.getExisted());
+        
+        LOG.info("Second write transaction executed succesfully. Executing read transaction");
+      
+        final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addReadOperation("DEMO_READ_KEY_1")
+                .addReadOperation("DEMO_READ_KEY_2");
 
-        rbuilder.setTransaction(trBuilder);
-        final Future<ProtocolMessage> readResponseFutureServer1 = mm.sendAndReceive(ms1.toServer(), rbuilder);
-        ProtocolMessage readResponsePMFromServer1 = readResponseFutureServer1.get();
-        ReadFromServer readFromServer1 = readResponsePMFromServer1.getReadFromServer();
-        Assert.assertNotNull(readFromServer1);
-        ms1.close();
-        mm.close();
+        
+        final TransactionResult transaction2result = mochiDBclient.executeReadTransaction(tb2.build());
+        Assert.assertNotNull(transaction2result);
+        final List<OperationResult> operationList2 = transaction2result.getOperationsList();
+        Assert.assertNotNull(operationList2);
+        Assert.assertTrue(operationList2.size() == 2,
+                String.format("Wrong size of operation list = %s", operationList2.size()));
+        final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
+        final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
+        Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+        Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
+        LOG.info("Read transaction executed successfully");
+        
     }
 
     @Test
@@ -241,9 +265,25 @@ public class MochiClientServerCommunicationTest {
         Assert.assertTrue(or2tr2.getExisted());
 
         LOG.info("Second write transaction executed succesfully. Executing read transaction");
+      
+        final TransactionBuilder tb3 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addReadOperation("DEMO_KEY_1")
+                .addReadOperation("DEMO_KEY_2");
 
-        // TODO: @Saravana, please, create read transaction that will read two
-        // keys and check the content
+        
+        final TransactionResult transaction3result = mochiDBclient.executeReadTransaction(tb3.build());
+        Assert.assertNotNull(transaction3result);
+        final List<OperationResult> operationList3 = transaction3result.getOperationsList();
+        Assert.assertNotNull(operationList3);
+        Assert.assertTrue(operationList3.size() == 2,
+                String.format("Wrong size of operation list = %s", operationList3.size()));
+        final OperationResult or1tr3 = Utils.getOperationResult(transaction3result, 0);
+        final OperationResult or2tr3 = Utils.getOperationResult(transaction3result, 1);
+        Assert.assertEquals(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2");
+        Assert.assertEquals(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2");
+        LOG.info("Read transaction executed successfully");
+        
+        
 
         mochiVirtualCluster.close();
         mochiDBclient.close();

@@ -28,6 +28,15 @@ public class TransactionBuilder {
         operations.add(oBuilder.build());
         return this;
     }
+    
+    public TransactionBuilder addReadOperation(final String key) {
+        final Operation.Builder oBuilder = Operation.newBuilder();
+        oBuilder.setAction(OperationAction.READ);
+        oBuilder.setOperand1(key);
+        oBuilder.setOperationNumber(operationNumber);
+        operations.add(oBuilder.build());
+        return this;
+    }
 
     public Transaction build() {
         final Transaction.Builder tBuilder = Transaction.newBuilder();
