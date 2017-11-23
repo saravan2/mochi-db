@@ -220,7 +220,7 @@ public class MochiClientServerCommunicationTest {
         Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
         Assert.assertFalse(or2tr1.getExisted());
 
-        LOG.info("Executing second transaction");
+        LOG.info("First write transaction executed successfully. Executing second write transaction");
         final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
                 .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_2")
                 .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_2");
@@ -232,6 +232,15 @@ public class MochiClientServerCommunicationTest {
         Assert.assertTrue(operationList2.size() == 2);
         final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
         final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
+        Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+        Assert.assertTrue(or1tr2.getExisted());
+        Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
+        Assert.assertTrue(or2tr2.getExisted());
+
+        LOG.info("Second write transaction executed succesfully. Executing read transaction");
+
+        // TODO: @Saravana, please, create read transaction that will read two
+        // keys and check the content
 
         mochiVirtualCluster.close();
         mochiDBclient.close();
