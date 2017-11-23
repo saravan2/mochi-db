@@ -19,12 +19,14 @@ import com.google.protobuf.TextFormat;
 
 import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.Utils;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.FailureMessageType;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.RequestFailedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
@@ -67,10 +69,14 @@ public class InMemoryDataStore implements DataStore {
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
         synchronized (storeValue) {
             final Long oprationNumberInOldOps = storeValue.getOperationNumberInOldOps(clientId);
-            if (oprationNumberInOldOps != null && oprationNumberInOldOps < op.getOperationNumber()) {
-                throw new TooOldRequestException();
+            LOG.debug("Got oprationNumberInOldOps = {}", oprationNumberInOldOps);
+            if (oprationNumberInOldOps != null && oprationNumberInOldOps > op.getOperationNumber()) {
+                throw new TooOldRequestException(op.getOperationNumber(), oprationNumberInOldOps);
             }
             if (oprationNumberInOldOps != null && oprationNumberInOldOps == op.getOperationNumber()) {
+                LOG.debug(
+                        "oprationNumberInOldOps is not null ({}) and that is equal to existing number in the message: {}",
+                        oprationNumberInOldOps, op.getOperationNumber());
                 // TODO: reply old
                 throw new UnsupportedOperationException();
             }
@@ -156,8 +162,7 @@ public class InMemoryDataStore implements DataStore {
         return transactionResultBuilder.build();
     }
 
-    @Override
-    public Object processWrite1ToServer(final Write1ToServer write1ToServer) {
+    public Object tryProcessWriteRegularly(final Write1ToServer write1ToServer) {
         final Transaction transaction = write1ToServer.getTransaction();
         LOG.debug("Executing  write transaction: {}", transaction);
         final List<Operation> operations = transaction.getOperationsList();
@@ -208,6 +213,21 @@ public class InMemoryDataStore implements DataStore {
             return builder.build();
         }
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object processWrite1ToServer(final Write1ToServer write1ToServer) {
+        try {
+            Object messageResponse = tryProcessWriteRegularly(write1ToServer);
+            return messageResponse;
+        } catch (TooOldRequestException ex) {
+            LOG.info(
+                    "Write1 request is too old. Denying it. Write operation number = {}, old ops operation number = {}",
+                    ex.getProvidedOperationNumber(), ex.getObjectOperationNumber());
+            RequestFailedFromServer.Builder rfsBuilder = RequestFailedFromServer.newBuilder();
+            rfsBuilder.setType(FailureMessageType.OLD_REQUEST);
+            return rfsBuilder.build();
+        }
     }
 
     private List<String> getObjectsToLock(final MultiGrant multiGrant) {
@@ -306,7 +326,11 @@ public class InMemoryDataStore implements DataStore {
             final String oldValue = storeValueContainer.setValue(newValue);
             final boolean wasAvailable = storeValueContainer.setValueAvailble(true);
 
-            // TODO: update oldOps
+            final OldOpsEntry newOldOpsEntry = new OldOpsEntry();
+            newOldOpsEntry.setOperationNumber(op.getOperationNumber());
+            // TODO: add more stuff to oldOps
+            
+            storeValueContainer.updateOldOps(write1toServerIfAny.getClientId(), newOldOpsEntry);
             Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
             storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);
 

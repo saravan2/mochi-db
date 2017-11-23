@@ -79,6 +79,10 @@ public class StoreValueObjectContainer<T> {
         return clientOldOpsEntry.getOperationNumber();
     }
 
+    public void updateOldOps(final String clientId, final OldOpsEntry entry) {
+        oldOps.put(clientId, entry);
+    }
+
     public boolean isRequestInOps(final Write1ToServer writeToServer) {
         for (final Write1ToServer writeFromOps : ops) {
             if (writeFromOps.equals(writeToServer)) {

@@ -229,7 +229,8 @@ public class MochiClientServerCommunicationTest {
         Assert.assertNotNull(transaction2result);
         final List<OperationResult> operationList2 = transaction2result.getOperationsList();
         Assert.assertNotNull(operationList2);
-        Assert.assertTrue(operationList2.size() == 2);
+        Assert.assertTrue(operationList2.size() == 2,
+                String.format("Wrong size of operation list = %s", operationList2.size()));
         final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
         final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
         Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
@@ -244,6 +245,42 @@ public class MochiClientServerCommunicationTest {
 
         mochiVirtualCluster.close();
         mochiDBclient.close();
+    }
+
+    // @Test
+    public void testWriteOperationTooOld() throws InterruptedException, ExecutionException {
+        final int numberOfServersToTest = 1;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        mochiVirtualCluster.startAllServers();
+
+        final MochiDBClient mochiDBclient = new MochiDBClient();
+        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+        mochiDBclient.waitForConnectionToBeEstablishedToServers();
+
+        try {
+            final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction(
+                    mochiDBclient.getNextOperationNumber()).addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_1");
+
+            final TransactionResult transaction1result = mochiDBclient.executeWriteTransaction(tb1.build());
+            Assert.assertNotNull(transaction1result);
+
+            final List<OperationResult> operationList = transaction1result.getOperationsList();
+            Assert.assertTrue(operationList.size() == 1);
+            final OperationResult or1tr1 = Utils.getOperationResult(transaction1result, 0);
+            Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
+
+            LOG.info("First write transaction executed successfully. "
+                    + " Executing second write transaction which should raise exception");
+            final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(
+                    mochiDBclient.getNextOperationNumber() - 1).addWriteOperation("DEMO_KEY_1",
+                    "NEW_VALUE_FOR_KEY_1_TR_2");
+
+            final TransactionResult transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
+
+        } finally {
+            mochiVirtualCluster.close();
+            mochiDBclient.close();
+        }
     }
 
     /*

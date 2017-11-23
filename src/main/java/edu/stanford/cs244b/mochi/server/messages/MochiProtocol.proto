@@ -151,6 +151,14 @@ message Write1RefusedFromServer {
 
 // =============================================== Other messages ======================================
 
+enum FailureMessageType {
+    OLD_REQUEST = 0;
+}
+
+message RequestFailedFromServer {
+    FailureMessageType type = 1;
+}
+
 message HelloToServer {
     string msg = 1;
 }
@@ -182,6 +190,7 @@ message ProtocolMessage {
         Write1RefusedFromServer write1RefusedFromServer = 109;
         Write2ToServer write2ToServer = 110;
         Write2AnsFromServer write2AnsFromServer = 111;
+        RequestFailedFromServer requestFailedFromServer = 112;
     };
     int64 msgTimestamp = 5;
     string serverId = 6;
