@@ -55,8 +55,7 @@ public class InMemoryDataStore implements DataStore {
         final String valueForTheKey;
         final WriteCertificate currentC;
         if (keyStoreValue == null) {
-            // For now
-            valueForTheKey = "Voila";
+            valueForTheKey = null;
             currentC = WriteCertificate.getDefaultInstance();
         } else {
             valueForTheKey = keyStoreValue.getValue();
@@ -156,7 +155,10 @@ public class InMemoryDataStore implements DataStore {
             return null;
         }
         
+        readAcquireLocks(transaction);
+        
         final List<OperationResult> operationResults = new ArrayList<OperationResult>(operations.size());
+        
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.READ) {
                 operationResults.add(processRead(op));
@@ -165,6 +167,9 @@ public class InMemoryDataStore implements DataStore {
             }
 
         }
+        
+        readReleaseLocks(transaction);
+        
         final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
         transactionResultBuilder.addAllOperations(operationResults);
         final ReadFromServer.Builder readFromServerBuilder = ReadFromServer.newBuilder();
@@ -312,6 +317,43 @@ public class InMemoryDataStore implements DataStore {
             storeValueContianer.releaseObjectLockIfHeldByCurrent();
         }
     }
+    
+    private void readAcquireLocks(Transaction transaction) {
+        final List<Operation> operations = transaction.getOperationsList();
+        if (operations == null)
+            return;
+        
+        for (Operation op : operations) {
+            if (op.getAction() == OperationAction.READ) {
+                final String interestedKey = op.getOperand1();
+                if (StringUtils.isEmpty(interestedKey) == false) {
+                    final StoreValueObjectContainer<String> keyStoreValue = data.get(interestedKey);
+                    if (keyStoreValue != null) {
+                        keyStoreValue.acquireObjectLockIfNotHeld();
+                    }
+                }
+            }
+        }
+    }
+    
+    private void readReleaseLocks(Transaction transaction) {
+        final List<Operation> operations = transaction.getOperationsList();
+        if (operations == null)
+            return;
+        
+        for (Operation op : operations) {
+            if (op.getAction() == OperationAction.READ) {
+                final String interestedKey = op.getOperand1();
+                if (StringUtils.isEmpty(interestedKey) == false) {
+                    final StoreValueObjectContainer<String> keyStoreValue = data.get(interestedKey);
+                    if (keyStoreValue != null) {
+                        keyStoreValue.releaseObjectLockIfHeldByCurrent();
+                    }
+                    
+                }
+            }
+        }
+   }
 
     public <V, K> V getFirst(final Map<K, V> map) {
         if (map == null) {
