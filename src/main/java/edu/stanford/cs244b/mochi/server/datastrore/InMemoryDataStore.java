@@ -25,6 +25,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.RequestFailedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
@@ -49,15 +50,21 @@ public class InMemoryDataStore implements DataStore {
     protected OperationResult processRead(final Operation op) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
+        LOG.debug("Performing processRead on key: {}", interestedKey);
         final StoreValueObjectContainer<String> keyStoreValue = data.get(interestedKey);
         final String valueForTheKey;
+        final WriteCertificate currentC;
         if (keyStoreValue == null) {
-            valueForTheKey = null;
+            // For now
+            valueForTheKey = "Voila";
+            currentC = WriteCertificate.getDefaultInstance();
         } else {
             valueForTheKey = keyStoreValue.getValue();
+            currentC = keyStoreValue.getCurrentC();
         }
         final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
         operationResultBuilder.setResult(valueForTheKey);
+        operationResultBuilder.setCurrentCertificate(currentC);
         return operationResultBuilder.build();
     }
 
@@ -148,6 +155,7 @@ public class InMemoryDataStore implements DataStore {
         if (operations == null) {
             return null;
         }
+        
         final List<OperationResult> operationResults = new ArrayList<OperationResult>(operations.size());
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.READ) {
@@ -159,7 +167,11 @@ public class InMemoryDataStore implements DataStore {
         }
         final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
         transactionResultBuilder.addAllOperations(operationResults);
-        return transactionResultBuilder.build();
+        final ReadFromServer.Builder readFromServerBuilder = ReadFromServer.newBuilder();
+        readFromServerBuilder.setResult(transactionResultBuilder.build());
+        readFromServerBuilder.setNonce(readToServer.getNonce());
+        readFromServerBuilder.setRid(Utils.getUUID());
+        return readFromServerBuilder.build(); 
     }
 
     public Object tryProcessWriteRegularly(final Write1ToServer write1ToServer) {
