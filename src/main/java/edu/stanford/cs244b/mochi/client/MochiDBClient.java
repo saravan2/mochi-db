@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcabi.aspects.Loggable;
+
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
@@ -61,6 +63,7 @@ public class MochiDBClient implements Closeable {
         return operationNumberCounter.getAndIncrement();
     }
 
+    @Loggable()
     public TransactionResult executeWriteTransaction(final Transaction transactionToExecute) {
 
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
