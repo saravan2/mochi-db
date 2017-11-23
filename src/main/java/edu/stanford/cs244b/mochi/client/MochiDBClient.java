@@ -19,6 +19,7 @@ import com.jcabi.aspects.Loggable;
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
@@ -76,11 +77,15 @@ public class MochiDBClient implements Closeable {
         final List<ProtocolMessage> write1responseProtocalMessages = Utils.getFutures(write1responseFutures);
 
         final List<Object> messages1FromServers = new ArrayList<Object>(servers.size());
+        // TODO: consider majority of votes
         boolean allWriteOk = true;
         for (ProtocolMessage pm : write1responseProtocalMessages) {
             final Write1OkFromServer writeOkFromServer = pm.getWrite1OkFromServer();
-            if (writeOkFromServer != null) {
+            if (pm.getPayloadCase() == PayloadCase.WRITE1OKFROMSERVER) {
                 messages1FromServers.add(writeOkFromServer);
+            } else if (pm.getPayloadCase() == PayloadCase.REQUESTFAILEDFROMSERVER) {
+                allWriteOk = false;
+                throw new RequestFailedException();
             } else {
                 allWriteOk = false;
                 // TODO: handle other responses

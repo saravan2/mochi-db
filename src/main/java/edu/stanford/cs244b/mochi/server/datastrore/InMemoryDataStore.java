@@ -328,7 +328,7 @@ public class InMemoryDataStore implements DataStore {
 
             final OldOpsEntry newOldOpsEntry = new OldOpsEntry();
             newOldOpsEntry.setOperationNumber(op.getOperationNumber());
-            // TODO: add more stuff to oldOps
+            // More stuff into old entries is added at the end
             
             storeValueContainer.updateOldOps(write1toServerIfAny.getClientId(), newOldOpsEntry);
             Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
@@ -343,12 +343,13 @@ public class InMemoryDataStore implements DataStore {
             if (oldValue != null) {
                 resultBuilder.setResult(oldValue);
             }
+            final OperationResult oprationResult = resultBuilder.build();
+            newOldOpsEntry.setOperationResult(oprationResult);
+            return oprationResult;
         } else {
             // TODO: handle other operations, such as delete for example
             throw new UnsupportedOperationException();
         }
-
-        return resultBuilder.build();
     }
     
     private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {

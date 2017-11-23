@@ -11,6 +11,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.client.MochiDBClient;
+import edu.stanford.cs244b.mochi.client.RequestFailedException;
 import edu.stanford.cs244b.mochi.client.TransactionBuilder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
@@ -247,7 +248,7 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.close();
     }
 
-    // @Test
+    @Test(expectedExceptions = RequestFailedException.class)
     public void testWriteOperationTooOld() throws InterruptedException, ExecutionException {
         final int numberOfServersToTest = 1;
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
@@ -272,7 +273,7 @@ public class MochiClientServerCommunicationTest {
             LOG.info("First write transaction executed successfully. "
                     + " Executing second write transaction which should raise exception");
             final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction(
-                    mochiDBclient.getNextOperationNumber() - 1).addWriteOperation("DEMO_KEY_1",
+                    mochiDBclient.getNextOperationNumber() - 2).addWriteOperation("DEMO_KEY_1",
                     "NEW_VALUE_FOR_KEY_1_TR_2");
 
             final TransactionResult transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
