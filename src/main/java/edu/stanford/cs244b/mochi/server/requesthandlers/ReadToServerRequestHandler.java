@@ -26,6 +26,7 @@ public class ReadToServerRequestHandler implements ServerRequestHandler<ReadToSe
         LOG.debug("Executing ReadToServer {}", message);
         final Object readResponse = dataStore.processReadRequest(message);
         LOG.debug("Sending back read reply: {}", readResponse);
+        LOG.debug("Protocol getMsgId: {}", protocolMessage.getMsgId());
         ctx.writeAndFlush(MessagesUtils.wrapIntoProtocolMessage(readResponse, protocolMessage.getMsgId()));
         LOG.debug("Wrote back response");
     }

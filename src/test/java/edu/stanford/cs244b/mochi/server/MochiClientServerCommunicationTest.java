@@ -16,6 +16,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
@@ -155,7 +156,8 @@ public class MochiClientServerCommunicationTest {
     }
 
     @Test
-    public void testReadOperation() throws InterruptedException {
+    public void testReadOperation() throws InterruptedException, ExecutionException {
+        // TODO: Use Mochi Testing Framework
         final int serverPort1 = 8001;
         MochiServer ms1 = newMochiServer(serverPort1);
         ms1.start();
@@ -163,23 +165,22 @@ public class MochiClientServerCommunicationTest {
         final MochiMessaging mm = new MochiMessaging();
         mm.waitForConnectionToBeEstablished(ms1.toServer());
 
-        final ReadToServer.Builder builder = ReadToServer.newBuilder();
-        builder.setClientId(Utils.getUUID());
-        builder.setNonce(Utils.getUUID());
+        final ReadToServer.Builder rbuilder = ReadToServer.newBuilder();
+        rbuilder.setClientId(Utils.getUUID());
+        rbuilder.setNonce(Utils.getUUID());
 
-        final Operation.Builder oBuilder = Operation.newBuilder();
-        oBuilder.setAction(OperationAction.READ);
-        oBuilder.setOperand1("DEMO_KEY_1");
+        final Operation.Builder orBuilder = Operation.newBuilder();
+        orBuilder.setAction(OperationAction.READ);
+        orBuilder.setOperand1("DEMO_KEY_1");
 
-        final Transaction.Builder tBuilder = Transaction.newBuilder();
-        tBuilder.addOperations(oBuilder);
+        final Transaction.Builder trBuilder = Transaction.newBuilder();
+        trBuilder.addOperations(orBuilder);
 
-        builder.setTransaction(tBuilder);
-        mm.sendAndReceive(ms1.toServer(), builder);
-        // TODO: we just sending here and do not do anything. Let's introduce a
-        // method into MochiMessaging, so we can re-use that code and as part of
-        // that test we will need to ask to read some keys
-
+        rbuilder.setTransaction(trBuilder);
+        final Future<ProtocolMessage> readResponseFutureServer1 = mm.sendAndReceive(ms1.toServer(), rbuilder);
+        ProtocolMessage readResponsePMFromServer1 = readResponseFutureServer1.get();
+        ReadFromServer readFromServer1 = readResponsePMFromServer1.getReadFromServer();
+        Assert.assertNotNull(readFromServer1);
         ms1.close();
         mm.close();
     }
