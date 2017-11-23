@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.javatuples.Pair;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class StoreValueObjectContainer<T> {
     private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
     private volatile long currentVS = VIEWSTAMP_START_NUMBER;
-    private final ReentrantLock objectLock = new ReentrantLock();
+    private final ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
 
     public StoreValueObjectContainer(String key, boolean valueAvailble) {
         this(key, null, valueAvailble);
@@ -202,23 +202,27 @@ public class StoreValueObjectContainer<T> {
         this.currentC = currentC;
     }
 
-    public void acquireObjectLockIfNotHeld() {
-        if (objectLock.isHeldByCurrentThread() == false) {
-            objectLock.lock();
+    public void acquireObjectWriteLockIfNotHeld() {
+        if (objectLock.isWriteLockedByCurrentThread() == false) {
+            objectLock.writeLock().lock();
         }
     }
-
-    public void releaseObjectLock() {
-        objectLock.unlock();
+    
+    public void acquireObjectReadLock() {
+        objectLock.readLock().lock();
     }
 
-    public void releaseObjectLockIfHeldByCurrent() {
-        if (objectLock.isHeldByCurrentThread()) {
-            objectLock.unlock();
+    public void releaseObjectWriteLockIfHeldByCurrent() {
+        if (objectLock.isWriteLockedByCurrentThread()) {
+            objectLock.writeLock().unlock();
         }
     }
+    
+    public void releaseObjectReadLock() {
+        objectLock.readLock().unlock();
+    }
 
-    public boolean isObjectLockHeldByCurrent() {
-        return objectLock.isHeldByCurrentThread();
+    public boolean isObjectWriteLockHeldByCurrent() {
+        return objectLock.isWriteLockedByCurrentThread();
     }
 }

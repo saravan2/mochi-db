@@ -155,7 +155,7 @@ public class InMemoryDataStore implements DataStore {
             return null;
         }
         
-        readAcquireLocks(transaction);
+        final List<String> objectsToReadLock = acquireReadLocksAndReturnList(transaction);
         
         final List<OperationResult> operationResults = new ArrayList<OperationResult>(operations.size());
         
@@ -168,7 +168,7 @@ public class InMemoryDataStore implements DataStore {
 
         }
         
-        readReleaseLocks(transaction);
+        releaseReadLocks(objectsToReadLock);
         
         final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
         transactionResultBuilder.addAllOperations(operationResults);
@@ -247,7 +247,7 @@ public class InMemoryDataStore implements DataStore {
         }
     }
 
-    private List<String> getObjectsToLock(final MultiGrant multiGrant) {
+    private List<String> getObjectsToWriteLock(final MultiGrant multiGrant) {
         Utils.assertNotNull(multiGrant, "MultiGrant cannot be null");
         final Set<String> objectsFromMultiGrant = multiGrant.getGrantsMap().keySet();
         Utils.assertNotNull(multiGrant, "objectsFromMultiGrant cannot be null");
@@ -256,6 +256,23 @@ public class InMemoryDataStore implements DataStore {
         // Need to do in order to avoid deadlock
         Collections.sort(objectsToLock);
         return objectsToLock;
+    }
+    
+    private void acquireWriteLocks(final MultiGrant multiGrant) {
+        final List<String> objectsToWriteLock = getObjectsToWriteLock(multiGrant);
+        for (String object : objectsToWriteLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.acquireObjectWriteLockIfNotHeld();
+        }
+    }
+    
+    private List<String> acquireWriteLocksAndReturnList(final MultiGrant multiGrant) {
+        final List<String> objectsToWriteLock = getObjectsToWriteLock(multiGrant);
+        for (String object : objectsToWriteLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.acquireObjectWriteLockIfNotHeld();
+        }
+        return objectsToWriteLock;
     }
 
     private Pair<Long, Long> getViewstampAndTimestampFromGrant(final Grant grant) {
@@ -272,12 +289,9 @@ public class InMemoryDataStore implements DataStore {
      * identical grants are passed in phase 2
      */
     private List<String> write2acquireLocksAndCheckViewStamps(final MultiGrant multiGrant) {
-        final List<String> objectsToLock = getObjectsToLock(multiGrant);
-        for (String object : objectsToLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
-            storeValueContianer.acquireObjectLockIfNotHeld();
-        }
+        final List<String> objectsToLock = acquireWriteLocksAndReturnList(multiGrant);
         LOG.debug("All locks for write grant acquired: {}", objectsToLock);
+
         final List<String> listOfObjectsWhoseTimestampIsOld = new ArrayList<String>();
         for (String object : objectsToLock) {
             final Grant grantForThatObject = multiGrant.getGrantsMap().get(object);
@@ -310,48 +324,71 @@ public class InMemoryDataStore implements DataStore {
         return listOfObjectsWhoseTimestampIsOld;
     }
 
-    private void write2releaseLocks(final MultiGrant multiGrant) {
-        final List<String> objectsToLock = getObjectsToLock(multiGrant);
+    private void releaseWriteLocks(final MultiGrant multiGrant) {
+        final List<String> objectsToLock = getObjectsToWriteLock(multiGrant);
         for (String object : objectsToLock) {
             final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
-            storeValueContianer.releaseObjectLockIfHeldByCurrent();
+            storeValueContianer.releaseObjectWriteLockIfHeldByCurrent();
         }
     }
     
-    private void readAcquireLocks(Transaction transaction) {
+    private void releaseWriteLocks(List<String> objectsToUnLock) {
+        for (String object : objectsToUnLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.releaseObjectWriteLockIfHeldByCurrent();
+        }
+    }
+    
+    private List<String> getObjectsToReadLock(Transaction transaction) {
+        List<String> objectsFromTransaction = new ArrayList<String>();
         final List<Operation> operations = transaction.getOperationsList();
         if (operations == null)
-            return;
+            return objectsFromTransaction;
         
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.READ) {
                 final String interestedKey = op.getOperand1();
                 if (StringUtils.isEmpty(interestedKey) == false) {
-                    final StoreValueObjectContainer<String> keyStoreValue = data.get(interestedKey);
-                    if (keyStoreValue != null) {
-                        keyStoreValue.acquireObjectLockIfNotHeld();
-                    }
+                    objectsFromTransaction.add(interestedKey);
                 }
             }
         }
+
+        final List<String> objectsToReadLock = new ArrayList<String>(objectsFromTransaction);
+        // Need to do in order to avoid deadlock
+        Collections.sort(objectsToReadLock);
+        return objectsToReadLock;
     }
     
-    private void readReleaseLocks(Transaction transaction) {
-        final List<Operation> operations = transaction.getOperationsList();
-        if (operations == null)
-            return;
-        
-        for (Operation op : operations) {
-            if (op.getAction() == OperationAction.READ) {
-                final String interestedKey = op.getOperand1();
-                if (StringUtils.isEmpty(interestedKey) == false) {
-                    final StoreValueObjectContainer<String> keyStoreValue = data.get(interestedKey);
-                    if (keyStoreValue != null) {
-                        keyStoreValue.releaseObjectLockIfHeldByCurrent();
-                    }
-                    
-                }
-            }
+    private void acquireReadLocks(Transaction transaction) {
+        final List<String> objectsToReadLock = getObjectsToReadLock(transaction);
+        for (String object : objectsToReadLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.acquireObjectReadLock();
+        }
+    }
+    
+    private List<String> acquireReadLocksAndReturnList(Transaction transaction) {
+        final List<String> objectsToReadLock = getObjectsToReadLock(transaction);
+        for (String object : objectsToReadLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.acquireObjectReadLock();
+        }
+        return objectsToReadLock;
+    }
+    
+    private void releaseReadLocks(Transaction transaction) {       
+        final List<String> objectsToReleaseReadLock = getObjectsToReadLock(transaction);
+        for (String object : objectsToReleaseReadLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.releaseObjectReadLock();
+        }
+   }
+    
+    private void releaseReadLocks(List<String> objectsToReleaseReadLock) {       
+        for (String object : objectsToReleaseReadLock) {
+            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            storeValueContianer.releaseObjectReadLock();
         }
    }
 
@@ -370,8 +407,8 @@ public class InMemoryDataStore implements DataStore {
             final Write1ToServer write1toServerIfAny) {
         final StoreValueObjectContainer<String> storeValueContainer = data.get(op.getOperand1());
         Utils.assertNotNull(storeValueContainer, "storeValueCotainer should not be null");
-        if (storeValueContainer.isObjectLockHeldByCurrent() == false) {
-            throw new IllegalStateException("Cannot apply operation since lock is not held");
+        if (storeValueContainer.isObjectWriteLockHeldByCurrent() == false) {
+            throw new IllegalStateException("Cannot apply operation since write lock is not held");
         }
 
         final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
@@ -452,7 +489,7 @@ public class InMemoryDataStore implements DataStore {
             LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
             throw ex;
         } finally {
-            write2releaseLocks(multiGrant);
+            releaseWriteLocks(multiGrant);
         }
 
         final Write2AnsFromServer.Builder write2AnsFromServerBuilder = Write2AnsFromServer.newBuilder();
