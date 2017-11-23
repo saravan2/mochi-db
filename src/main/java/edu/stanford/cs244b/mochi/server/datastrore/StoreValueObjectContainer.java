@@ -65,8 +65,10 @@ public class StoreValueObjectContainer<T> {
         return valueAvailble;
     }
 
-    public void setValueAvailble(boolean valueAvailble) {
+    public boolean setValueAvailble(boolean valueAvailble) {
+        final boolean oldAvailable = this.valueAvailble;
         this.valueAvailble = valueAvailble;
+        return oldAvailable;
     }
 
     public Long getOperationNumberInOldOps(final String clientId) {

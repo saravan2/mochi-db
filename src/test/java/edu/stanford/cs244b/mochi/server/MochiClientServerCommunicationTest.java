@@ -215,8 +215,10 @@ public class MochiClientServerCommunicationTest {
 
         Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
         Assert.assertNotNull(or2tr1.getCurrentCertificate(), "write ceritificate for op2 in transaction 1 is null");
-        Assert.assertNull(or1tr1.getResult(), "result of op1 in transaction 1 is not null");
-        Assert.assertNull(or2tr1.getResult(), "result of op2 in transaction 1 is not null");
+        Assert.assertTrue(StringUtils.isEmpty(or1tr1.getResult()));
+        Assert.assertFalse(or1tr1.getExisted());
+        Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
+        Assert.assertFalse(or2tr1.getExisted());
 
         mochiVirtualCluster.close();
         mochiDBclient.close();

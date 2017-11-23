@@ -10,7 +10,8 @@ WRITE:
   operand 1       - key
   operand 2       - new value
   
-  return result   - old value for key. null if was not present
+  return result   - old value for key. null or empty if was not present
+         existed  - false, if that value did not exist
 
 
 
@@ -46,6 +47,7 @@ message Transaction {
 message OperationResult {
     string result = 1;
     WriteCertificate currentCertificate = 2;
+    bool existed = 3; 
 }
 
 message TransactionResult {

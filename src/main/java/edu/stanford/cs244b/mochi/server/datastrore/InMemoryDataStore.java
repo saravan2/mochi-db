@@ -304,7 +304,7 @@ public class InMemoryDataStore implements DataStore {
         if (op.getAction() == OperationAction.WRITE) {
             final String newValue = op.getOperand2();
             final String oldValue = storeValueContainer.setValue(newValue);
-            storeValueContainer.setValueAvailble(true);
+            final boolean wasAvailable = storeValueContainer.setValueAvailble(true);
 
             // TODO: update oldOps
             Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
@@ -315,6 +315,7 @@ public class InMemoryDataStore implements DataStore {
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
             resultBuilder.setCurrentCertificate(writeCertificateIfAny);
+            resultBuilder.setExisted(wasAvailable);
             if (oldValue != null) {
                 resultBuilder.setResult(oldValue);
             }
