@@ -1,5 +1,6 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -15,9 +16,11 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -195,11 +198,20 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
-        final TransactionBuilder tb = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
-                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1a")
-                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2b");
+        final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction(mochiDBclient.getNextOperationNumber())
+                .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_1")
+                .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_1");
         
-        mochiDBclient.executeWriteTransaction(tb.build());
+        final TransactionResult transaction1result = mochiDBclient.executeWriteTransaction(tb1.build());
+        Assert.assertNotNull(transaction1result);
+
+        final List<OperationResult> operationList = transaction1result.getOperationsList();
+        Assert.assertNotNull(operationList);
+        Assert.assertTrue(operationList.size() == 2);
+        final OperationResult or1tr1 = operationList.get(0);
+        final OperationResult or2tr1 = operationList.get(1);
+        Assert.assertNotNull(or1tr1);
+        Assert.assertNotNull(or2tr1);
 
         mochiVirtualCluster.close();
         mochiDBclient.close();

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.testng.Assert;
 
+import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
 
@@ -23,14 +24,19 @@ public class MochiVirtualCluster implements Closeable {
         Assert.assertTrue(initialNumberOfServers > 0);
         servers = new ArrayList<VirtualServer>(initialNumberOfServers * 2);
         for (int i = 0 ; i < initialNumberOfServers; i++) {
-            final MochiServer ms = newMochiServer(nextPort);
-            nextPort += 1;
-            servers.add(new VirtualServer(ms));
+            addMochiServer();
         }
     }
 
-    private MochiServer newMochiServer(final int serverPort) {
-        return new MochiServer(serverPort, new InMemoryDSMochiContextImpl());
+    private void addMochiServer() {
+        final InMemoryDSMochiContextImpl mochiContext = new InMemoryDSMochiContextImpl();
+        final MochiServer ms = newMochiServer(nextPort, mochiContext);
+        nextPort += 1;
+        servers.add(new VirtualServer(ms, mochiContext));
+    }
+
+    private MochiServer newMochiServer(final int serverPort, final MochiContext mochiContext) {
+        return new MochiServer(serverPort, mochiContext);
     }
 
     public void startAllServers() {

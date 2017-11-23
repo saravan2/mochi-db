@@ -18,6 +18,7 @@ import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
@@ -60,7 +61,7 @@ public class MochiDBClient implements Closeable {
         return operationNumberCounter.getAndIncrement();
     }
 
-    public void executeWriteTransaction(final Transaction transactionToExecute) {
+    public TransactionResult executeWriteTransaction(final Transaction transactionToExecute) {
 
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
         write1toServerBuilder.setTransaction(transactionToExecute);
@@ -116,7 +117,13 @@ public class MochiDBClient implements Closeable {
         for (final ProtocolMessage pm : write2responseProtocolMessages) {
             final Write2AnsFromServer write2AnsFromServer = pm.getWrite2AnsFromServer();
             Utils.assertNotNull(write2AnsFromServer, "write2AnsFromServer is null");
+            write2ansFromServers.add(write2AnsFromServer);
         }
+
+        // To get transaction result, we can select any write2ansFromServers
+        final Write2AnsFromServer someWrite2AnsFromServer = write2ansFromServers.get(0);
+        final TransactionResult transactionResult = someWrite2AnsFromServer.getResult();
+        return transactionResult;
     }
 
     private void executePhase2() {

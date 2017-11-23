@@ -326,8 +326,9 @@ public class InMemoryDataStore implements DataStore {
         return resultBuilder.build();
     }
     
-    private void write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
+    private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
         final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
+        final List<OperationResult> operationResults = new ArrayList<OperationResult>(grantsToExecute.size());
         for (final String object : grantsToExecute.keySet()) {
             final StoreValueObjectContainer<String> storeValueCotainer = data.get(object);
             final Grant grantForObject = grantsToExecute.get(object);
@@ -341,7 +342,9 @@ public class InMemoryDataStore implements DataStore {
                     TextFormat.shortDebugString(write1request));
             final OperationResult operationResult = applyOperation(opToExecute, write2ToServer.getWriteCertificate(),
                     write1request);
+            operationResults.add(operationResult);
         }
+        return operationResults;
     }
 
     @Override
@@ -354,6 +357,7 @@ public class InMemoryDataStore implements DataStore {
         final Map<String, MultiGrant> multiGrants = wc.getGrantsMap();
         final MultiGrant multiGrant = getFirst(multiGrants);
 
+        final List<OperationResult> operationResults;
         try {
             final List<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(multiGrant);
             if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
@@ -361,7 +365,7 @@ public class InMemoryDataStore implements DataStore {
                 throw new UnsupportedOperationException();
             }
             LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");
-            write2apply(multiGrant, write2ToServer);
+            operationResults = write2apply(multiGrant, write2ToServer);
 
         } catch (Exception ex) {
             LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
@@ -372,9 +376,7 @@ public class InMemoryDataStore implements DataStore {
 
         final Write2AnsFromServer.Builder write2AnsFromServerBuilder = Write2AnsFromServer.newBuilder();
         final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
-
-        // TODO: execute business logic
-
+        transactionResultBuilder.addAllOperations(operationResults);
         write2AnsFromServerBuilder.setResult(transactionResultBuilder);
         return write2AnsFromServerBuilder.build();
     }
