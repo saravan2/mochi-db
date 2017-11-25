@@ -143,7 +143,12 @@ some other client; the reply contains the grant to
 that client, plus the information about this client’s
 request (to prevent replays). */
 message Write1RefusedFromServer {
-    // TODO: add other properties
+    MultiGrant multiGrant = 1; // <oid, op#, ts> + vs
+    /* Map of certificates for the current state of the object. 
+        Key is object, value is certificate for that state of object */
+    map <string, WriteCertificate> currentCertificates = 2;
+    string clientId = 3; // cid
+    string hash = 4;
 }
 
 

@@ -11636,6 +11636,118 @@ public final class MochiProtocol {
   public interface Write1RefusedFromServerOrBuilder extends
       // @@protoc_insertion_point(interface_extends:edu.stanford.cs244b.mochi.server.messages.Write1RefusedFromServer)
       com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * &lt;oid, op#, ts&gt; + vs
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+     */
+    boolean hasMultiGrant();
+    /**
+     * <pre>
+     * &lt;oid, op#, ts&gt; + vs
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant getMultiGrant();
+    /**
+     * <pre>
+     * &lt;oid, op#, ts&gt; + vs
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantOrBuilder getMultiGrantOrBuilder();
+
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+    int getCurrentCertificatesCount();
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+    boolean containsCurrentCertificates(
+        java.lang.String key);
+    /**
+     * Use {@link #getCurrentCertificatesMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+    getCurrentCertificates();
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+    java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+    getCurrentCertificatesMap();
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getCurrentCertificatesOrDefault(
+        java.lang.String key,
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate defaultValue);
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getCurrentCertificatesOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * cid
+     * </pre>
+     *
+     * <code>string clientId = 3;</code>
+     */
+    java.lang.String getClientId();
+    /**
+     * <pre>
+     * cid
+     * </pre>
+     *
+     * <code>string clientId = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getClientIdBytes();
+
+    /**
+     * <code>string hash = 4;</code>
+     */
+    java.lang.String getHash();
+    /**
+     * <code>string hash = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getHashBytes();
   }
   /**
    * <pre>
@@ -11658,6 +11770,8 @@ public final class MochiProtocol {
       super(builder);
     }
     private Write1RefusedFromServer() {
+      clientId_ = "";
+      hash_ = "";
     }
 
     @java.lang.Override
@@ -11670,6 +11784,7 @@ public final class MochiProtocol {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -11685,6 +11800,44 @@ public final class MochiProtocol {
                   input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
+              break;
+            }
+            case 10: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.Builder subBuilder = null;
+              if (multiGrant_ != null) {
+                subBuilder = multiGrant_.toBuilder();
+              }
+              multiGrant_ = input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(multiGrant_);
+                multiGrant_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                currentCertificates_ = com.google.protobuf.MapField.newMapField(
+                    CurrentCertificatesDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000002;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+              currentCertificates__ = input.readMessage(
+                  CurrentCertificatesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              currentCertificates_.getMutableMap().put(
+                  currentCertificates__.getKey(), currentCertificates__.getValue());
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              clientId_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              hash_ = s;
               break;
             }
           }
@@ -11704,11 +11857,228 @@ public final class MochiProtocol {
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 2:
+          return internalGetCurrentCertificates();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.class, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int MULTIGRANT_FIELD_NUMBER = 1;
+    private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant multiGrant_;
+    /**
+     * <pre>
+     * &lt;oid, op#, ts&gt; + vs
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+     */
+    public boolean hasMultiGrant() {
+      return multiGrant_ != null;
+    }
+    /**
+     * <pre>
+     * &lt;oid, op#, ts&gt; + vs
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant getMultiGrant() {
+      return multiGrant_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.getDefaultInstance() : multiGrant_;
+    }
+    /**
+     * <pre>
+     * &lt;oid, op#, ts&gt; + vs
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantOrBuilder getMultiGrantOrBuilder() {
+      return getMultiGrant();
+    }
+
+    public static final int CURRENTCERTIFICATES_FIELD_NUMBER = 2;
+    private static final class CurrentCertificatesDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>newDefaultInstance(
+                  edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_CurrentCertificatesEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> currentCertificates_;
+    private com.google.protobuf.MapField<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+    internalGetCurrentCertificates() {
+      if (currentCertificates_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            CurrentCertificatesDefaultEntryHolder.defaultEntry);
+      }
+      return currentCertificates_;
+    }
+
+    public int getCurrentCertificatesCount() {
+      return internalGetCurrentCertificates().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+
+    public boolean containsCurrentCertificates(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetCurrentCertificates().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getCurrentCertificatesMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> getCurrentCertificates() {
+      return getCurrentCertificatesMap();
+    }
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+
+    public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> getCurrentCertificatesMap() {
+      return internalGetCurrentCertificates().getMap();
+    }
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getCurrentCertificatesOrDefault(
+        java.lang.String key,
+        edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> map =
+          internalGetCurrentCertificates().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map of certificates for the current state of the object. 
+     *Key is object, value is certificate for that state of object 
+     * </pre>
+     *
+     * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+     */
+
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getCurrentCertificatesOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> map =
+          internalGetCurrentCertificates().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int CLIENTID_FIELD_NUMBER = 3;
+    private volatile java.lang.Object clientId_;
+    /**
+     * <pre>
+     * cid
+     * </pre>
+     *
+     * <code>string clientId = 3;</code>
+     */
+    public java.lang.String getClientId() {
+      java.lang.Object ref = clientId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        clientId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * cid
+     * </pre>
+     *
+     * <code>string clientId = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getClientIdBytes() {
+      java.lang.Object ref = clientId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        clientId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int HASH_FIELD_NUMBER = 4;
+    private volatile java.lang.Object hash_;
+    /**
+     * <code>string hash = 4;</code>
+     */
+    public java.lang.String getHash() {
+      java.lang.Object ref = hash_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        hash_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string hash = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getHashBytes() {
+      java.lang.Object ref = hash_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        hash_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -11723,6 +12093,21 @@ public final class MochiProtocol {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (multiGrant_ != null) {
+        output.writeMessage(1, getMultiGrant());
+      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetCurrentCertificates(),
+          CurrentCertificatesDefaultEntryHolder.defaultEntry,
+          2);
+      if (!getClientIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, clientId_);
+      }
+      if (!getHashBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, hash_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -11731,6 +12116,26 @@ public final class MochiProtocol {
       if (size != -1) return size;
 
       size = 0;
+      if (multiGrant_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getMultiGrant());
+      }
+      for (java.util.Map.Entry<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> entry
+           : internalGetCurrentCertificates().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+        currentCertificates__ = CurrentCertificatesDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(2, currentCertificates__);
+      }
+      if (!getClientIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, clientId_);
+      }
+      if (!getHashBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, hash_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -11747,6 +12152,17 @@ public final class MochiProtocol {
       edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer other = (edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer) obj;
 
       boolean result = true;
+      result = result && (hasMultiGrant() == other.hasMultiGrant());
+      if (hasMultiGrant()) {
+        result = result && getMultiGrant()
+            .equals(other.getMultiGrant());
+      }
+      result = result && internalGetCurrentCertificates().equals(
+          other.internalGetCurrentCertificates());
+      result = result && getClientId()
+          .equals(other.getClientId());
+      result = result && getHash()
+          .equals(other.getHash());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -11758,6 +12174,18 @@ public final class MochiProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasMultiGrant()) {
+        hash = (37 * hash) + MULTIGRANT_FIELD_NUMBER;
+        hash = (53 * hash) + getMultiGrant().hashCode();
+      }
+      if (!internalGetCurrentCertificates().getMap().isEmpty()) {
+        hash = (37 * hash) + CURRENTCERTIFICATES_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetCurrentCertificates().hashCode();
+      }
+      hash = (37 * hash) + CLIENTID_FIELD_NUMBER;
+      hash = (53 * hash) + getClientId().hashCode();
+      hash = (37 * hash) + HASH_FIELD_NUMBER;
+      hash = (53 * hash) + getHash().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -11871,6 +12299,28 @@ public final class MochiProtocol {
         return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 2:
+            return internalGetCurrentCertificates();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 2:
+            return internalGetMutableCurrentCertificates();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return edu.stanford.cs244b.mochi.server.messages.MochiProtocol.internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable
@@ -11895,6 +12345,17 @@ public final class MochiProtocol {
       }
       public Builder clear() {
         super.clear();
+        if (multiGrantBuilder_ == null) {
+          multiGrant_ = null;
+        } else {
+          multiGrant_ = null;
+          multiGrantBuilder_ = null;
+        }
+        internalGetMutableCurrentCertificates().clear();
+        clientId_ = "";
+
+        hash_ = "";
+
         return this;
       }
 
@@ -11917,6 +12378,18 @@ public final class MochiProtocol {
 
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer buildPartial() {
         edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (multiGrantBuilder_ == null) {
+          result.multiGrant_ = multiGrant_;
+        } else {
+          result.multiGrant_ = multiGrantBuilder_.build();
+        }
+        result.currentCertificates_ = internalGetCurrentCertificates();
+        result.currentCertificates_.makeImmutable();
+        result.clientId_ = clientId_;
+        result.hash_ = hash_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -11958,6 +12431,19 @@ public final class MochiProtocol {
 
       public Builder mergeFrom(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer other) {
         if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer.getDefaultInstance()) return this;
+        if (other.hasMultiGrant()) {
+          mergeMultiGrant(other.getMultiGrant());
+        }
+        internalGetMutableCurrentCertificates().mergeFrom(
+            other.internalGetCurrentCertificates());
+        if (!other.getClientId().isEmpty()) {
+          clientId_ = other.clientId_;
+          onChanged();
+        }
+        if (!other.getHash().isEmpty()) {
+          hash_ = other.hash_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -11982,6 +12468,476 @@ public final class MochiProtocol {
             mergeFrom(parsedMessage);
           }
         }
+        return this;
+      }
+      private int bitField0_;
+
+      private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant multiGrant_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantOrBuilder> multiGrantBuilder_;
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public boolean hasMultiGrant() {
+        return multiGrantBuilder_ != null || multiGrant_ != null;
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant getMultiGrant() {
+        if (multiGrantBuilder_ == null) {
+          return multiGrant_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.getDefaultInstance() : multiGrant_;
+        } else {
+          return multiGrantBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public Builder setMultiGrant(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant value) {
+        if (multiGrantBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          multiGrant_ = value;
+          onChanged();
+        } else {
+          multiGrantBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public Builder setMultiGrant(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.Builder builderForValue) {
+        if (multiGrantBuilder_ == null) {
+          multiGrant_ = builderForValue.build();
+          onChanged();
+        } else {
+          multiGrantBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public Builder mergeMultiGrant(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant value) {
+        if (multiGrantBuilder_ == null) {
+          if (multiGrant_ != null) {
+            multiGrant_ =
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.newBuilder(multiGrant_).mergeFrom(value).buildPartial();
+          } else {
+            multiGrant_ = value;
+          }
+          onChanged();
+        } else {
+          multiGrantBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public Builder clearMultiGrant() {
+        if (multiGrantBuilder_ == null) {
+          multiGrant_ = null;
+          onChanged();
+        } else {
+          multiGrant_ = null;
+          multiGrantBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.Builder getMultiGrantBuilder() {
+        
+        onChanged();
+        return getMultiGrantFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantOrBuilder getMultiGrantOrBuilder() {
+        if (multiGrantBuilder_ != null) {
+          return multiGrantBuilder_.getMessageOrBuilder();
+        } else {
+          return multiGrant_ == null ?
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.getDefaultInstance() : multiGrant_;
+        }
+      }
+      /**
+       * <pre>
+       * &lt;oid, op#, ts&gt; + vs
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.MultiGrant multiGrant = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantOrBuilder> 
+          getMultiGrantFieldBuilder() {
+        if (multiGrantBuilder_ == null) {
+          multiGrantBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrantOrBuilder>(
+                  getMultiGrant(),
+                  getParentForChildren(),
+                  isClean());
+          multiGrant_ = null;
+        }
+        return multiGrantBuilder_;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> currentCertificates_;
+      private com.google.protobuf.MapField<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+      internalGetCurrentCertificates() {
+        if (currentCertificates_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              CurrentCertificatesDefaultEntryHolder.defaultEntry);
+        }
+        return currentCertificates_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+      internalGetMutableCurrentCertificates() {
+        onChanged();;
+        if (currentCertificates_ == null) {
+          currentCertificates_ = com.google.protobuf.MapField.newMapField(
+              CurrentCertificatesDefaultEntryHolder.defaultEntry);
+        }
+        if (!currentCertificates_.isMutable()) {
+          currentCertificates_ = currentCertificates_.copy();
+        }
+        return currentCertificates_;
+      }
+
+      public int getCurrentCertificatesCount() {
+        return internalGetCurrentCertificates().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+
+      public boolean containsCurrentCertificates(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetCurrentCertificates().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getCurrentCertificatesMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> getCurrentCertificates() {
+        return getCurrentCertificatesMap();
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+
+      public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> getCurrentCertificatesMap() {
+        return internalGetCurrentCertificates().getMap();
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getCurrentCertificatesOrDefault(
+          java.lang.String key,
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> map =
+            internalGetCurrentCertificates().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate getCurrentCertificatesOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> map =
+            internalGetCurrentCertificates().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearCurrentCertificates() {
+        internalGetMutableCurrentCertificates().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+
+      public Builder removeCurrentCertificates(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableCurrentCertificates().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate>
+      getMutableCurrentCertificates() {
+        return internalGetMutableCurrentCertificates().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+      public Builder putCurrentCertificates(
+          java.lang.String key,
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableCurrentCertificates().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * Map of certificates for the current state of the object. 
+       *Key is object, value is certificate for that state of object 
+       * </pre>
+       *
+       * <code>map&lt;string, .edu.stanford.cs244b.mochi.server.messages.WriteCertificate&gt; currentCertificates = 2;</code>
+       */
+
+      public Builder putAllCurrentCertificates(
+          java.util.Map<java.lang.String, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate> values) {
+        internalGetMutableCurrentCertificates().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private java.lang.Object clientId_ = "";
+      /**
+       * <pre>
+       * cid
+       * </pre>
+       *
+       * <code>string clientId = 3;</code>
+       */
+      public java.lang.String getClientId() {
+        java.lang.Object ref = clientId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          clientId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * cid
+       * </pre>
+       *
+       * <code>string clientId = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getClientIdBytes() {
+        java.lang.Object ref = clientId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          clientId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * cid
+       * </pre>
+       *
+       * <code>string clientId = 3;</code>
+       */
+      public Builder setClientId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        clientId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * cid
+       * </pre>
+       *
+       * <code>string clientId = 3;</code>
+       */
+      public Builder clearClientId() {
+        
+        clientId_ = getDefaultInstance().getClientId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * cid
+       * </pre>
+       *
+       * <code>string clientId = 3;</code>
+       */
+      public Builder setClientIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        clientId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object hash_ = "";
+      /**
+       * <code>string hash = 4;</code>
+       */
+      public java.lang.String getHash() {
+        java.lang.Object ref = hash_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          hash_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string hash = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getHashBytes() {
+        java.lang.Object ref = hash_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          hash_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string hash = 4;</code>
+       */
+      public Builder setHash(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        hash_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string hash = 4;</code>
+       */
+      public Builder clearHash() {
+        
+        hash_ = getDefaultInstance().getHash();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string hash = 4;</code>
+       */
+      public Builder setHashBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        hash_ = value;
+        onChanged();
         return this;
       }
       public final Builder setUnknownFields(
@@ -18492,6 +19448,11 @@ public final class MochiProtocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_CurrentCertificatesEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_CurrentCertificatesEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_edu_stanford_cs244b_mochi_server_messages_RequestFailedFromServer_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -18582,47 +19543,56 @@ public final class MochiProtocol {
       "ord.cs244b.mochi.server.messages.WriteCe",
       "rtificate:\0028\001\"g\n\016Write2ToServer\022U\n\020write" +
       "Certificate\030\001 \001(\0132;.edu.stanford.cs244b." +
-      "mochi.server.messages.WriteCertificate\"\031" +
-      "\n\027Write1RefusedFromServer\"f\n\027RequestFail" +
-      "edFromServer\022K\n\004type\030\001 \001(\0162=.edu.stanfor" +
-      "d.cs244b.mochi.server.messages.FailureMe" +
-      "ssageType\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"" +
-      "\035\n\016HelloToServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloF" +
-      "romServer\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(" +
-      "\t\"2\n\020HelloFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tcl",
-      "ientMsg\030\002 \001(\t\"\233\t\n\017ProtocolMessage\022Q\n\rhel" +
-      "loToServer\030e \001(\01328.edu.stanford.cs244b.m" +
-      "ochi.server.messages.HelloToServerH\000\022U\n\017" +
-      "helloFromServer\030f \001(\0132:.edu.stanford.cs2" +
-      "44b.mochi.server.messages.HelloFromServe" +
-      "rH\000\022S\n\016helloToServer2\030g \001(\01329.edu.stanfo" +
-      "rd.cs244b.mochi.server.messages.HelloToS" +
-      "erver2H\000\022W\n\020helloFromServer2\030h \001(\0132;.edu" +
-      ".stanford.cs244b.mochi.server.messages.H" +
-      "elloFromServer2H\000\022O\n\014readToServer\030i \001(\0132",
-      "7.edu.stanford.cs244b.mochi.server.messa" +
-      "ges.ReadToServerH\000\022S\n\016readFromServer\030j \001" +
-      "(\01329.edu.stanford.cs244b.mochi.server.me" +
-      "ssages.ReadFromServerH\000\022S\n\016write1ToServe" +
-      "r\030k \001(\01329.edu.stanford.cs244b.mochi.serv" +
-      "er.messages.Write1ToServerH\000\022[\n\022write1Ok" +
-      "FromServer\030l \001(\0132=.edu.stanford.cs244b.m" +
-      "ochi.server.messages.Write1OkFromServerH" +
-      "\000\022e\n\027write1RefusedFromServer\030m \001(\0132B.edu" +
-      ".stanford.cs244b.mochi.server.messages.W",
-      "rite1RefusedFromServerH\000\022S\n\016write2ToServ" +
-      "er\030n \001(\01329.edu.stanford.cs244b.mochi.ser" +
-      "ver.messages.Write2ToServerH\000\022]\n\023write2A" +
-      "nsFromServer\030o \001(\0132>.edu.stanford.cs244b" +
-      ".mochi.server.messages.Write2AnsFromServ" +
-      "erH\000\022e\n\027requestFailedFromServer\030p \001(\0132B." +
-      "edu.stanford.cs244b.mochi.server.message" +
-      "s.RequestFailedFromServerH\000\022\024\n\014msgTimest" +
-      "amp\030\005 \001(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001" +
-      "(\t\022\024\n\014replyToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017O",
-      "perationAction\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005" +
-      "WRITE\020\002*%\n\022FailureMessageType\022\017\n\013OLD_REQ" +
-      "UEST\020\000B\002H\001b\006proto3"
+      "mochi.server.messages.WriteCertificate\"\367" +
+      "\002\n\027Write1RefusedFromServer\022I\n\nmultiGrant" +
+      "\030\001 \001(\01325.edu.stanford.cs244b.mochi.serve" +
+      "r.messages.MultiGrant\022x\n\023currentCertific" +
+      "ates\030\002 \003(\0132[.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.Write1RefusedFromServer.C" +
+      "urrentCertificatesEntry\022\020\n\010clientId\030\003 \001(" +
+      "\t\022\014\n\004hash\030\004 \001(\t\032w\n\030CurrentCertificatesEn",
+      "try\022\013\n\003key\030\001 \001(\t\022J\n\005value\030\002 \001(\0132;.edu.st" +
+      "anford.cs244b.mochi.server.messages.Writ" +
+      "eCertificate:\0028\001\"f\n\027RequestFailedFromSer" +
+      "ver\022K\n\004type\030\001 \001(\0162=.edu.stanford.cs244b." +
+      "mochi.server.messages.FailureMessageType" +
+      "\"\034\n\rHelloToServer\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloT" +
+      "oServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017HelloFromServer" +
+      "\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020Hell" +
+      "oFromServer2\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002" +
+      " \001(\t\"\233\t\n\017ProtocolMessage\022Q\n\rhelloToServe",
+      "r\030e \001(\01328.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.HelloToServerH\000\022U\n\017helloFrom" +
+      "Server\030f \001(\0132:.edu.stanford.cs244b.mochi" +
+      ".server.messages.HelloFromServerH\000\022S\n\016he" +
+      "lloToServer2\030g \001(\01329.edu.stanford.cs244b" +
+      ".mochi.server.messages.HelloToServer2H\000\022" +
+      "W\n\020helloFromServer2\030h \001(\0132;.edu.stanford" +
+      ".cs244b.mochi.server.messages.HelloFromS" +
+      "erver2H\000\022O\n\014readToServer\030i \001(\01327.edu.sta" +
+      "nford.cs244b.mochi.server.messages.ReadT",
+      "oServerH\000\022S\n\016readFromServer\030j \001(\01329.edu." +
+      "stanford.cs244b.mochi.server.messages.Re" +
+      "adFromServerH\000\022S\n\016write1ToServer\030k \001(\01329" +
+      ".edu.stanford.cs244b.mochi.server.messag" +
+      "es.Write1ToServerH\000\022[\n\022write1OkFromServe" +
+      "r\030l \001(\0132=.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.Write1OkFromServerH\000\022e\n\027writ" +
+      "e1RefusedFromServer\030m \001(\0132B.edu.stanford" +
+      ".cs244b.mochi.server.messages.Write1Refu" +
+      "sedFromServerH\000\022S\n\016write2ToServer\030n \001(\0132",
+      "9.edu.stanford.cs244b.mochi.server.messa" +
+      "ges.Write2ToServerH\000\022]\n\023write2AnsFromSer" +
+      "ver\030o \001(\0132>.edu.stanford.cs244b.mochi.se" +
+      "rver.messages.Write2AnsFromServerH\000\022e\n\027r" +
+      "equestFailedFromServer\030p \001(\0132B.edu.stanf" +
+      "ord.cs244b.mochi.server.messages.Request" +
+      "FailedFromServerH\000\022\024\n\014msgTimestamp\030\005 \001(\003" +
+      "\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014rep" +
+      "lyToMsgId\030\010 \001(\tB\t\n\007payload*2\n\017OperationA" +
+      "ction\022\010\n\004READ\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002*%",
+      "\n\022FailureMessageType\022\017\n\013OLD_REQUEST\020\000B\002H" +
+      "\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18737,7 +19707,13 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[] { "MultiGrant", "CurrentCertificates", "ClientId", "Hash", });
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_CurrentCertificatesEntry_descriptor =
+      internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor.getNestedTypes().get(0);
+    internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_CurrentCertificatesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_CurrentCertificatesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_RequestFailedFromServer_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_edu_stanford_cs244b_mochi_server_messages_RequestFailedFromServer_fieldAccessorTable = new
