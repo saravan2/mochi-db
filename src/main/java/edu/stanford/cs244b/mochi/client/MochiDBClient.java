@@ -25,6 +25,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
@@ -109,8 +110,12 @@ public class MochiDBClient implements Closeable {
         boolean allWriteOk = true;
         for (ProtocolMessage pm : write1responseProtocalMessages) {
             final Write1OkFromServer writeOkFromServer = pm.getWrite1OkFromServer();
+            final Write1RefusedFromServer writeRefusedFromServer = pm.getWrite1RefusedFromServer();
             if (pm.getPayloadCase() == PayloadCase.WRITE1OKFROMSERVER) {
                 messages1FromServers.add(writeOkFromServer);
+            } else if (pm.getPayloadCase() == PayloadCase.WRITE1REFUSEDFROMSERVER) {
+                allWriteOk=false;
+                messages1FromServers.add(writeRefusedFromServer);
             } else if (pm.getPayloadCase() == PayloadCase.REQUESTFAILEDFROMSERVER) {
                 allWriteOk = false;
                 throw new RequestFailedException();
@@ -122,18 +127,31 @@ public class MochiDBClient implements Closeable {
         }
 
         final Map<String, MultiGrant> write1mutiGrants = new HashMap<String, MultiGrant>();
+        final Map<String, MultiGrant> write1RefusedMultiGrants = new HashMap<String, MultiGrant>();
         for (Object messageFromServer : messages1FromServers) {
             if (messageFromServer instanceof Write1OkFromServer) {
                 final MultiGrant mg = ((Write1OkFromServer) messageFromServer).getMultiGrant();
                 Utils.assertNotNull(mg, "server1MultiGrant is null");
                 Utils.assertNotNull(mg.getServerId(), "serverId is null");
                 write1mutiGrants.put(mg.getServerId(), mg);
+            } else if (messageFromServer instanceof Write1RefusedFromServer){
+                final MultiGrant mg = ((Write1RefusedFromServer) messageFromServer).getMultiGrant();
+                Utils.assertNotNull(mg, "server1MultiGrant is null");
+                Utils.assertNotNull(mg.getServerId(), "serverId is null");
+                write1RefusedMultiGrants.put(mg.getServerId(), mg);
             } else {
                 throw new UnsupportedOperationException();
             }
         }
-        LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
-                write1mutiGrants.values());
+        
+        if (allWriteOk) {
+                LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
+                        write1mutiGrants.values());
+        } else {
+                LOG.info("Got refused grant from servers {} {} *Aborting* ", write1RefusedMultiGrants.keySet(),
+                        write1RefusedMultiGrants.values());
+                throw new UnsupportedOperationException();
+        }
 
         // Step 2:
 

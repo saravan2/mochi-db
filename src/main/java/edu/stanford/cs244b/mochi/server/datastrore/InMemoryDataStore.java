@@ -31,6 +31,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.RequestFailedFrom
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1RefusedFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1ToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2AnsFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer;
@@ -188,8 +189,10 @@ public class InMemoryDataStore implements DataStore {
         }
         final Map<String, WriteCertificate> currentObjectCertificates = new HashMap<String, WriteCertificate>(
                 operations.size());
+        final Map<String, WriteCertificate> currentRejectedObjectCertificates = new HashMap<String, WriteCertificate>(
+                operations.size());
         final Map<String, Grant> grants = new HashMap<String, Grant>();
-
+        final Map<String, Grant> rejectedGrants = new HashMap<String, Grant>();
         boolean allWriteOk = true;
         for (Operation op : operations) {
             if (op.getAction() == OperationAction.WRITE) {
@@ -199,17 +202,21 @@ public class InMemoryDataStore implements DataStore {
                 Utils.assertNotNull(grant, "Grant cannot be null");
                 final WriteCertificate writeCertificate = wrteResult.getValue1();
                 final boolean grantWasGranted = wrteResult.getValue2();
-
                 final String objectId = grant.getObjectId();
                 Utils.assertNotNull(objectId, "objectId cannot be null");
-                if (writeCertificate != null) {
-                    currentObjectCertificates.put(objectId, writeCertificate);
-                }
-                grants.put(objectId, grant);
 
                 if (grantWasGranted == false) {
                     LOG.debug("GrantWasNot Granted for opeation {}. Grant = {}", op, grant);
+                    if (writeCertificate != null) {
+                        currentRejectedObjectCertificates.put(objectId, writeCertificate);
+                    }
+                    rejectedGrants.put(objectId, grant);
                     allWriteOk = false;
+                } else {
+                    if (writeCertificate != null) {
+                        currentObjectCertificates.put(objectId, writeCertificate);
+                    }
+                    grants.put(objectId, grant);
                 }
             }
 
@@ -228,8 +235,20 @@ public class InMemoryDataStore implements DataStore {
                 builder.putAllCurrentCertificates(currentObjectCertificates);
             }
             return builder.build();
-        }
-        throw new UnsupportedOperationException();
+        } else {
+            final MultiGrant.Builder mgb = MultiGrant.newBuilder();
+            mgb.setClientId(write1ToServer.getClientId());
+            mgb.setServerId(mochiContext.getServerId());
+            mgb.putAllGrants(rejectedGrants);
+
+            final Write1RefusedFromServer.Builder builder = Write1RefusedFromServer.newBuilder();
+            builder.setMultiGrant(mgb);
+            Utils.assertNotNull(currentObjectCertificates, "Internal error");
+            if (currentRejectedObjectCertificates.size() > 0) {
+                builder.putAllCurrentCertificates(currentRejectedObjectCertificates);
+            }
+            return builder.build();
+        } 
     }
 
     @Override
