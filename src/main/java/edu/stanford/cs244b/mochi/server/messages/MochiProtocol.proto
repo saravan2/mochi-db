@@ -87,6 +87,7 @@ request to the replicas. */
 message Write1ToServer {
     string clientId = 1; // cid
     Transaction transaction = 2; // contains (oid, op#,  op)
+    uint32 seed = 3;
 }
 
 
@@ -102,6 +103,7 @@ message Grant {
     int64 operationNumber = 2;
     int64 timestamp = 3;
     int64 viewstamp = 4;
+    int64 configstamp = 5;
 }
 
 
