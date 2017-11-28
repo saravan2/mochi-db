@@ -34,6 +34,9 @@ public class StoreValueObjectContainer<T> {
     // Grant on that object if any
     private volatile Grant grantTimestamp;
 
+    // Note: working on givenWrite1Grants requires acquiring object lock
+    private final List<HashMap<Integer, Grant>> givenWrite1Grants;
+
     private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
     private volatile long currentVS = VIEWSTAMP_START_NUMBER;
@@ -47,6 +50,7 @@ public class StoreValueObjectContainer<T> {
         this.value = value;
         this.valueAvailble = valueAvailble;
         this.key = key;
+        givenWrite1Grants = new ArrayList<HashMap<Integer, Grant>>();
     }
 
     public T getValue() {
