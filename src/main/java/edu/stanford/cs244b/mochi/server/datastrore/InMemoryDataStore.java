@@ -92,7 +92,11 @@ public class InMemoryDataStore implements DataStore {
                 throw new UnsupportedOperationException();
             }
             storeValue.addRequestToOps(writeToServer);
-            if (storeValue.getGrantTimestamp() == null) {
+            long prospectiveTS = storeValue.getCurrentEpoch() + writeToServer.getSeed();
+            // TODO: Fix Warning
+            final List<HashMap<Long, Grant>> givenWrite1Grants = storeValue.getGivenWrite1Grants();
+            Grant grantAtCTS;
+            if (givenWrite1Grants.isEmpty() || ((grantAtCTS = storeValue.getGrantIfExistsAtTimeStamp(prospectiveTS)) == null)) {
                 /* There is no current grant on that timestamp */
 
                 final Grant.Builder grantBuilder = Grant.newBuilder();
@@ -100,18 +104,15 @@ public class InMemoryDataStore implements DataStore {
                 grantBuilder.setOperationNumber(op.getOperationNumber());
                 grantBuilder.setViewstamp(storeValue.getCurrentVS());
 
-                Long timestampFromCertificate = storeValue.getCurrentTimestampFromCurrentCertificate();
-                if (timestampFromCertificate != null) {
-                    grantBuilder.setTimestamp(timestampFromCertificate + 1);
-                }
+                grantBuilder.setTimestamp(prospectiveTS);
+                LOG.debug("Grant awarded in epoch {} ts {} for key {}", storeValue.getCurrentEpoch(), prospectiveTS, interestedKey);
                 final Grant newGrant = grantBuilder.build();
 
-                storeValue.setGrantTimestamp(grantBuilder.build());
-
+                storeValue.addGivenWrite1Grant(prospectiveTS, grantBuilder.build());
                 return Triplet.with(newGrant, storeValue.getCurrentC(), true);
             } else {
                 /* Somebody else has the grant. Write refuse */
-                return Triplet.with(storeValue.getGrantTimestamp(), storeValue.getCurrentC(), false);
+                return Triplet.with(grantAtCTS, storeValue.getCurrentC(), false);
             }
         }
     }
@@ -332,7 +333,7 @@ public class InMemoryDataStore implements DataStore {
                 }
                 continue;
             }
-            if (objectVS == grantVS && objectTS == grantTS - 1) {
+            if (objectVS == grantVS && objectTS < grantTS) {
                 LOG.debug("Timecheck for object {} is successful", object);
                 continue;
             }
@@ -442,16 +443,21 @@ public class InMemoryDataStore implements DataStore {
             
             storeValueContainer.updateOldOps(write1toServerIfAny.getClientId(), newOldOpsEntry);
             Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
-            storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);
-
-            storeValueContainer.setGrantTimestamp(null);
+            storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);        
 
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
+            long timestamp = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
+            storeValueContainer.deleteGivenWrite1Grant(timestamp);
+            long nextEpoch = (((timestamp/1000) + 1)*1000);
+            if (storeValueContainer.getCurrentEpoch() < nextEpoch) {
+                storeValueContainer.setCurrentEpoch(nextEpoch);
+            }
             resultBuilder.setCurrentCertificate(writeCertificateIfAny);
             resultBuilder.setExisted(wasAvailable);
             if (oldValue != null) {
                 resultBuilder.setResult(oldValue);
+                LOG.debug("Moving epoch to {} for key {}", nextEpoch, op.getOperand1());
             }
             final OperationResult oprationResult = resultBuilder.build();
             newOldOpsEntry.setOperationResult(oprationResult);
@@ -499,6 +505,11 @@ public class InMemoryDataStore implements DataStore {
             if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
                 LOG.debug("Found objects whose timestamps are old: {}", listOfObjectsWhoseTimestampIsOld);
                 // TODO: do data loading from remotes
+                // TODO: Resolve with Tigran that this scenario is acceptable 
+                // TODO: and therefore should not be an exception
+                // TODO: MochiDB should return write2Ans as if txn was successful 
+                // TODO: Except for 1 or more keys that were overwritten by another latest transaction 
+                // TODO: Or intimate client with a special message 
                 throw new UnsupportedOperationException();
             }
             LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");

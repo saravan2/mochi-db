@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
-
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,9 +96,11 @@ public class MochiDBClient implements Closeable {
     @Loggable()
     public TransactionResult executeWriteTransaction(final Transaction transactionToExecute) {
 
+        Random rand = new Random();
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
         write1toServerBuilder.setTransaction(transactionToExecute);
-
+        write1toServerBuilder.setSeed(rand.nextInt(1000));
+        
         final List<Future<ProtocolMessage>> write1responseFutures = Utils.sendMessageToServers(write1toServerBuilder,
                 servers, mochiMessaging);
         Utils.busyWaitForFutures(write1responseFutures);
