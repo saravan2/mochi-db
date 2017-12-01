@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.javatuples.Pair;
@@ -23,6 +25,7 @@ public class StoreValueObjectContainer<T> {
     final static Logger LOG = LoggerFactory.getLogger(StoreValueObjectContainer.class);
 
     public static final int VIEWSTAMP_START_NUMBER = 1;
+    public static final int EPOCH_START = 0;
     // Key to which that object belongs
     private final String key;
     // Value if any
@@ -31,15 +34,14 @@ public class StoreValueObjectContainer<T> {
     private volatile boolean valueAvailble;
     // How current object happen to be the way it is.
     private volatile WriteCertificate currentC;
-    // Grant on that object if any
-    private volatile Grant grantTimestamp;
 
     // Note: working on givenWrite1Grants requires acquiring object lock
-    private final List<HashMap<Integer, Grant>> givenWrite1Grants;
+    private final HashMap<Long, HashMap<Long, Grant>> givenWrite1Grants;
 
     private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
     private volatile long currentVS = VIEWSTAMP_START_NUMBER;
+    private volatile long currentEpoch = EPOCH_START;
     private final ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
 
     public StoreValueObjectContainer(String key, boolean valueAvailble) {
@@ -50,7 +52,7 @@ public class StoreValueObjectContainer<T> {
         this.value = value;
         this.valueAvailble = valueAvailble;
         this.key = key;
-        givenWrite1Grants = new ArrayList<HashMap<Integer, Grant>>();
+        givenWrite1Grants = new HashMap<Long, HashMap<Long, Grant>>();
     }
 
     public T getValue() {
@@ -67,6 +69,21 @@ public class StoreValueObjectContainer<T> {
 
     public boolean isValueAvailble() {
         return valueAvailble;
+    }
+    
+    public long getCurrentEpoch() {
+        return currentEpoch;
+    }
+    
+    public void setCurrentEpoch(long currentEpoch) {
+        this.currentEpoch = currentEpoch;
+    }
+    
+    public void moveToNextEpochIfNecessary(long timestamp) {
+        long nextEpoch = (((timestamp/1000) + 1)*1000);
+        if (currentEpoch < nextEpoch) {
+            currentEpoch = nextEpoch;
+        }
     }
 
     public boolean setValueAvailble(boolean valueAvailble) {
@@ -135,14 +152,85 @@ public class StoreValueObjectContainer<T> {
         }
         return Pair.with(foundWrite1ToServer, opToExecute);
     }
-
-    public Grant getGrantTimestamp() {
-        return grantTimestamp;
+    
+    public HashMap<Long, HashMap<Long, Grant>> getGivenWrite1Grants() {
+        return givenWrite1Grants;
+    }
+    
+    public final Long mapTimeStampsToEpoch(Long timestamp) {
+        return ((timestamp/1000) * 1000);
+    }
+    
+    public void addGivenWrite1Grant(Long timestamp, Grant grant) {
+        final Long epoch = mapTimeStampsToEpoch(timestamp);
+        if (givenWrite1Grants.containsKey(epoch)) {
+            givenWrite1Grants.get(epoch).put(timestamp, grant);
+        } else {
+            HashMap<Long, Grant> entry = new HashMap<Long, Grant>();
+            entry.put(timestamp, grant);
+            givenWrite1Grants.put(epoch, entry);
+        }
+    }
+    
+    public final HashMap<Long, Grant> getAllGrantsFromEpoch(Long timestamp) {
+        final Long epoch = mapTimeStampsToEpoch(timestamp);
+        if (givenWrite1Grants.containsKey(epoch)) {
+            return givenWrite1Grants.get(epoch);
+        }
+        return null;
+    }
+    
+    public Grant getGrantIfExistsAtTimeStamp(Long timestamp) {
+        final Long epoch = mapTimeStampsToEpoch(timestamp);
+        if (givenWrite1Grants.containsKey(epoch)) {
+            HashMap<Long, Grant> grantTimeStamps = givenWrite1Grants.get(epoch);
+            if (grantTimeStamps.containsKey(timestamp)) {
+                return grantTimeStamps.get(timestamp);
+            }
+        }
+        return null;
+    }
+    
+    public boolean grantAlreadyGiven(Long timestamp) {
+        Long epoch = mapTimeStampsToEpoch(timestamp);
+        if (givenWrite1Grants.containsKey(epoch)) {
+            HashMap<Long, Grant> grantTimeStamps = givenWrite1Grants.get(epoch);
+            if (grantTimeStamps.containsKey(timestamp)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void deleteGivenWrite1Grant(Long timestamp) {
+        final Long epoch = mapTimeStampsToEpoch(timestamp);
+        if (givenWrite1Grants.containsKey(epoch)) {
+            if (givenWrite1Grants.get(epoch).containsKey(timestamp)) {
+                givenWrite1Grants.get(epoch).remove(timestamp);
+                if (givenWrite1Grants.get(epoch).isEmpty()) {
+                    givenWrite1Grants.remove(epoch);
+                }
+            }
+        }
+    }
+    
+    public void truncateGivenWrite1Grants() {
+        if (currentEpoch >= 3000) {
+            Set<Long> epochs = givenWrite1Grants.keySet();
+            for (Long epoch : epochs) {
+                if ((currentEpoch > epoch) && ((currentEpoch-epoch) >= 2000)) {
+                    givenWrite1Grants.get(epoch).clear();
+                    givenWrite1Grants.remove(epoch);
+                }
+            
+            }
+        }
+    }
+    
+    public boolean isGivenWrite1GrantsEmpty() {
+        return givenWrite1Grants.isEmpty();
     }
 
-    public void setGrantTimestamp(Grant grantTimestamp) {
-        this.grantTimestamp = grantTimestamp;
-    }
 
     public long getCurrentVS() {
         return currentVS;
