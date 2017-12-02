@@ -38,6 +38,7 @@ public class StoreValueObjectContainer<T> {
     // Note: working on givenWrite1Grants requires acquiring object lock
     private final HashMap<Long, HashMap<Long, Grant>> givenWrite1Grants;
 
+
     private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
     private volatile long currentVS = VIEWSTAMP_START_NUMBER;
@@ -53,6 +54,7 @@ public class StoreValueObjectContainer<T> {
         this.valueAvailble = valueAvailble;
         this.key = key;
         givenWrite1Grants = new HashMap<Long, HashMap<Long, Grant>>();
+
     }
 
     public T getValue() {
@@ -85,6 +87,7 @@ public class StoreValueObjectContainer<T> {
             currentEpoch = nextEpoch;
         }
     }
+
 
     public boolean setValueAvailble(boolean valueAvailble) {
         final boolean oldAvailable = this.valueAvailble;
