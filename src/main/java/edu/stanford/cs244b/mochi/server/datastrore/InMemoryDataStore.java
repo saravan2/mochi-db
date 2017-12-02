@@ -39,8 +39,10 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 
 public class InMemoryDataStore implements DataStore {
     private final static Logger LOG = LoggerFactory.getLogger(InMemoryDataStore.class);
-
+    private final static String CONFIG_KEY_PREFIX = "_CONFIG_";
     private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> data = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
+    private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> dataConfig = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
+
     private final MochiContext mochiContext;
 
     @SuppressWarnings("unchecked")
@@ -48,11 +50,19 @@ public class InMemoryDataStore implements DataStore {
         this.mochiContext = mochiContext;
     }
 
+    protected ConcurrentHashMap<String, StoreValueObjectContainer<String>> getDataMap(final String key) {
+        if (key.startsWith(CONFIG_KEY_PREFIX)) {
+            return dataConfig;
+        } else {
+            return data;
+        }
+    }
+
     protected OperationResult processRead(final Operation op) {
         final String interestedKey = op.getOperand1();
         checkOp1IsNonEmptyKeyError(interestedKey);
         LOG.debug("Performing processRead on key: {}", interestedKey);
-        final StoreValueObjectContainer<String> keyStoreValue = data.get(interestedKey);
+        final StoreValueObjectContainer<String> keyStoreValue = getDataMap(interestedKey).get(interestedKey);
         final String valueForTheKey;
         final WriteCertificate currentC;
         if (keyStoreValue == null) {
@@ -117,12 +127,13 @@ public class InMemoryDataStore implements DataStore {
 
     protected StoreValueObjectContainer getOrCreateStoreValue(final String interestedKey) {
         final StoreValueObjectContainer<String> valueContainer;
-        if (data.contains(interestedKey)) {
-            valueContainer = data.get(interestedKey);
+        final ConcurrentHashMap<String, StoreValueObjectContainer<String>> dataMap = getDataMap(interestedKey);
+        if (dataMap.contains(interestedKey)) {
+            valueContainer = dataMap.get(interestedKey);
         } else {
             final StoreValueObjectContainer<String> possibleStoreValueContainerForThatKey = new StoreValueObjectContainer<String>(
                     interestedKey, false);
-            final StoreValueObjectContainer<String> containerIfWasCreated = data.putIfAbsent(interestedKey,
+            final StoreValueObjectContainer<String> containerIfWasCreated = dataMap.putIfAbsent(interestedKey,
                     possibleStoreValueContainerForThatKey);
             if (containerIfWasCreated == null) {
                 valueContainer = possibleStoreValueContainerForThatKey;
@@ -279,7 +290,7 @@ public class InMemoryDataStore implements DataStore {
     private void acquireWriteLocks(final MultiGrant multiGrant) {
         final List<String> objectsToWriteLock = getObjectsToWriteLock(multiGrant);
         for (String object : objectsToWriteLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.acquireObjectWriteLockIfNotHeld();
         }
     }
@@ -287,7 +298,7 @@ public class InMemoryDataStore implements DataStore {
     private List<String> acquireWriteLocksAndReturnList(final MultiGrant multiGrant) {
         final List<String> objectsToWriteLock = getObjectsToWriteLock(multiGrant);
         for (String object : objectsToWriteLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.acquireObjectWriteLockIfNotHeld();
         }
         return objectsToWriteLock;
@@ -315,7 +326,7 @@ public class InMemoryDataStore implements DataStore {
             final Grant grantForThatObject = multiGrant.getGrantsMap().get(object);
             final Pair<Long, Long> vstsFromGrant = getViewstampAndTimestampFromGrant(grantForThatObject);
 
-            final StoreValueObjectContainer<String> storeValueContainer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
             final long objectVS = storeValueContainer.getCurrentVS();
             final Long objectTS = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
 
@@ -345,14 +356,14 @@ public class InMemoryDataStore implements DataStore {
     private void releaseWriteLocks(final MultiGrant multiGrant) {
         final List<String> objectsToLock = getObjectsToWriteLock(multiGrant);
         for (String object : objectsToLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.releaseObjectWriteLockIfHeldByCurrent();
         }
     }
     
     private void releaseWriteLocks(List<String> objectsToUnLock) {
         for (String object : objectsToUnLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.releaseObjectWriteLockIfHeldByCurrent();
         }
     }
@@ -381,7 +392,7 @@ public class InMemoryDataStore implements DataStore {
     private void acquireReadLocks(Transaction transaction) {
         final List<String> objectsToReadLock = getObjectsToReadLock(transaction);
         for (String object : objectsToReadLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.acquireObjectReadLock();
         }
     }
@@ -389,7 +400,7 @@ public class InMemoryDataStore implements DataStore {
     private List<String> acquireReadLocksAndReturnList(Transaction transaction) {
         final List<String> objectsToReadLock = getObjectsToReadLock(transaction);
         for (String object : objectsToReadLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.acquireObjectReadLock();
         }
         return objectsToReadLock;
@@ -398,14 +409,14 @@ public class InMemoryDataStore implements DataStore {
     private void releaseReadLocks(Transaction transaction) {       
         final List<String> objectsToReleaseReadLock = getObjectsToReadLock(transaction);
         for (String object : objectsToReleaseReadLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.releaseObjectReadLock();
         }
    }
     
     private void releaseReadLocks(List<String> objectsToReleaseReadLock) {       
         for (String object : objectsToReleaseReadLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.releaseObjectReadLock();
         }
    }
@@ -423,7 +434,8 @@ public class InMemoryDataStore implements DataStore {
 
     private OperationResult applyOperation(final Operation op, final WriteCertificate writeCertificateIfAny,
             final Write1ToServer write1toServerIfAny) {
-        final StoreValueObjectContainer<String> storeValueContainer = data.get(op.getOperand1());
+        final StoreValueObjectContainer<String> storeValueContainer = getDataMap(op.getOperand1())
+                .get(op.getOperand1());
         Utils.assertNotNull(storeValueContainer, "storeValueCotainer should not be null");
         if (storeValueContainer.isObjectWriteLockHeldByCurrent() == false) {
             throw new IllegalStateException("Cannot apply operation since write lock is not held");
@@ -467,7 +479,7 @@ public class InMemoryDataStore implements DataStore {
         final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
         final List<OperationResult> operationResults = new ArrayList<OperationResult>(grantsToExecute.size());
         for (final String object : grantsToExecute.keySet()) {
-            final StoreValueObjectContainer<String> storeValueCotainer = data.get(object);
+            final StoreValueObjectContainer<String> storeValueCotainer = getDataMap(object).get(object);
             final Grant grantForObject = grantsToExecute.get(object);
             final Pair<Write1ToServer, Operation> requestToExecuteWithOp = storeValueCotainer.locateRequestInOps(
                     multiGrant.getClientId(), grantForObject.getOperationNumber());
