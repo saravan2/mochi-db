@@ -1,5 +1,8 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,5 +117,25 @@ public class Utils {
         }
         final OperationResult or = operationList.get(position);
         return or;
+    }
+
+    public static String sha512(final byte[] data) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Failed to get sha-512 implementation", e);
+        }
+        byte[] bytes = md.digest(data);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
+
+    public static String objectSHA512(final Serializable object) {
+        byte[] data = SerializationUtils.serialize(object);
+        return sha512(data);
     }
 }
