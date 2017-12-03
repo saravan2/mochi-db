@@ -13,11 +13,10 @@ import edu.stanford.cs244b.mochi.server.requesthandlers.Write1ToServerRequestHan
 import edu.stanford.cs244b.mochi.server.requesthandlers.Write2ToServerRequestHandler;
 
 public class MochiContextImpl implements MochiContext {
-    private static final int SHARD_TOKENS = 1024;
     private final String serverId = Utils.getUUIDwithPref(Utils.UUID_PREFIXES.SERVER);
     private volatile Map<Class, ServerRequestHandler<?>> handlers = null;
     private volatile DataStore dataStore = null;
-    private final ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
+    private final ClusterConfiguration clusterConfiguration = new ClusterConfiguration(this);
 
     public synchronized Map<Class, ServerRequestHandler<?>> getBeanRequestHandlers() {
         if (handlers != null) {
@@ -48,11 +47,6 @@ public class MochiContextImpl implements MochiContext {
     @Override
     public String getServerId() {
         return serverId;
-    }
-
-    @Override
-    public int getShardTokens() {
-        return SHARD_TOKENS;
     }
 
     @Override

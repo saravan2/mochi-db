@@ -13,8 +13,6 @@ public interface MochiContext {
 
     public String getServerId();
 
-    public int getShardTokens();
-
     public ClusterConfiguration getClusterConfiguration();
 
 }
