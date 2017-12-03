@@ -260,11 +260,6 @@ public final class MochiProtocol {
      */
     com.google.protobuf.ByteString
         getOperand3Bytes();
-
-    /**
-     * <code>int64 operationNumber = 5;</code>
-     */
-    long getOperationNumber();
   }
   /**
    * <pre>
@@ -291,7 +286,6 @@ public final class MochiProtocol {
       operand1_ = "";
       operand2_ = "";
       operand3_ = "";
-      operationNumber_ = 0L;
     }
 
     @java.lang.Override
@@ -344,11 +338,6 @@ public final class MochiProtocol {
               java.lang.String s = input.readStringRequireUtf8();
 
               operand3_ = s;
-              break;
-            }
-            case 40: {
-
-              operationNumber_ = input.readInt64();
               break;
             }
           }
@@ -501,15 +490,6 @@ public final class MochiProtocol {
       }
     }
 
-    public static final int OPERATIONNUMBER_FIELD_NUMBER = 5;
-    private long operationNumber_;
-    /**
-     * <code>int64 operationNumber = 5;</code>
-     */
-    public long getOperationNumber() {
-      return operationNumber_;
-    }
-
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -534,9 +514,6 @@ public final class MochiProtocol {
       if (!getOperand3Bytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, operand3_);
       }
-      if (operationNumber_ != 0L) {
-        output.writeInt64(5, operationNumber_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -557,10 +534,6 @@ public final class MochiProtocol {
       }
       if (!getOperand3Bytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, operand3_);
-      }
-      if (operationNumber_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(5, operationNumber_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -585,8 +558,6 @@ public final class MochiProtocol {
           .equals(other.getOperand2());
       result = result && getOperand3()
           .equals(other.getOperand3());
-      result = result && (getOperationNumber()
-          == other.getOperationNumber());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -606,9 +577,6 @@ public final class MochiProtocol {
       hash = (53 * hash) + getOperand2().hashCode();
       hash = (37 * hash) + OPERAND3_FIELD_NUMBER;
       hash = (53 * hash) + getOperand3().hashCode();
-      hash = (37 * hash) + OPERATIONNUMBER_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getOperationNumber());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -754,8 +722,6 @@ public final class MochiProtocol {
 
         operand3_ = "";
 
-        operationNumber_ = 0L;
-
         return this;
       }
 
@@ -782,7 +748,6 @@ public final class MochiProtocol {
         result.operand1_ = operand1_;
         result.operand2_ = operand2_;
         result.operand3_ = operand3_;
-        result.operationNumber_ = operationNumber_;
         onBuilt();
         return result;
       }
@@ -838,9 +803,6 @@ public final class MochiProtocol {
         if (!other.getOperand3().isEmpty()) {
           operand3_ = other.operand3_;
           onChanged();
-        }
-        if (other.getOperationNumber() != 0L) {
-          setOperationNumber(other.getOperationNumber());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1136,32 +1098,6 @@ public final class MochiProtocol {
   checkByteStringIsUtf8(value);
         
         operand3_ = value;
-        onChanged();
-        return this;
-      }
-
-      private long operationNumber_ ;
-      /**
-       * <code>int64 operationNumber = 5;</code>
-       */
-      public long getOperationNumber() {
-        return operationNumber_;
-      }
-      /**
-       * <code>int64 operationNumber = 5;</code>
-       */
-      public Builder setOperationNumber(long value) {
-        
-        operationNumber_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int64 operationNumber = 5;</code>
-       */
-      public Builder clearOperationNumber() {
-        
-        operationNumber_ = 0L;
         onChanged();
         return this;
       }
@@ -7187,26 +7123,21 @@ public final class MochiProtocol {
         getObjectIdBytes();
 
     /**
-     * <code>int64 operationNumber = 2;</code>
-     */
-    long getOperationNumber();
-
-    /**
-     * <code>int64 timestamp = 3;</code>
+     * <code>int64 timestamp = 2;</code>
      */
     long getTimestamp();
 
     /**
-     * <code>int64 configstamp = 4;</code>
+     * <code>int64 configstamp = 3;</code>
      */
     long getConfigstamp();
 
     /**
-     * <code>string transactionHash = 5;</code>
+     * <code>string transactionHash = 4;</code>
      */
     java.lang.String getTransactionHash();
     /**
-     * <code>string transactionHash = 5;</code>
+     * <code>string transactionHash = 4;</code>
      */
     com.google.protobuf.ByteString
         getTransactionHashBytes();
@@ -7225,7 +7156,6 @@ public final class MochiProtocol {
     }
     private Grant() {
       objectId_ = "";
-      operationNumber_ = 0L;
       timestamp_ = 0L;
       configstamp_ = 0L;
       transactionHash_ = "";
@@ -7267,20 +7197,15 @@ public final class MochiProtocol {
             }
             case 16: {
 
-              operationNumber_ = input.readInt64();
+              timestamp_ = input.readInt64();
               break;
             }
             case 24: {
 
-              timestamp_ = input.readInt64();
-              break;
-            }
-            case 32: {
-
               configstamp_ = input.readInt64();
               break;
             }
-            case 42: {
+            case 34: {
               java.lang.String s = input.readStringRequireUtf8();
 
               transactionHash_ = s;
@@ -7344,37 +7269,28 @@ public final class MochiProtocol {
       }
     }
 
-    public static final int OPERATIONNUMBER_FIELD_NUMBER = 2;
-    private long operationNumber_;
-    /**
-     * <code>int64 operationNumber = 2;</code>
-     */
-    public long getOperationNumber() {
-      return operationNumber_;
-    }
-
-    public static final int TIMESTAMP_FIELD_NUMBER = 3;
+    public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private long timestamp_;
     /**
-     * <code>int64 timestamp = 3;</code>
+     * <code>int64 timestamp = 2;</code>
      */
     public long getTimestamp() {
       return timestamp_;
     }
 
-    public static final int CONFIGSTAMP_FIELD_NUMBER = 4;
+    public static final int CONFIGSTAMP_FIELD_NUMBER = 3;
     private long configstamp_;
     /**
-     * <code>int64 configstamp = 4;</code>
+     * <code>int64 configstamp = 3;</code>
      */
     public long getConfigstamp() {
       return configstamp_;
     }
 
-    public static final int TRANSACTIONHASH_FIELD_NUMBER = 5;
+    public static final int TRANSACTIONHASH_FIELD_NUMBER = 4;
     private volatile java.lang.Object transactionHash_;
     /**
-     * <code>string transactionHash = 5;</code>
+     * <code>string transactionHash = 4;</code>
      */
     public java.lang.String getTransactionHash() {
       java.lang.Object ref = transactionHash_;
@@ -7389,7 +7305,7 @@ public final class MochiProtocol {
       }
     }
     /**
-     * <code>string transactionHash = 5;</code>
+     * <code>string transactionHash = 4;</code>
      */
     public com.google.protobuf.ByteString
         getTransactionHashBytes() {
@@ -7420,17 +7336,14 @@ public final class MochiProtocol {
       if (!getObjectIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, objectId_);
       }
-      if (operationNumber_ != 0L) {
-        output.writeInt64(2, operationNumber_);
-      }
       if (timestamp_ != 0L) {
-        output.writeInt64(3, timestamp_);
+        output.writeInt64(2, timestamp_);
       }
       if (configstamp_ != 0L) {
-        output.writeInt64(4, configstamp_);
+        output.writeInt64(3, configstamp_);
       }
       if (!getTransactionHashBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, transactionHash_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, transactionHash_);
       }
       unknownFields.writeTo(output);
     }
@@ -7443,20 +7356,16 @@ public final class MochiProtocol {
       if (!getObjectIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, objectId_);
       }
-      if (operationNumber_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, operationNumber_);
-      }
       if (timestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(3, timestamp_);
+          .computeInt64Size(2, timestamp_);
       }
       if (configstamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, configstamp_);
+          .computeInt64Size(3, configstamp_);
       }
       if (!getTransactionHashBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, transactionHash_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, transactionHash_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7476,8 +7385,6 @@ public final class MochiProtocol {
       boolean result = true;
       result = result && getObjectId()
           .equals(other.getObjectId());
-      result = result && (getOperationNumber()
-          == other.getOperationNumber());
       result = result && (getTimestamp()
           == other.getTimestamp());
       result = result && (getConfigstamp()
@@ -7497,9 +7404,6 @@ public final class MochiProtocol {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + OBJECTID_FIELD_NUMBER;
       hash = (53 * hash) + getObjectId().hashCode();
-      hash = (37 * hash) + OPERATIONNUMBER_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getOperationNumber());
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTimestamp());
@@ -7639,8 +7543,6 @@ public final class MochiProtocol {
         super.clear();
         objectId_ = "";
 
-        operationNumber_ = 0L;
-
         timestamp_ = 0L;
 
         configstamp_ = 0L;
@@ -7670,7 +7572,6 @@ public final class MochiProtocol {
       public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant buildPartial() {
         edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant result = new edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant(this);
         result.objectId_ = objectId_;
-        result.operationNumber_ = operationNumber_;
         result.timestamp_ = timestamp_;
         result.configstamp_ = configstamp_;
         result.transactionHash_ = transactionHash_;
@@ -7718,9 +7619,6 @@ public final class MochiProtocol {
         if (!other.getObjectId().isEmpty()) {
           objectId_ = other.objectId_;
           onChanged();
-        }
-        if (other.getOperationNumber() != 0L) {
-          setOperationNumber(other.getOperationNumber());
         }
         if (other.getTimestamp() != 0L) {
           setTimestamp(other.getTimestamp());
@@ -7828,41 +7726,15 @@ public final class MochiProtocol {
         return this;
       }
 
-      private long operationNumber_ ;
-      /**
-       * <code>int64 operationNumber = 2;</code>
-       */
-      public long getOperationNumber() {
-        return operationNumber_;
-      }
-      /**
-       * <code>int64 operationNumber = 2;</code>
-       */
-      public Builder setOperationNumber(long value) {
-        
-        operationNumber_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int64 operationNumber = 2;</code>
-       */
-      public Builder clearOperationNumber() {
-        
-        operationNumber_ = 0L;
-        onChanged();
-        return this;
-      }
-
       private long timestamp_ ;
       /**
-       * <code>int64 timestamp = 3;</code>
+       * <code>int64 timestamp = 2;</code>
        */
       public long getTimestamp() {
         return timestamp_;
       }
       /**
-       * <code>int64 timestamp = 3;</code>
+       * <code>int64 timestamp = 2;</code>
        */
       public Builder setTimestamp(long value) {
         
@@ -7871,7 +7743,7 @@ public final class MochiProtocol {
         return this;
       }
       /**
-       * <code>int64 timestamp = 3;</code>
+       * <code>int64 timestamp = 2;</code>
        */
       public Builder clearTimestamp() {
         
@@ -7882,13 +7754,13 @@ public final class MochiProtocol {
 
       private long configstamp_ ;
       /**
-       * <code>int64 configstamp = 4;</code>
+       * <code>int64 configstamp = 3;</code>
        */
       public long getConfigstamp() {
         return configstamp_;
       }
       /**
-       * <code>int64 configstamp = 4;</code>
+       * <code>int64 configstamp = 3;</code>
        */
       public Builder setConfigstamp(long value) {
         
@@ -7897,7 +7769,7 @@ public final class MochiProtocol {
         return this;
       }
       /**
-       * <code>int64 configstamp = 4;</code>
+       * <code>int64 configstamp = 3;</code>
        */
       public Builder clearConfigstamp() {
         
@@ -7908,7 +7780,7 @@ public final class MochiProtocol {
 
       private java.lang.Object transactionHash_ = "";
       /**
-       * <code>string transactionHash = 5;</code>
+       * <code>string transactionHash = 4;</code>
        */
       public java.lang.String getTransactionHash() {
         java.lang.Object ref = transactionHash_;
@@ -7923,7 +7795,7 @@ public final class MochiProtocol {
         }
       }
       /**
-       * <code>string transactionHash = 5;</code>
+       * <code>string transactionHash = 4;</code>
        */
       public com.google.protobuf.ByteString
           getTransactionHashBytes() {
@@ -7939,7 +7811,7 @@ public final class MochiProtocol {
         }
       }
       /**
-       * <code>string transactionHash = 5;</code>
+       * <code>string transactionHash = 4;</code>
        */
       public Builder setTransactionHash(
           java.lang.String value) {
@@ -7952,7 +7824,7 @@ public final class MochiProtocol {
         return this;
       }
       /**
-       * <code>string transactionHash = 5;</code>
+       * <code>string transactionHash = 4;</code>
        */
       public Builder clearTransactionHash() {
         
@@ -7961,7 +7833,7 @@ public final class MochiProtocol {
         return this;
       }
       /**
-       * <code>string transactionHash = 5;</code>
+       * <code>string transactionHash = 4;</code>
        */
       public Builder setTransactionHashBytes(
           com.google.protobuf.ByteString value) {
@@ -20083,108 +19955,107 @@ public final class MochiProtocol {
       "\nKsrc/main/java/edu/stanford/cs244b/moch" +
       "i/server/messages/MochiProtocol.proto\022)e" +
       "du.stanford.cs244b.mochi.server.messages" +
-      "\"\246\001\n\tOperation\022J\n\006action\030\001 \001(\0162:.edu.sta" +
+      "\"\215\001\n\tOperation\022J\n\006action\030\001 \001(\0162:.edu.sta" +
       "nford.cs244b.mochi.server.messages.Opera" +
       "tionAction\022\020\n\010operand1\030\002 \001(\t\022\020\n\010operand2" +
-      "\030\003 \001(\t\022\020\n\010operand3\030\004 \001(\t\022\027\n\017operationNum" +
-      "ber\030\005 \001(\003\"W\n\013Transaction\022H\n\noperations\030\001" +
-      " \003(\01324.edu.stanford.cs244b.mochi.server." +
-      "messages.Operation\"\213\001\n\017OperationResult\022\016",
-      "\n\006result\030\001 \001(\t\022W\n\022currentCertificate\030\002 \001" +
-      "(\0132;.edu.stanford.cs244b.mochi.server.me" +
-      "ssages.WriteCertificate\022\017\n\007existed\030\003 \001(\010" +
-      "\"c\n\021TransactionResult\022N\n\noperations\030\001 \003(" +
-      "\0132:.edu.stanford.cs244b.mochi.server.mes" +
-      "sages.OperationResult\"|\n\014ReadToServer\022\020\n" +
-      "\010clientId\030\001 \001(\t\022K\n\013transaction\030\002 \001(\01326.e" +
+      "\030\003 \001(\t\022\020\n\010operand3\030\004 \001(\t\"W\n\013Transaction\022" +
+      "H\n\noperations\030\001 \003(\01324.edu.stanford.cs244" +
+      "b.mochi.server.messages.Operation\"\213\001\n\017Op" +
+      "erationResult\022\016\n\006result\030\001 \001(\t\022W\n\022current",
+      "Certificate\030\002 \001(\0132;.edu.stanford.cs244b." +
+      "mochi.server.messages.WriteCertificate\022\017" +
+      "\n\007existed\030\003 \001(\010\"c\n\021TransactionResult\022N\n\n" +
+      "operations\030\001 \003(\0132:.edu.stanford.cs244b.m" +
+      "ochi.server.messages.OperationResult\"|\n\014" +
+      "ReadToServer\022\020\n\010clientId\030\001 \001(\t\022K\n\013transa" +
+      "ction\030\002 \001(\01326.edu.stanford.cs244b.mochi." +
+      "server.messages.Transaction\022\r\n\005nonce\030\003 \001" +
+      "(\t\"z\n\016ReadFromServer\022L\n\006result\030\001 \001(\0132<.e" +
+      "du.stanford.cs244b.mochi.server.messages",
+      ".TransactionResult\022\r\n\005nonce\030\002 \001(\t\022\013\n\003rid" +
+      "\030\003 \001(\t\"\226\001\n\016Write1ToServer\022\020\n\010clientId\030\001 " +
+      "\001(\t\022K\n\013transaction\030\002 \001(\01326.edu.stanford." +
+      "cs244b.mochi.server.messages.Transaction" +
+      "\022\014\n\004seed\030\003 \001(\r\022\027\n\017transactionHash\030\004 \001(\t\"" +
+      "p\n\023Write2AnsFromServer\022L\n\006result\030\001 \001(\0132<" +
+      ".edu.stanford.cs244b.mochi.server.messag" +
+      "es.TransactionResult\022\013\n\003rid\030\002 \001(\t\"Z\n\005Gra" +
+      "nt\022\020\n\010objectId\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\003\022" +
+      "\023\n\013configstamp\030\003 \001(\003\022\027\n\017transactionHash\030",
+      "\004 \001(\t\"\362\001\n\nMultiGrant\022Q\n\006grants\030\001 \003(\0132A.e" +
       "du.stanford.cs244b.mochi.server.messages" +
-      ".Transaction\022\r\n\005nonce\030\003 \001(\t\"z\n\016ReadFromS" +
-      "erver\022L\n\006result\030\001 \001(\0132<.edu.stanford.cs2",
-      "44b.mochi.server.messages.TransactionRes" +
-      "ult\022\r\n\005nonce\030\002 \001(\t\022\013\n\003rid\030\003 \001(\t\"\226\001\n\016Writ" +
-      "e1ToServer\022\020\n\010clientId\030\001 \001(\t\022K\n\013transact" +
-      "ion\030\002 \001(\01326.edu.stanford.cs244b.mochi.se" +
-      "rver.messages.Transaction\022\014\n\004seed\030\003 \001(\r\022" +
-      "\027\n\017transactionHash\030\004 \001(\t\"p\n\023Write2AnsFro" +
-      "mServer\022L\n\006result\030\001 \001(\0132<.edu.stanford.c" +
-      "s244b.mochi.server.messages.TransactionR" +
-      "esult\022\013\n\003rid\030\002 \001(\t\"s\n\005Grant\022\020\n\010objectId\030" +
-      "\001 \001(\t\022\027\n\017operationNumber\030\002 \001(\003\022\021\n\ttimest",
-      "amp\030\003 \001(\003\022\023\n\013configstamp\030\004 \001(\003\022\027\n\017transa" +
-      "ctionHash\030\005 \001(\t\"\362\001\n\nMultiGrant\022Q\n\006grants" +
-      "\030\001 \003(\0132A.edu.stanford.cs244b.mochi.serve" +
-      "r.messages.MultiGrant.GrantsEntry\022\020\n\010cli" +
-      "entId\030\002 \001(\t\022\014\n\004hash\030\003 \001(\t\022\020\n\010serverId\030\004 " +
-      "\001(\t\032_\n\013GrantsEntry\022\013\n\003key\030\001 \001(\t\022?\n\005value" +
-      "\030\002 \001(\01320.edu.stanford.cs244b.mochi.serve" +
-      "r.messages.Grant:\0028\001\"\321\001\n\020WriteCertificat" +
-      "e\022W\n\006grants\030\001 \003(\0132G.edu.stanford.cs244b." +
-      "mochi.server.messages.WriteCertificate.G",
-      "rantsEntry\032d\n\013GrantsEntry\022\013\n\003key\030\001 \001(\t\022D" +
-      "\n\005value\030\002 \001(\01325.edu.stanford.cs244b.moch" +
-      "i.server.messages.MultiGrant:\0028\001\"\355\002\n\022Wri" +
-      "te1OkFromServer\022I\n\nmultiGrant\030\001 \001(\01325.ed" +
+      ".MultiGrant.GrantsEntry\022\020\n\010clientId\030\002 \001(" +
+      "\t\022\014\n\004hash\030\003 \001(\t\022\020\n\010serverId\030\004 \001(\t\032_\n\013Gra" +
+      "ntsEntry\022\013\n\003key\030\001 \001(\t\022?\n\005value\030\002 \001(\01320.e" +
+      "du.stanford.cs244b.mochi.server.messages" +
+      ".Grant:\0028\001\"\321\001\n\020WriteCertificate\022W\n\006grant" +
+      "s\030\001 \003(\0132G.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.WriteCertificate.GrantsEntry" +
+      "\032d\n\013GrantsEntry\022\013\n\003key\030\001 \001(\t\022D\n\005value\030\002 ",
+      "\001(\01325.edu.stanford.cs244b.mochi.server.m" +
+      "essages.MultiGrant:\0028\001\"\355\002\n\022Write1OkFromS" +
+      "erver\022I\n\nmultiGrant\030\001 \001(\01325.edu.stanford" +
+      ".cs244b.mochi.server.messages.MultiGrant" +
+      "\022s\n\023currentCertificates\030\002 \003(\0132V.edu.stan" +
+      "ford.cs244b.mochi.server.messages.Write1" +
+      "OkFromServer.CurrentCertificatesEntry\022\020\n" +
+      "\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t\032w\n\030Current" +
+      "CertificatesEntry\022\013\n\003key\030\001 \001(\t\022J\n\005value\030" +
+      "\002 \001(\0132;.edu.stanford.cs244b.mochi.server",
+      ".messages.WriteCertificate:\0028\001\"\264\001\n\016Write" +
+      "2ToServer\022U\n\020writeCertificate\030\001 \001(\0132;.ed" +
       "u.stanford.cs244b.mochi.server.messages." +
-      "MultiGrant\022s\n\023currentCertificates\030\002 \003(\0132" +
-      "V.edu.stanford.cs244b.mochi.server.messa" +
-      "ges.Write1OkFromServer.CurrentCertificat" +
-      "esEntry\022\020\n\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t\032" +
-      "w\n\030CurrentCertificatesEntry\022\013\n\003key\030\001 \001(\t",
-      "\022J\n\005value\030\002 \001(\0132;.edu.stanford.cs244b.mo" +
-      "chi.server.messages.WriteCertificate:\0028\001" +
-      "\"\264\001\n\016Write2ToServer\022U\n\020writeCertificate\030" +
-      "\001 \001(\0132;.edu.stanford.cs244b.mochi.server" +
-      ".messages.WriteCertificate\022K\n\013transactio" +
-      "n\030\002 \001(\01326.edu.stanford.cs244b.mochi.serv" +
-      "er.messages.Transaction\"\367\002\n\027Write1Refuse" +
-      "dFromServer\022I\n\nmultiGrant\030\001 \001(\01325.edu.st" +
-      "anford.cs244b.mochi.server.messages.Mult" +
-      "iGrant\022x\n\023currentCertificates\030\002 \003(\0132[.ed",
-      "u.stanford.cs244b.mochi.server.messages." +
-      "Write1RefusedFromServer.CurrentCertifica" +
-      "tesEntry\022\020\n\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t" +
-      "\032w\n\030CurrentCertificatesEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022J\n\005value\030\002 \001(\0132;.edu.stanford.cs244b.m" +
-      "ochi.server.messages.WriteCertificate:\0028" +
-      "\001\"f\n\027RequestFailedFromServer\022K\n\004type\030\001 \001" +
-      "(\0162=.edu.stanford.cs244b.mochi.server.me" +
-      "ssages.FailureMessageType\"\034\n\rHelloToServ" +
-      "er\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003msg",
-      "\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n\003msg\030\001 \001(\t\022\021" +
-      "\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFromServer2\022\013\n" +
-      "\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"\233\t\n\017Protoc" +
-      "olMessage\022Q\n\rhelloToServer\030e \001(\01328.edu.s" +
-      "tanford.cs244b.mochi.server.messages.Hel" +
-      "loToServerH\000\022U\n\017helloFromServer\030f \001(\0132:." +
+      "WriteCertificate\022K\n\013transaction\030\002 \001(\01326." +
       "edu.stanford.cs244b.mochi.server.message" +
-      "s.HelloFromServerH\000\022S\n\016helloToServer2\030g " +
-      "\001(\01329.edu.stanford.cs244b.mochi.server.m" +
-      "essages.HelloToServer2H\000\022W\n\020helloFromSer",
-      "ver2\030h \001(\0132;.edu.stanford.cs244b.mochi.s" +
-      "erver.messages.HelloFromServer2H\000\022O\n\014rea" +
-      "dToServer\030i \001(\01327.edu.stanford.cs244b.mo" +
-      "chi.server.messages.ReadToServerH\000\022S\n\016re" +
-      "adFromServer\030j \001(\01329.edu.stanford.cs244b" +
-      ".mochi.server.messages.ReadFromServerH\000\022" +
-      "S\n\016write1ToServer\030k \001(\01329.edu.stanford.c" +
-      "s244b.mochi.server.messages.Write1ToServ" +
-      "erH\000\022[\n\022write1OkFromServer\030l \001(\0132=.edu.s" +
-      "tanford.cs244b.mochi.server.messages.Wri",
-      "te1OkFromServerH\000\022e\n\027write1RefusedFromSe" +
-      "rver\030m \001(\0132B.edu.stanford.cs244b.mochi.s" +
-      "erver.messages.Write1RefusedFromServerH\000" +
-      "\022S\n\016write2ToServer\030n \001(\01329.edu.stanford." +
-      "cs244b.mochi.server.messages.Write2ToSer" +
-      "verH\000\022]\n\023write2AnsFromServer\030o \001(\0132>.edu" +
-      ".stanford.cs244b.mochi.server.messages.W" +
-      "rite2AnsFromServerH\000\022e\n\027requestFailedFro" +
-      "mServer\030p \001(\0132B.edu.stanford.cs244b.moch" +
-      "i.server.messages.RequestFailedFromServe",
-      "rH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010serverId\030\006 " +
-      "\001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(\t" +
-      "B\t\n\007payload*2\n\017OperationAction\022\010\n\004READ\020\000" +
-      "\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002*%\n\022FailureMessag" +
-      "eType\022\017\n\013OLD_REQUEST\020\000B\002H\001b\006proto3"
+      "s.Transaction\"\367\002\n\027Write1RefusedFromServe" +
+      "r\022I\n\nmultiGrant\030\001 \001(\01325.edu.stanford.cs2" +
+      "44b.mochi.server.messages.MultiGrant\022x\n\023" +
+      "currentCertificates\030\002 \003(\0132[.edu.stanford" +
+      ".cs244b.mochi.server.messages.Write1Refu",
+      "sedFromServer.CurrentCertificatesEntry\022\020" +
+      "\n\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t\032w\n\030Curren" +
+      "tCertificatesEntry\022\013\n\003key\030\001 \001(\t\022J\n\005value" +
+      "\030\002 \001(\0132;.edu.stanford.cs244b.mochi.serve" +
+      "r.messages.WriteCertificate:\0028\001\"f\n\027Reque" +
+      "stFailedFromServer\022K\n\004type\030\001 \001(\0162=.edu.s" +
+      "tanford.cs244b.mochi.server.messages.Fai" +
+      "lureMessageType\"\034\n\rHelloToServer\022\013\n\003msg\030" +
+      "\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003msg\030\001 \001(\t\"1\n\017" +
+      "HelloFromServer\022\013\n\003msg\030\001 \001(\t\022\021\n\tclientMs",
+      "g\030\002 \001(\t\"2\n\020HelloFromServer2\022\013\n\003msg\030\001 \001(\t" +
+      "\022\021\n\tclientMsg\030\002 \001(\t\"\233\t\n\017ProtocolMessage\022" +
+      "Q\n\rhelloToServer\030e \001(\01328.edu.stanford.cs" +
+      "244b.mochi.server.messages.HelloToServer" +
+      "H\000\022U\n\017helloFromServer\030f \001(\0132:.edu.stanfo" +
+      "rd.cs244b.mochi.server.messages.HelloFro" +
+      "mServerH\000\022S\n\016helloToServer2\030g \001(\01329.edu." +
+      "stanford.cs244b.mochi.server.messages.He" +
+      "lloToServer2H\000\022W\n\020helloFromServer2\030h \001(\013" +
+      "2;.edu.stanford.cs244b.mochi.server.mess",
+      "ages.HelloFromServer2H\000\022O\n\014readToServer\030" +
+      "i \001(\01327.edu.stanford.cs244b.mochi.server" +
+      ".messages.ReadToServerH\000\022S\n\016readFromServ" +
+      "er\030j \001(\01329.edu.stanford.cs244b.mochi.ser" +
+      "ver.messages.ReadFromServerH\000\022S\n\016write1T" +
+      "oServer\030k \001(\01329.edu.stanford.cs244b.moch" +
+      "i.server.messages.Write1ToServerH\000\022[\n\022wr" +
+      "ite1OkFromServer\030l \001(\0132=.edu.stanford.cs" +
+      "244b.mochi.server.messages.Write1OkFromS" +
+      "erverH\000\022e\n\027write1RefusedFromServer\030m \001(\013",
+      "2B.edu.stanford.cs244b.mochi.server.mess" +
+      "ages.Write1RefusedFromServerH\000\022S\n\016write2" +
+      "ToServer\030n \001(\01329.edu.stanford.cs244b.moc" +
+      "hi.server.messages.Write2ToServerH\000\022]\n\023w" +
+      "rite2AnsFromServer\030o \001(\0132>.edu.stanford." +
+      "cs244b.mochi.server.messages.Write2AnsFr" +
+      "omServerH\000\022e\n\027requestFailedFromServer\030p " +
+      "\001(\0132B.edu.stanford.cs244b.mochi.server.m" +
+      "essages.RequestFailedFromServerH\000\022\024\n\014msg" +
+      "Timestamp\030\005 \001(\003\022\020\n\010serverId\030\006 \001(\t\022\r\n\005msg",
+      "Id\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(\tB\t\n\007payloa" +
+      "d*2\n\017OperationAction\022\010\n\004READ\020\000\022\n\n\006DELETE" +
+      "\020\001\022\t\n\005WRITE\020\002*%\n\022FailureMessageType\022\017\n\013O" +
+      "LD_REQUEST\020\000B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -20203,7 +20074,7 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_Operation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Operation_descriptor,
-        new java.lang.String[] { "Action", "Operand1", "Operand2", "Operand3", "OperationNumber", });
+        new java.lang.String[] { "Action", "Operand1", "Operand2", "Operand3", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Transaction_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Transaction_fieldAccessorTable = new
@@ -20251,7 +20122,7 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_Grant_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Grant_descriptor,
-        new java.lang.String[] { "ObjectId", "OperationNumber", "Timestamp", "Configstamp", "TransactionHash", });
+        new java.lang.String[] { "ObjectId", "Timestamp", "Configstamp", "TransactionHash", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_edu_stanford_cs244b_mochi_server_messages_MultiGrant_fieldAccessorTable = new

@@ -36,7 +36,6 @@ message Operation {
     string operand1 = 2;  // object id (oid) is the key 
     string operand2 = 3;
     string operand3 = 4;
-    int64 operationNumber = 5;
 }
 
 message Transaction {
@@ -100,10 +99,9 @@ message Write2AnsFromServer {
 
 message Grant {
     string objectId = 1;
-    int64 operationNumber = 2;
-    int64 timestamp = 3;
-    int64 configstamp = 4;
-    string transactionHash = 5;
+    int64 timestamp = 2;
+    int64 configstamp = 3;
+    string transactionHash = 4;
 }
 
 
