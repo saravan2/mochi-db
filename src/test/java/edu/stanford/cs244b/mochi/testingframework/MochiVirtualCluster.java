@@ -20,11 +20,20 @@ public class MochiVirtualCluster implements Closeable {
 
     private final List<VirtualServer> servers;
     
-    public MochiVirtualCluster(int initialNumberOfServers) {
+    public MochiVirtualCluster(int initialNumberOfServers, int bftFautlyReplicas) {
         Assert.assertTrue(initialNumberOfServers > 0);
+        Assert.assertTrue(bftFautlyReplicas > 0);
+        checkNumberOfFaultyCorrect(initialNumberOfServers, bftFautlyReplicas);
         servers = new ArrayList<VirtualServer>(initialNumberOfServers * 2);
         for (int i = 0 ; i < initialNumberOfServers; i++) {
             addMochiServer();
+        }
+    }
+
+    private void checkNumberOfFaultyCorrect(int servers, int bftFautlyReplicas) {
+        int minNumberOfServers = 3 * bftFautlyReplicas + 1;
+        if (servers < minNumberOfServers) {
+            throw new IllegalStateException("Too little servers to support specified BFT");
         }
     }
 

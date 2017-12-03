@@ -12,4 +12,9 @@ public interface MochiContext {
     public DataStore getBeanDataStore();
 
     public String getServerId();
+
+    public int getShardTokens();
+
+    public ClusterConfiguration getClusterConfiguration();
+
 }

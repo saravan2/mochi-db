@@ -15,13 +15,8 @@ import edu.stanford.cs244b.mochi.client.RequestFailedException;
 import edu.stanford.cs244b.mochi.client.TransactionBuilder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messaging.ConnectionNotReadyException;
 import edu.stanford.cs244b.mochi.server.messaging.MochiMessaging;
@@ -163,8 +158,8 @@ public class MochiClientServerCommunicationTest {
     @Test
     public void testReadOperation() throws InterruptedException, ExecutionException {
         
-        final int numberOfServersToTest = 2;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        final int numberOfServersToTest = 4;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
         mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();
@@ -216,8 +211,8 @@ public class MochiClientServerCommunicationTest {
 
     @Test
     public void testWriteOperation() throws InterruptedException, ExecutionException {
-        final int numberOfServersToTest = 2;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        final int numberOfServersToTest = 4;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
         mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();
@@ -291,8 +286,8 @@ public class MochiClientServerCommunicationTest {
 
     @Test(expectedExceptions = RequestFailedException.class)
     public void testWriteOperationTooOld() throws InterruptedException, ExecutionException {
-        final int numberOfServersToTest = 1;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest);
+        final int numberOfServersToTest = 4;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
         mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();

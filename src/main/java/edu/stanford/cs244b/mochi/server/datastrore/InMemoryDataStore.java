@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import com.google.protobuf.TextFormat;
 
+import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
 import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.FailureMessageType;
@@ -42,12 +43,14 @@ public class InMemoryDataStore implements DataStore {
     private final static String CONFIG_KEY_PREFIX = "_CONFIG_";
     private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> data = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
     private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> dataConfig = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
+    private final ClusterConfiguration clusterConfiguration;
 
     private final MochiContext mochiContext;
 
     @SuppressWarnings("unchecked")
     public InMemoryDataStore(final MochiContext mochiContext) {
         this.mochiContext = mochiContext;
+        this.clusterConfiguration = mochiContext.getClusterConfiguration();
     }
 
     protected ConcurrentHashMap<String, StoreValueObjectContainer<String>> getDataMap(final String key) {
