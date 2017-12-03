@@ -16,13 +16,13 @@ public class UtilsTest {
 
     @Test
     public void testObjectSHA512() {
-        final Transaction tr1 = TransactionBuilder.startNewTransaction(10).addWriteOperation("key", "hello world")
+        final Transaction tr1 = TransactionBuilder.startNewTransaction().addWriteOperation("key", "hello world")
                 .addReadOperation("key").addReadOperation("key2").build();
 
-        final Transaction tr2 = TransactionBuilder.startNewTransaction(10).addWriteOperation("key", "hello world")
+        final Transaction tr2 = TransactionBuilder.startNewTransaction().addWriteOperation("key", "hello world")
                 .addReadOperation("key").addReadOperation("key2").build();
 
-        final Transaction tr3 = TransactionBuilder.startNewTransaction(10).addWriteOperation("key", "hello world")
+        final Transaction tr3 = TransactionBuilder.startNewTransaction().addWriteOperation("key", "hello world")
                 .addReadOperation("key2").addReadOperation("key3").build();
 
         final String shaTr1 = Utils.objectSHA512(tr1);

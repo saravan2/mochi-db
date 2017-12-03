@@ -44,7 +44,6 @@ public class InMemoryDataStore implements DataStore {
     private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> data = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
     private final ConcurrentHashMap<String, StoreValueObjectContainer<String>> dataConfig = new ConcurrentHashMap<String, StoreValueObjectContainer<String>>();
     private final ClusterConfiguration clusterConfiguration;
-
     private final MochiContext mochiContext;
 
     @SuppressWarnings("unchecked")
@@ -89,6 +88,7 @@ public class InMemoryDataStore implements DataStore {
         LOG.debug("Performing processWrite on key: {}", interestedKey);
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
         synchronized (storeValue) {
+            /*
             final Long oprationNumberInOldOps = storeValue.getOperationNumberInOldOps(clientId);
             LOG.debug("Got oprationNumberInOldOps = {}", oprationNumberInOldOps);
             if (oprationNumberInOldOps != null && oprationNumberInOldOps > op.getOperationNumber()) {
@@ -106,13 +106,14 @@ public class InMemoryDataStore implements DataStore {
                 throw new UnsupportedOperationException();
             }
             storeValue.addRequestToOps(writeToServer);
+            */
             long prospectiveTS = storeValue.getCurrentEpoch() + writeToServer.getSeed();
             if (storeValue.isGivenWrite1GrantsEmpty() || ((grantAtTS = storeValue.getGrantIfExistsAtTimeStamp(prospectiveTS)) == null)) {
                 /* There is no current grant on that timestamp */
 
                 final Grant.Builder grantBuilder = Grant.newBuilder();
                 grantBuilder.setObjectId(interestedKey);
-                grantBuilder.setOperationNumber(op.getOperationNumber());
+                grantBuilder.setTransactionHash(writeToServer.getTransactionHash());
 
                 grantBuilder.setTimestamp(prospectiveTS);
                 LOG.debug("Grant awarded in epoch {} ts {} for key {}", storeValue.getCurrentEpoch(), prospectiveTS, interestedKey);
@@ -121,8 +122,13 @@ public class InMemoryDataStore implements DataStore {
                 storeValue.addGivenWrite1Grant(prospectiveTS, grantBuilder.build());
                 return Triplet.with(newGrant, storeValue.getCurrentC(), true);
             } else {
-                /* Somebody else has the grant. Write refuse */
-                return Triplet.with(grantAtTS, storeValue.getCurrentC(), false);
+                /* Could be a retry */
+                if (writeToServer.getTransactionHash().equals(grantAtTS.getTransactionHash())) {
+                    return Triplet.with(grantAtTS, storeValue.getCurrentC(), true);
+                } else {
+                    /* Someone else has the grant */
+                    return Triplet.with(grantAtTS, storeValue.getCurrentC(), false);
+                }
             }
         }
     }
@@ -425,8 +431,7 @@ public class InMemoryDataStore implements DataStore {
         return null;
     }
 
-    private OperationResult applyOperation(final Operation op, final WriteCertificate writeCertificateIfAny,
-            final Write1ToServer write1toServerIfAny) {
+    private OperationResult applyOperation(final Operation op, final WriteCertificate writeCertificateIfAny) {
         final StoreValueObjectContainer<String> storeValueContainer = getDataMap(op.getOperand1())
                 .get(op.getOperand1());
         Utils.assertNotNull(storeValueContainer, "storeValueCotainer should not be null");
@@ -440,14 +445,14 @@ public class InMemoryDataStore implements DataStore {
             final String oldValue = storeValueContainer.setValue(newValue);
             final boolean wasAvailable = storeValueContainer.setValueAvailble(true);
 
-            final OldOpsEntry newOldOpsEntry = new OldOpsEntry();
-            newOldOpsEntry.setOperationNumber(op.getOperationNumber());
+            //final OldOpsEntry newOldOpsEntry = new OldOpsEntry();
+            //newOldOpsEntry.setOperationNumber(op.getOperationNumber());
             // More stuff into old entries is added at the end
-            
+            /*
             storeValueContainer.updateOldOps(write1toServerIfAny.getClientId(), newOldOpsEntry);
             Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
             storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);        
-
+            */
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
             long timestamp = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
@@ -460,7 +465,7 @@ public class InMemoryDataStore implements DataStore {
                 LOG.debug("Moving epoch to {} for key {}", storeValueContainer.getCurrentEpoch(), op.getOperand1());
             }
             final OperationResult oprationResult = resultBuilder.build();
-            newOldOpsEntry.setOperationResult(oprationResult);
+            //newOldOpsEntry.setOperationResult(oprationResult);
             return oprationResult;
         } else {
             // TODO: handle other operations, such as delete for example
@@ -472,9 +477,9 @@ public class InMemoryDataStore implements DataStore {
         final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
         final List<OperationResult> operationResults = new ArrayList<OperationResult>(grantsToExecute.size());
         for (final String object : grantsToExecute.keySet()) {
-            final StoreValueObjectContainer<String> storeValueCotainer = getDataMap(object).get(object);
+            final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
             final Grant grantForObject = grantsToExecute.get(object);
-            final Pair<Write1ToServer, Operation> requestToExecuteWithOp = storeValueCotainer.locateRequestInOps(
+            /*final Pair<Write1ToServer, Operation> requestToExecuteWithOp = storeValueCotainer.locateRequestInOps(
                     multiGrant.getClientId(), grantForObject.getOperationNumber());
             Utils.assertNotNull(requestToExecuteWithOp, "requestToExecuteWithOp is null. logic error");
             final Write1ToServer write1request = requestToExecuteWithOp.getValue0();
@@ -482,9 +487,21 @@ public class InMemoryDataStore implements DataStore {
             Utils.assertNotNull(write1request, "Failed to find write1 request. Something is wrong");
             LOG.debug("Executing operation {} from {}", TextFormat.shortDebugString(opToExecute),
                     TextFormat.shortDebugString(write1request));
-            final OperationResult operationResult = applyOperation(opToExecute, write2ToServer.getWriteCertificate(),
-                    write1request);
-            operationResults.add(operationResult);
+                    */
+            final Transaction transaction = write2ToServer.getTransaction();
+            final String txnHash = Utils.objectSHA512(transaction);
+            if (grantForObject.getTransactionHash().equals(txnHash)) {
+                final List<Operation> transactionOps = transaction.getOperationsList();
+                for (final Operation op : transactionOps) {
+                    if (op.getOperand1().equals(storeValueContainer.getKey())) {
+                        final OperationResult operationResult = applyOperation(op, write2ToServer.getWriteCertificate());
+                        operationResults.add(operationResult);
+                    }
+                }
+            } else {
+                // TODO
+                Utils.assertTrue(true);
+            }
         }
         return operationResults;
     }

@@ -35,11 +35,8 @@ public class StoreValueObjectContainer<T> {
     private volatile WriteCertificate currentC;
 
     // Note: working on givenWrite1Grants requires acquiring object lock
-    private final HashMap<Long, HashMap<Long, Grant>> givenWrite1Grants;
+    private final HashMap<Long, HashMap<Long, Pair<String, Grant>>> givenWrite1Grants;
 
-
-    private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
-    private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
     private volatile long currentEpoch = EPOCH_START;
     private final ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
 
@@ -51,8 +48,12 @@ public class StoreValueObjectContainer<T> {
         this.value = value;
         this.valueAvailble = valueAvailble;
         this.key = key;
-        givenWrite1Grants = new HashMap<Long, HashMap<Long, Grant>>();
+        givenWrite1Grants = new HashMap<Long, HashMap<Long, Pair<String, Grant>>>();
 
+    }
+    
+    public String getKey() {
+        return this.key;
     }
 
     public T getValue() {
@@ -92,69 +93,8 @@ public class StoreValueObjectContainer<T> {
         this.valueAvailble = valueAvailble;
         return oldAvailable;
     }
-
-    public Long getOperationNumberInOldOps(final String clientId) {
-        final OldOpsEntry clientOldOpsEntry = oldOps.get(clientId);
-        if (clientOldOpsEntry == null) {
-            return null;
-        }
-        return clientOldOpsEntry.getOperationNumber();
-    }
-
-    public void updateOldOps(final String clientId, final OldOpsEntry entry) {
-        oldOps.put(clientId, entry);
-    }
-
-    public boolean isRequestInOps(final Write1ToServer writeToServer) {
-        for (final Write1ToServer writeFromOps : ops) {
-            if (writeFromOps.equals(writeToServer)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void addRequestToOps(final Write1ToServer writeToServer) {
-        this.ops.add(writeToServer);
-    }
-
-    public void overrideOpsWithOneElement(final Write1ToServer writeToServer) {
-        synchronized (this.ops) {
-            this.ops.clear();
-            this.ops.add(writeToServer);
-        }
-    }
-
-    public Pair<Write1ToServer, Operation> locateRequestInOps(final String clientIdToMatch,
-            final long operationNumberToMatch) {
-        Write1ToServer foundWrite1ToServer = null;
-        Operation opToExecute = null;
-        for (final Write1ToServer writeToServerFromOps : ops) {
-            final String clientId = writeToServerFromOps.getClientId();
-            final Transaction transaction = writeToServerFromOps.getTransaction();
-            final List<Operation> transactionOps = transaction.getOperationsList();
-            for (final Operation op : transactionOps) {
-                final String operand1 = op.getOperand1();
-                if (operand1.equals(this.key) == false) {
-                    continue;
-                }
-                final long operationNumber = op.getOperationNumber();
-                if (operationNumber == operationNumberToMatch && clientIdToMatch.equals(clientId)) {
-                    LOG.debug("Found match in ops for clientIdToMatch = {} and operationNumberToMatch = {}",
-                            clientIdToMatch, operationNumberToMatch);
-                    if (foundWrite1ToServer != null) {
-                        throw new IllegalStateException();
-                    }
-                    foundWrite1ToServer = writeToServerFromOps;
-                    opToExecute = op;
-                    break; // No point to check for that transaction
-                }
-            }
-        }
-        return Pair.with(foundWrite1ToServer, opToExecute);
-    }
-    
-    public HashMap<Long, HashMap<Long, Grant>> getGivenWrite1Grants() {
+   
+    public HashMap<Long, HashMap<Long, Pair<String, Grant>>> getGivenWrite1Grants() {
         return givenWrite1Grants;
     }
     
@@ -164,16 +104,17 @@ public class StoreValueObjectContainer<T> {
     
     public void addGivenWrite1Grant(Long timestamp, Grant grant) {
         final Long epoch = mapTimeStampsToEpoch(timestamp);
+        final Pair<String, Grant> hashedGrant = new Pair<String, Grant>(grant.getTransactionHash(), grant);
         if (givenWrite1Grants.containsKey(epoch)) {
-            givenWrite1Grants.get(epoch).put(timestamp, grant);
+            givenWrite1Grants.get(epoch).put(timestamp, hashedGrant);
         } else {
-            HashMap<Long, Grant> entry = new HashMap<Long, Grant>();
-            entry.put(timestamp, grant);
+            HashMap<Long, Pair<String, Grant>> entry = new HashMap<Long, Pair<String, Grant>>();
+            entry.put(timestamp, hashedGrant);
             givenWrite1Grants.put(epoch, entry);
         }
     }
     
-    public final HashMap<Long, Grant> getAllGrantsFromEpoch(Long timestamp) {
+    public final HashMap<Long, Pair<String, Grant>> getAllGrantsFromEpoch(Long timestamp) {
         final Long epoch = mapTimeStampsToEpoch(timestamp);
         if (givenWrite1Grants.containsKey(epoch)) {
             return givenWrite1Grants.get(epoch);
@@ -184,9 +125,9 @@ public class StoreValueObjectContainer<T> {
     public Grant getGrantIfExistsAtTimeStamp(Long timestamp) {
         final Long epoch = mapTimeStampsToEpoch(timestamp);
         if (givenWrite1Grants.containsKey(epoch)) {
-            HashMap<Long, Grant> grantTimeStamps = givenWrite1Grants.get(epoch);
+            HashMap<Long, Pair<String, Grant>> grantTimeStamps = givenWrite1Grants.get(epoch);
             if (grantTimeStamps.containsKey(timestamp)) {
-                return grantTimeStamps.get(timestamp);
+                return grantTimeStamps.get(timestamp).getValue1();
             }
         }
         return null;
@@ -195,7 +136,7 @@ public class StoreValueObjectContainer<T> {
     public boolean grantAlreadyGiven(Long timestamp) {
         Long epoch = mapTimeStampsToEpoch(timestamp);
         if (givenWrite1Grants.containsKey(epoch)) {
-            HashMap<Long, Grant> grantTimeStamps = givenWrite1Grants.get(epoch);
+            HashMap<Long, Pair<String, Grant>> grantTimeStamps = givenWrite1Grants.get(epoch);
             if (grantTimeStamps.containsKey(timestamp)) {
                 return true;
             }

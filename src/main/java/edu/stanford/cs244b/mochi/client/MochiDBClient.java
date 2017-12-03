@@ -18,6 +18,7 @@ import com.jcabi.aspects.Loggable;
 
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
@@ -98,9 +99,15 @@ public class MochiDBClient implements Closeable {
 
         Random rand = new Random();
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
-        write1toServerBuilder.setTransaction(transactionToExecute);
+        /* We dont have to send value in write1 message. Lets rebuild transaction */
+        final TransactionBuilder tb = TransactionBuilder.startNewTransaction();
+        List<Operation> transactionOps = transactionToExecute.getOperationsList();
+        for (final Operation op : transactionOps) {
+            tb.addWriteWithoutValueOperation(op.getOperand1());
+        }
+        write1toServerBuilder.setTransaction(tb.build());
         write1toServerBuilder.setSeed(rand.nextInt(1000));
-        
+        write1toServerBuilder.setTransactionHash(Utils.objectSHA512(transactionToExecute));
         final List<Future<ProtocolMessage>> write1responseFutures = Utils.sendMessageToServers(write1toServerBuilder,
                 servers, mochiMessaging);
         Utils.busyWaitForFutures(write1responseFutures);
@@ -162,6 +169,7 @@ public class MochiDBClient implements Closeable {
 
         final Write2ToServer.Builder write2ToServerBuilder = Write2ToServer.newBuilder();
         write2ToServerBuilder.setWriteCertificate(wcb);
+        write2ToServerBuilder.setTransaction(transactionToExecute);
 
         final List<Future<ProtocolMessage>> write2responseFutures = Utils.sendMessageToServers(write2ToServerBuilder,
                 servers, mochiMessaging);
