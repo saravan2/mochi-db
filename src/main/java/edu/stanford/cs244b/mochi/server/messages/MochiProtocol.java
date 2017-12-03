@@ -11405,6 +11405,31 @@ public final class MochiProtocol {
      * <code>.edu.stanford.cs244b.mochi.server.messages.WriteCertificate writeCertificate = 1;</code>
      */
     edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificateOrBuilder getWriteCertificateOrBuilder();
+
+    /**
+     * <pre>
+     * contains (oid, op#,  op)
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+     */
+    boolean hasTransaction();
+    /**
+     * <pre>
+     * contains (oid, op#,  op)
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction getTransaction();
+    /**
+     * <pre>
+     * contains (oid, op#,  op)
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+     */
+    edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionOrBuilder getTransactionOrBuilder();
   }
   /**
    * Protobuf type {@code edu.stanford.cs244b.mochi.server.messages.Write2ToServer}
@@ -11462,6 +11487,19 @@ public final class MochiProtocol {
 
               break;
             }
+            case 18: {
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.Builder subBuilder = null;
+              if (transaction_ != null) {
+                subBuilder = transaction_.toBuilder();
+              }
+              transaction_ = input.readMessage(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(transaction_);
+                transaction_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -11507,6 +11545,39 @@ public final class MochiProtocol {
       return getWriteCertificate();
     }
 
+    public static final int TRANSACTION_FIELD_NUMBER = 2;
+    private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction transaction_;
+    /**
+     * <pre>
+     * contains (oid, op#,  op)
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+     */
+    public boolean hasTransaction() {
+      return transaction_ != null;
+    }
+    /**
+     * <pre>
+     * contains (oid, op#,  op)
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction getTransaction() {
+      return transaction_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.getDefaultInstance() : transaction_;
+    }
+    /**
+     * <pre>
+     * contains (oid, op#,  op)
+     * </pre>
+     *
+     * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+     */
+    public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionOrBuilder getTransactionOrBuilder() {
+      return getTransaction();
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -11522,6 +11593,9 @@ public final class MochiProtocol {
       if (writeCertificate_ != null) {
         output.writeMessage(1, getWriteCertificate());
       }
+      if (transaction_ != null) {
+        output.writeMessage(2, getTransaction());
+      }
       unknownFields.writeTo(output);
     }
 
@@ -11533,6 +11607,10 @@ public final class MochiProtocol {
       if (writeCertificate_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getWriteCertificate());
+      }
+      if (transaction_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getTransaction());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -11555,6 +11633,11 @@ public final class MochiProtocol {
         result = result && getWriteCertificate()
             .equals(other.getWriteCertificate());
       }
+      result = result && (hasTransaction() == other.hasTransaction());
+      if (hasTransaction()) {
+        result = result && getTransaction()
+            .equals(other.getTransaction());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -11569,6 +11652,10 @@ public final class MochiProtocol {
       if (hasWriteCertificate()) {
         hash = (37 * hash) + WRITECERTIFICATE_FIELD_NUMBER;
         hash = (53 * hash) + getWriteCertificate().hashCode();
+      }
+      if (hasTransaction()) {
+        hash = (37 * hash) + TRANSACTION_FIELD_NUMBER;
+        hash = (53 * hash) + getTransaction().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -11705,6 +11792,12 @@ public final class MochiProtocol {
           writeCertificate_ = null;
           writeCertificateBuilder_ = null;
         }
+        if (transactionBuilder_ == null) {
+          transaction_ = null;
+        } else {
+          transaction_ = null;
+          transactionBuilder_ = null;
+        }
         return this;
       }
 
@@ -11731,6 +11824,11 @@ public final class MochiProtocol {
           result.writeCertificate_ = writeCertificate_;
         } else {
           result.writeCertificate_ = writeCertificateBuilder_.build();
+        }
+        if (transactionBuilder_ == null) {
+          result.transaction_ = transaction_;
+        } else {
+          result.transaction_ = transactionBuilder_.build();
         }
         onBuilt();
         return result;
@@ -11775,6 +11873,9 @@ public final class MochiProtocol {
         if (other == edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write2ToServer.getDefaultInstance()) return this;
         if (other.hasWriteCertificate()) {
           mergeWriteCertificate(other.getWriteCertificate());
+        }
+        if (other.hasTransaction()) {
+          mergeTransaction(other.getTransaction());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -11918,6 +12019,159 @@ public final class MochiProtocol {
           writeCertificate_ = null;
         }
         return writeCertificateBuilder_;
+      }
+
+      private edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction transaction_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionOrBuilder> transactionBuilder_;
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public boolean hasTransaction() {
+        return transactionBuilder_ != null || transaction_ != null;
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction getTransaction() {
+        if (transactionBuilder_ == null) {
+          return transaction_ == null ? edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.getDefaultInstance() : transaction_;
+        } else {
+          return transactionBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public Builder setTransaction(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction value) {
+        if (transactionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          transaction_ = value;
+          onChanged();
+        } else {
+          transactionBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public Builder setTransaction(
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.Builder builderForValue) {
+        if (transactionBuilder_ == null) {
+          transaction_ = builderForValue.build();
+          onChanged();
+        } else {
+          transactionBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public Builder mergeTransaction(edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction value) {
+        if (transactionBuilder_ == null) {
+          if (transaction_ != null) {
+            transaction_ =
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.newBuilder(transaction_).mergeFrom(value).buildPartial();
+          } else {
+            transaction_ = value;
+          }
+          onChanged();
+        } else {
+          transactionBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public Builder clearTransaction() {
+        if (transactionBuilder_ == null) {
+          transaction_ = null;
+          onChanged();
+        } else {
+          transaction_ = null;
+          transactionBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.Builder getTransactionBuilder() {
+        
+        onChanged();
+        return getTransactionFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      public edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionOrBuilder getTransactionOrBuilder() {
+        if (transactionBuilder_ != null) {
+          return transactionBuilder_.getMessageOrBuilder();
+        } else {
+          return transaction_ == null ?
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.getDefaultInstance() : transaction_;
+        }
+      }
+      /**
+       * <pre>
+       * contains (oid, op#,  op)
+       * </pre>
+       *
+       * <code>.edu.stanford.cs244b.mochi.server.messages.Transaction transaction = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionOrBuilder> 
+          getTransactionFieldBuilder() {
+        if (transactionBuilder_ == null) {
+          transactionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction.Builder, edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionOrBuilder>(
+                  getTransaction(),
+                  getParentForChildren(),
+                  isClean());
+          transaction_ = null;
+        }
+        return transactionBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -19878,57 +20132,59 @@ public final class MochiProtocol {
       "w\n\030CurrentCertificatesEntry\022\013\n\003key\030\001 \001(\t",
       "\022J\n\005value\030\002 \001(\0132;.edu.stanford.cs244b.mo" +
       "chi.server.messages.WriteCertificate:\0028\001" +
-      "\"g\n\016Write2ToServer\022U\n\020writeCertificate\030\001" +
-      " \001(\0132;.edu.stanford.cs244b.mochi.server." +
-      "messages.WriteCertificate\"\367\002\n\027Write1Refu" +
-      "sedFromServer\022I\n\nmultiGrant\030\001 \001(\01325.edu." +
-      "stanford.cs244b.mochi.server.messages.Mu" +
-      "ltiGrant\022x\n\023currentCertificates\030\002 \003(\0132[." +
+      "\"\264\001\n\016Write2ToServer\022U\n\020writeCertificate\030" +
+      "\001 \001(\0132;.edu.stanford.cs244b.mochi.server" +
+      ".messages.WriteCertificate\022K\n\013transactio" +
+      "n\030\002 \001(\01326.edu.stanford.cs244b.mochi.serv" +
+      "er.messages.Transaction\"\367\002\n\027Write1Refuse" +
+      "dFromServer\022I\n\nmultiGrant\030\001 \001(\01325.edu.st" +
+      "anford.cs244b.mochi.server.messages.Mult" +
+      "iGrant\022x\n\023currentCertificates\030\002 \003(\0132[.ed",
+      "u.stanford.cs244b.mochi.server.messages." +
+      "Write1RefusedFromServer.CurrentCertifica" +
+      "tesEntry\022\020\n\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001(\t" +
+      "\032w\n\030CurrentCertificatesEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022J\n\005value\030\002 \001(\0132;.edu.stanford.cs244b.m" +
+      "ochi.server.messages.WriteCertificate:\0028" +
+      "\001\"f\n\027RequestFailedFromServer\022K\n\004type\030\001 \001" +
+      "(\0162=.edu.stanford.cs244b.mochi.server.me" +
+      "ssages.FailureMessageType\"\034\n\rHelloToServ" +
+      "er\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003msg",
+      "\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n\003msg\030\001 \001(\t\022\021" +
+      "\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFromServer2\022\013\n" +
+      "\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"\233\t\n\017Protoc" +
+      "olMessage\022Q\n\rhelloToServer\030e \001(\01328.edu.s" +
+      "tanford.cs244b.mochi.server.messages.Hel" +
+      "loToServerH\000\022U\n\017helloFromServer\030f \001(\0132:." +
       "edu.stanford.cs244b.mochi.server.message" +
-      "s.Write1RefusedFromServer.CurrentCertifi",
-      "catesEntry\022\020\n\010clientId\030\003 \001(\t\022\014\n\004hash\030\004 \001" +
-      "(\t\032w\n\030CurrentCertificatesEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022J\n\005value\030\002 \001(\0132;.edu.stanford.cs244b" +
-      ".mochi.server.messages.WriteCertificate:" +
-      "\0028\001\"f\n\027RequestFailedFromServer\022K\n\004type\030\001" +
-      " \001(\0162=.edu.stanford.cs244b.mochi.server." +
-      "messages.FailureMessageType\"\034\n\rHelloToSe" +
-      "rver\022\013\n\003msg\030\001 \001(\t\"\035\n\016HelloToServer2\022\013\n\003m" +
-      "sg\030\001 \001(\t\"1\n\017HelloFromServer\022\013\n\003msg\030\001 \001(\t" +
-      "\022\021\n\tclientMsg\030\002 \001(\t\"2\n\020HelloFromServer2\022",
-      "\013\n\003msg\030\001 \001(\t\022\021\n\tclientMsg\030\002 \001(\t\"\233\t\n\017Prot" +
-      "ocolMessage\022Q\n\rhelloToServer\030e \001(\01328.edu" +
-      ".stanford.cs244b.mochi.server.messages.H" +
-      "elloToServerH\000\022U\n\017helloFromServer\030f \001(\0132" +
-      ":.edu.stanford.cs244b.mochi.server.messa" +
-      "ges.HelloFromServerH\000\022S\n\016helloToServer2\030" +
-      "g \001(\01329.edu.stanford.cs244b.mochi.server" +
-      ".messages.HelloToServer2H\000\022W\n\020helloFromS" +
-      "erver2\030h \001(\0132;.edu.stanford.cs244b.mochi" +
-      ".server.messages.HelloFromServer2H\000\022O\n\014r",
-      "eadToServer\030i \001(\01327.edu.stanford.cs244b." +
-      "mochi.server.messages.ReadToServerH\000\022S\n\016" +
-      "readFromServer\030j \001(\01329.edu.stanford.cs24" +
-      "4b.mochi.server.messages.ReadFromServerH" +
-      "\000\022S\n\016write1ToServer\030k \001(\01329.edu.stanford" +
-      ".cs244b.mochi.server.messages.Write1ToSe" +
-      "rverH\000\022[\n\022write1OkFromServer\030l \001(\0132=.edu" +
+      "s.HelloFromServerH\000\022S\n\016helloToServer2\030g " +
+      "\001(\01329.edu.stanford.cs244b.mochi.server.m" +
+      "essages.HelloToServer2H\000\022W\n\020helloFromSer",
+      "ver2\030h \001(\0132;.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.HelloFromServer2H\000\022O\n\014rea" +
+      "dToServer\030i \001(\01327.edu.stanford.cs244b.mo" +
+      "chi.server.messages.ReadToServerH\000\022S\n\016re" +
+      "adFromServer\030j \001(\01329.edu.stanford.cs244b" +
+      ".mochi.server.messages.ReadFromServerH\000\022" +
+      "S\n\016write1ToServer\030k \001(\01329.edu.stanford.c" +
+      "s244b.mochi.server.messages.Write1ToServ" +
+      "erH\000\022[\n\022write1OkFromServer\030l \001(\0132=.edu.s" +
+      "tanford.cs244b.mochi.server.messages.Wri",
+      "te1OkFromServerH\000\022e\n\027write1RefusedFromSe" +
+      "rver\030m \001(\0132B.edu.stanford.cs244b.mochi.s" +
+      "erver.messages.Write1RefusedFromServerH\000" +
+      "\022S\n\016write2ToServer\030n \001(\01329.edu.stanford." +
+      "cs244b.mochi.server.messages.Write2ToSer" +
+      "verH\000\022]\n\023write2AnsFromServer\030o \001(\0132>.edu" +
       ".stanford.cs244b.mochi.server.messages.W" +
-      "rite1OkFromServerH\000\022e\n\027write1RefusedFrom" +
-      "Server\030m \001(\0132B.edu.stanford.cs244b.mochi",
-      ".server.messages.Write1RefusedFromServer" +
-      "H\000\022S\n\016write2ToServer\030n \001(\01329.edu.stanfor" +
-      "d.cs244b.mochi.server.messages.Write2ToS" +
-      "erverH\000\022]\n\023write2AnsFromServer\030o \001(\0132>.e" +
-      "du.stanford.cs244b.mochi.server.messages" +
-      ".Write2AnsFromServerH\000\022e\n\027requestFailedF" +
-      "romServer\030p \001(\0132B.edu.stanford.cs244b.mo" +
-      "chi.server.messages.RequestFailedFromSer" +
-      "verH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010serverId\030" +
-      "\006 \001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001",
-      "(\tB\t\n\007payload*2\n\017OperationAction\022\010\n\004READ" +
-      "\020\000\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002*%\n\022FailureMess" +
-      "ageType\022\017\n\013OLD_REQUEST\020\000B\002H\001b\006proto3"
+      "rite2AnsFromServerH\000\022e\n\027requestFailedFro" +
+      "mServer\030p \001(\0132B.edu.stanford.cs244b.moch" +
+      "i.server.messages.RequestFailedFromServe",
+      "rH\000\022\024\n\014msgTimestamp\030\005 \001(\003\022\020\n\010serverId\030\006 " +
+      "\001(\t\022\r\n\005msgId\030\007 \001(\t\022\024\n\014replyToMsgId\030\010 \001(\t" +
+      "B\t\n\007payload*2\n\017OperationAction\022\010\n\004READ\020\000" +
+      "\022\n\n\006DELETE\020\001\022\t\n\005WRITE\020\002*%\n\022FailureMessag" +
+      "eType\022\017\n\013OLD_REQUEST\020\000B\002H\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -20037,7 +20293,7 @@ public final class MochiProtocol {
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_edu_stanford_cs244b_mochi_server_messages_Write2ToServer_descriptor,
-        new java.lang.String[] { "WriteCertificate", });
+        new java.lang.String[] { "WriteCertificate", "Transaction", });
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_descriptor =
       getDescriptor().getMessageTypes().get(13);
     internal_static_edu_stanford_cs244b_mochi_server_messages_Write1RefusedFromServer_fieldAccessorTable = new
