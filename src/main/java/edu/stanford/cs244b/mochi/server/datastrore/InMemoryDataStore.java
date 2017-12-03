@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,25 +89,6 @@ public class InMemoryDataStore implements DataStore {
         LOG.debug("Performing processWrite on key: {}", interestedKey);
         final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
         synchronized (storeValue) {
-            /*
-            final Long oprationNumberInOldOps = storeValue.getOperationNumberInOldOps(clientId);
-            LOG.debug("Got oprationNumberInOldOps = {}", oprationNumberInOldOps);
-            if (oprationNumberInOldOps != null && oprationNumberInOldOps > op.getOperationNumber()) {
-                throw new TooOldRequestException(op.getOperationNumber(), oprationNumberInOldOps);
-            }
-            if (oprationNumberInOldOps != null && oprationNumberInOldOps == op.getOperationNumber()) {
-                LOG.debug(
-                        "oprationNumberInOldOps is not null ({}) and that is equal to existing number in the message: {}",
-                        oprationNumberInOldOps, op.getOperationNumber());
-                // TODO: reply old
-                throw new UnsupportedOperationException();
-            }
-            if (storeValue.isRequestInOps(writeToServer)) {
-                // TODO: reply previous value
-                throw new UnsupportedOperationException();
-            }
-            storeValue.addRequestToOps(writeToServer);
-            */
             long prospectiveTS = storeValue.getCurrentEpoch() + writeToServer.getSeed();
             if (storeValue.isGivenWrite1GrantsEmpty() || ((grantAtTS = storeValue.getGrantIfExistsAtTimeStamp(prospectiveTS)) == null)) {
                 /* There is no current grant on that timestamp */
@@ -320,11 +302,11 @@ public class InMemoryDataStore implements DataStore {
      * exception. That is a responsibiloty of the client to make sure that
      * identical grants are passed in phase 2
      */
-    private List<String> write2acquireLocksAndCheckViewStamps(final MultiGrant multiGrant) {
+    private Set<String> write2acquireLocksAndCheckViewStamps(final MultiGrant multiGrant) {
         final List<String> objectsToLock = acquireWriteLocksAndReturnList(multiGrant);
         LOG.debug("All locks for write grant acquired: {}", objectsToLock);
 
-        final List<String> listOfObjectsWhoseTimestampIsOld = new ArrayList<String>();
+        final Set<String> listOfObjectsWhoseTimestampIsOld = new HashSet<String>();
         for (String object : objectsToLock) {
             final Grant grantForThatObject = multiGrant.getGrantsMap().get(object);
             Utils.assertNotNull(grantForThatObject, "Grant cannot be null");
@@ -438,21 +420,11 @@ public class InMemoryDataStore implements DataStore {
         if (storeValueContainer.isObjectWriteLockHeldByCurrent() == false) {
             throw new IllegalStateException("Cannot apply operation since write lock is not held");
         }
-
         final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
         if (op.getAction() == OperationAction.WRITE) {
             final String newValue = op.getOperand2();
             final String oldValue = storeValueContainer.setValue(newValue);
             final boolean wasAvailable = storeValueContainer.setValueAvailble(true);
-
-            //final OldOpsEntry newOldOpsEntry = new OldOpsEntry();
-            //newOldOpsEntry.setOperationNumber(op.getOperationNumber());
-            // More stuff into old entries is added at the end
-            /*
-            storeValueContainer.updateOldOps(write1toServerIfAny.getClientId(), newOldOpsEntry);
-            Utils.assertNotNull(write1toServerIfAny, "write1toServerIfAny is null");
-            storeValueContainer.overrideOpsWithOneElement(write1toServerIfAny);        
-            */
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
             long timestamp = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
@@ -465,7 +437,6 @@ public class InMemoryDataStore implements DataStore {
                 LOG.debug("Moving epoch to {} for key {}", storeValueContainer.getCurrentEpoch(), op.getOperand1());
             }
             final OperationResult oprationResult = resultBuilder.build();
-            //newOldOpsEntry.setOperationResult(oprationResult);
             return oprationResult;
         } else {
             // TODO: handle other operations, such as delete for example
@@ -473,34 +444,48 @@ public class InMemoryDataStore implements DataStore {
         }
     }
     
-    private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer) {
+    private OperationResult readOperation(final Operation op) {
+        final StoreValueObjectContainer<String> storeValueContainer = getDataMap(op.getOperand1())
+                .get(op.getOperand1());
+        Utils.assertNotNull(storeValueContainer, "storeValueCotainer should not be null");
+        if (storeValueContainer.isObjectWriteLockHeldByCurrent() == false) {
+            throw new IllegalStateException("Cannot apply operation since write lock is not held");
+        }
+        final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
+        if (op.getAction() == OperationAction.WRITE) {
+            resultBuilder.setCurrentCertificate(storeValueContainer.getCurrentC());
+            resultBuilder.setExisted(true);
+            resultBuilder.setResult(storeValueContainer.getValue());
+            final OperationResult oprationResult = resultBuilder.build();
+            return oprationResult;
+        } else {
+            // TODO: handle other operations, such as delete for example
+            throw new UnsupportedOperationException();
+        }
+    }
+    
+    private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer, final Set<String> listOfObjectsWhoseTimestampIsOld) {
         final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
         final List<OperationResult> operationResults = new ArrayList<OperationResult>(grantsToExecute.size());
         for (final String object : grantsToExecute.keySet()) {
             final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
             final Grant grantForObject = grantsToExecute.get(object);
-            /*final Pair<Write1ToServer, Operation> requestToExecuteWithOp = storeValueCotainer.locateRequestInOps(
-                    multiGrant.getClientId(), grantForObject.getOperationNumber());
-            Utils.assertNotNull(requestToExecuteWithOp, "requestToExecuteWithOp is null. logic error");
-            final Write1ToServer write1request = requestToExecuteWithOp.getValue0();
-            final Operation opToExecute = requestToExecuteWithOp.getValue1();
-            Utils.assertNotNull(write1request, "Failed to find write1 request. Something is wrong");
-            LOG.debug("Executing operation {} from {}", TextFormat.shortDebugString(opToExecute),
-                    TextFormat.shortDebugString(write1request));
-                    */
             final Transaction transaction = write2ToServer.getTransaction();
             final String txnHash = Utils.objectSHA512(transaction);
             if (grantForObject.getTransactionHash().equals(txnHash)) {
                 final List<Operation> transactionOps = transaction.getOperationsList();
                 for (final Operation op : transactionOps) {
                     if (op.getOperand1().equals(storeValueContainer.getKey())) {
-                        final OperationResult operationResult = applyOperation(op, write2ToServer.getWriteCertificate());
-                        operationResults.add(operationResult);
+                        if (listOfObjectsWhoseTimestampIsOld.contains(object)) {
+                            operationResults.add(readOperation(op));
+                        } else {
+                            operationResults.add(applyOperation(op, write2ToServer.getWriteCertificate()));
+                        }
                     }
                 }
             } else {
-                // TODO
-                Utils.assertTrue(true);
+                // TODO: Handle malicious client
+                throw new UnsupportedOperationException();
             }
         }
         return operationResults;
@@ -508,32 +493,21 @@ public class InMemoryDataStore implements DataStore {
 
     @Override
     public Object processWrite2ToServer(final Write2ToServer write2ToServer) {
-
         final WriteCertificate wc = write2ToServer.getWriteCertificate();
-        // TODO: check for oldOps for duplicates
-
         // TODO: check that all multigrants are the same
         final Map<String, MultiGrant> multiGrants = wc.getGrantsMap();
         final MultiGrant multiGrant = getFirst(multiGrants);
 
         final List<OperationResult> operationResults;
         try {
-            final List<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(multiGrant);
+            final Set<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(multiGrant);
             if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
                 LOG.debug("Found objects whose timestamps are old: {}", listOfObjectsWhoseTimestampIsOld);
-                // TODO: do data loading from remotes
-                // TODO: Resolve with Tigran that this scenario is acceptable 
-                // TODO: and therefore should not be an exception
-                // TODO: MochiDB should return write2Ans as if txn was successful 
-                // TODO: Except for 1 or more keys that were overwritten by another latest transaction 
-                // TODO: Or intimate client with a special message 
-                throw new UnsupportedOperationException();
             }
             LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");
-            operationResults = write2apply(multiGrant, write2ToServer);
-
+            operationResults = write2apply(multiGrant, write2ToServer, listOfObjectsWhoseTimestampIsOld);
         } catch (Exception ex) {
-            LOG.error("Exception at write2acquireLocksAndCheckViewStamps:", ex);
+            LOG.error("Exception at ProcessWrite2ToServer:", ex);
             throw ex;
         } finally {
             releaseWriteLocks(multiGrant);
