@@ -24,7 +24,6 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.WriteCertificate;
 public class StoreValueObjectContainer<T> {
     final static Logger LOG = LoggerFactory.getLogger(StoreValueObjectContainer.class);
 
-    public static final int VIEWSTAMP_START_NUMBER = 1;
     public static final int EPOCH_START = 0;
     // Key to which that object belongs
     private final String key;
@@ -41,7 +40,6 @@ public class StoreValueObjectContainer<T> {
 
     private final List<Write1ToServer> ops = new ArrayList<Write1ToServer>(4);
     private final Map<String, OldOpsEntry> oldOps = new HashMap<String, OldOpsEntry>();
-    private volatile long currentVS = VIEWSTAMP_START_NUMBER;
     private volatile long currentEpoch = EPOCH_START;
     private final ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
 
@@ -232,15 +230,6 @@ public class StoreValueObjectContainer<T> {
     
     public boolean isGivenWrite1GrantsEmpty() {
         return givenWrite1Grants.isEmpty();
-    }
-
-
-    public long getCurrentVS() {
-        return currentVS;
-    }
-
-    public void setCurrentVS(long currentVS) {
-        this.currentVS = currentVS;
     }
 
     public Long getCurrentTimestampFromCurrentCertificate() {

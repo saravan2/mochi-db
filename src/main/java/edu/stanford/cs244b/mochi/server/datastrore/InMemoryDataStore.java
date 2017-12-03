@@ -113,7 +113,6 @@ public class InMemoryDataStore implements DataStore {
                 final Grant.Builder grantBuilder = Grant.newBuilder();
                 grantBuilder.setObjectId(interestedKey);
                 grantBuilder.setOperationNumber(op.getOperationNumber());
-                grantBuilder.setViewstamp(storeValue.getCurrentVS());
 
                 grantBuilder.setTimestamp(prospectiveTS);
                 LOG.debug("Grant awarded in epoch {} ts {} for key {}", storeValue.getCurrentEpoch(), prospectiveTS, interestedKey);
@@ -307,11 +306,6 @@ public class InMemoryDataStore implements DataStore {
         return objectsToWriteLock;
     }
 
-    private Pair<Long, Long> getViewstampAndTimestampFromGrant(final Grant grant) {
-        Utils.assertNotNull(grant, "Grant cannot be null");
-        return Pair.with(grant.getViewstamp(), grant.getTimestamp());
-    }
-
     /*
      * Attempt to acquire locks on object which are referenced by write grants,
      * after that we check for timestamp and viewstamp to identify whether there
@@ -327,25 +321,21 @@ public class InMemoryDataStore implements DataStore {
         final List<String> listOfObjectsWhoseTimestampIsOld = new ArrayList<String>();
         for (String object : objectsToLock) {
             final Grant grantForThatObject = multiGrant.getGrantsMap().get(object);
-            final Pair<Long, Long> vstsFromGrant = getViewstampAndTimestampFromGrant(grantForThatObject);
-
+            Utils.assertNotNull(grantForThatObject, "Grant cannot be null");
+            final long grantTS = grantForThatObject.getTimestamp();
             final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
-            final long objectVS = storeValueContainer.getCurrentVS();
             final Long objectTS = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
-
-            final long grantVS = vstsFromGrant.getValue0();
-            final long grantTS = vstsFromGrant.getValue1();
             LOG.debug(
-                    "Got grants and certificate VS and TS in write2acquireLocksAndCheckViewStamps. grant = [TS {}, VS {}], object = [TS {}, VS {}]",
-                    grantTS, grantVS, objectTS, objectVS);
+                    "Got grants and certificate TS in write2acquireLocksAndCheckViewStamps. grant = [TS {}], object = [TS {}]",
+                    grantTS, objectTS);
 
-            if (objectTS == null && objectVS == StoreValueObjectContainer.VIEWSTAMP_START_NUMBER) {
+            if (objectTS == null) {
                 if (storeValueContainer.isValueAvailble()) {
-                    throw new IllegalStateException("objectTS and objectTS are null but object value is availble");
+                    throw new IllegalStateException("objectTS is null but object value is availble");
                 }
                 continue;
             }
-            if (objectVS == grantVS && objectTS < grantTS) {
+            if (objectTS < grantTS) {
                 LOG.debug("Timecheck for object {} is successful", object);
                 continue;
             }
