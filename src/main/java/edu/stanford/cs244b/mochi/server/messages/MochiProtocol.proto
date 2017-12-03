@@ -29,7 +29,6 @@ Some examples (in form - {ACTION, OP1, OP2,...}) :
     { READ, "KEY" } -> read value for key "KEY"
     { DELETE, "KEY" } -> delete key "KEY"
     { WRITE, "KEY", "VALUE" } -> write value "VALUE" to key "KEY"
-    { WRITE_IF_EQUALS, "KEY", "VALUE", "VALUE_TO_CHECK" } -> writes value "VALUE" to key "KEY" if existing value matches "VALUE_TO_CHECK"
 
 */
 message Operation {
@@ -88,6 +87,7 @@ message Write1ToServer {
     string clientId = 1; // cid
     Transaction transaction = 2; // contains (oid, op#,  op)
     uint32 seed = 3;
+    string transactionHash = 4;
 }
 
 
@@ -102,8 +102,8 @@ message Grant {
     string objectId = 1;
     int64 operationNumber = 2;
     int64 timestamp = 3;
-    int64 viewstamp = 4;
-    int64 configstamp = 5;
+    int64 configstamp = 4;
+    string transactionHash = 5;
 }
 
 
