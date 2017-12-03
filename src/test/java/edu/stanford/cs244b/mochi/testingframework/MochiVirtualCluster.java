@@ -2,9 +2,12 @@ package edu.stanford.cs244b.mochi.testingframework;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 
 import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
@@ -21,22 +24,39 @@ public class MochiVirtualCluster implements Closeable {
     private volatile int nextPort = initialPort;
 
     private final HashMap<String, VirtualServer> servers;
+    private final HashMap<Integer, String> tokenDivision;
     
     public MochiVirtualCluster(int initialNumberOfServers, int bftFautlyReplicas) {
         Assert.assertTrue(initialNumberOfServers > 0);
         Assert.assertTrue(bftFautlyReplicas > 0);
         checkNumberOfFaultyCorrect(initialNumberOfServers, bftFautlyReplicas);
         servers = new HashMap<String, VirtualServer>(initialNumberOfServers * 2);
+        tokenDivision = new HashMap<Integer, String>(ClusterConfiguration.SHARD_TOKENS);
         for (int i = 0 ; i < initialNumberOfServers; i++) {
             addMochiServer();
         }
+        giveTokensToServers(initialNumberOfServers);
         setInitialMochiServersConfiguration();
+    }
+    
+    private void giveTokensToServers(int initialNumberOfServers) {
+        final String[] serverIds = servers.keySet().toArray(new String[0]);
+        Arrays.sort(serverIds); // To have determinism during tests
+        for (int i = 0; i < ClusterConfiguration.SHARD_TOKENS; i++) {
+            final String serverId = serverIds[ i % serverIds.length];
+            tokenDivision.put(i, serverId);
+        }
     }
 
     private void setInitialMochiServersConfiguration() {
+        final String allServers = StringUtils.join(servers.keySet(), ClusterConfiguration.CONFIG_DELIMITER);
+        // Dividing tokens between servers
         for (final VirtualServer vs : servers.values()) {
             final InMemoryDSMochiContextImpl context = vs.getContext();
             final ClusterConfiguration cc = context.getClusterConfiguration();
+            final Properties props = new Properties();
+            props.setProperty(ClusterConfiguration.PROPERTY_SERVERS, allServers);
+            // TODO: pass tokens
         }
     }
 

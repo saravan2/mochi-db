@@ -3,12 +3,14 @@ package edu.stanford.cs244b.mochi.server;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ClusterConfiguration {
     public static final int SHARD_TOKENS = 1024;
     public static final long SHARD_TOKEN_VALUE_RANGE = getTokenValueRangePerToken(SHARD_TOKENS);
     public static final long MAX_INT = 0xffffffffl;
 
-    public static final String CONFIG_DELIMITER = ",";
+    public static final char CONFIG_DELIMITER = ',';
     public static final String PROPERTY_SERVERS = "_CONFIG_SERVERS";
     public static final String PROPERTY_PREF_SERVERS = "_CONFIG_SERVER_%s_TOKENS=";
 
@@ -52,7 +54,7 @@ public class ClusterConfiguration {
     }
 
     public String[] splitMultiple(final String s) {
-        return s.split(CONFIG_DELIMITER);
+        return StringUtils.split(s, CONFIG_DELIMITER);
     }
 
     public int getShardTokens() {
