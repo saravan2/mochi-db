@@ -363,6 +363,7 @@ public class MochiClientServerCommunicationTest {
             } catch (Exception ex) {
                 LOG.info("Test failed !!!");
                 testPassed = false;
+                throw new RuntimeException(ex);
             }
         }
 
