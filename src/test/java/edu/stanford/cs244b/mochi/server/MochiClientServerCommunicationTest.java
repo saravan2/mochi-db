@@ -3,7 +3,11 @@ package edu.stanford.cs244b.mochi.server;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -287,7 +291,7 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.close();
     }
     
-    @Test(dependsOnMethods = { "testWriteOperation" }, enabled = true)
+    @Test(dependsOnMethods = { "testWriteOperation" }, enabled = false)
     public void testWriteOperationConcurrent() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrent");
         final int numberOfServersToTest = 4;
@@ -315,29 +319,31 @@ public class MochiClientServerCommunicationTest {
         LOG.info("Concurrent test: connection was established. Trying one by one");
 
         int i = 0;
-        for (final Runnable r : runnables) {
+        for (final MochiConcurrentTestRunnable r : runnables) {
             r.run();
             LOG.info("Succeeded operation for client {}", i);
             i++;
+            Assert.assertTrue(r.getTestPassed());
         }
 
         LOG.info("Now executing test concurrently");
 
-        // final ExecutorService threadPoolExecutor = new
-        // ThreadPoolExecutor(numberOfCurrentClients,
-        // numberOfCurrentClients,
-        // 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-        // final List<Future<Void>> futures = new
-        // ArrayList<Future<Void>>(numberOfCurrentClients);
-        // for (final Runnable r : runnables) {
-        // final Future<?> f = threadPoolExecutor.submit(r);
-        // futures.add((Future<Void>) f);
-        // }
+        final ExecutorService threadPoolExecutor = new ThreadPoolExecutor(numberOfCurrentClients,
+                numberOfCurrentClients, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        final List<Future<Void>> futures = new ArrayList<Future<Void>>(numberOfCurrentClients);
+        for (final Runnable r : runnables) {
+            final Future<?> f = threadPoolExecutor.submit(r);
+            futures.add((Future<Void>) f);
+        }
 
-        // Utils.busyWaitForFutures(futures);
+        Utils.busyWaitForFutures(futures);
 
-        // TODO: wait for all futures, check that they are success. Check each
-        // MochiConcurrentTestRunnable has test passed
+        i = 0;
+        for (final MochiConcurrentTestRunnable r : runnables) {
+            LOG.info("Succeeded operation for client {}", i);
+            i++;
+            Assert.assertTrue(r.getTestPassed());
+        }
 
         mochiVirtualCluster.close();
         for (final MochiDBClient c : clients) {
