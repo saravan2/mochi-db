@@ -287,7 +287,7 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.close();
     }
     
-    @Test(dependsOnMethods = { "testWriteOperation" }, enabled = false)
+    @Test(dependsOnMethods = { "testWriteOperation" }, enabled = true)
     public void testWriteOperationConcurrent() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrent");
         final int numberOfServersToTest = 4;
@@ -386,10 +386,6 @@ public class MochiClientServerCommunicationTest {
                     "write ceritificate for op1 in transaction 1 is null");
             Assert.assertNotNull(or2tr1.getCurrentCertificate(),
                     "write ceritificate for op2 in transaction 1 is null");
-            Assert.assertTrue(StringUtils.isEmpty(or1tr1.getResult()));
-            Assert.assertFalse(or1tr1.getExisted());
-            Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
-            Assert.assertFalse(or2tr1.getExisted());
 
             LOG.info("First write transaction executed successfully. Executing second write transaction");
             final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction()
