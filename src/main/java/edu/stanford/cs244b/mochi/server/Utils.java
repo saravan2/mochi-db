@@ -1,6 +1,9 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -40,6 +43,12 @@ public class Utils {
     public static void assertTrue(boolean cond) {
         if (!cond) {
             throw new IllegalStateException("Assertion failed");
+        }
+    }
+
+    public static void assertTrue(boolean cond, final String msg) {
+        if (!cond) {
+            throw new IllegalStateException(msg);
         }
     }
 
@@ -137,5 +146,38 @@ public class Utils {
     public static String objectSHA512(final Serializable object) {
         byte[] data = SerializationUtils.serialize(object);
         return sha512(data);
+    }
+
+    public static boolean portAvailable(int port) {
+        final int MIN_PORT_NUMBER = 0;
+        final int MAX_PORT_NUMBER = 65535;
+        if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
+            throw new IllegalArgumentException("Invalid start port: " + port);
+        }
+
+        ServerSocket ss = null;
+        DatagramSocket ds = null;
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            ds = new DatagramSocket(port);
+            ds.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+        } finally {
+            if (ds != null) {
+                ds.close();
+            }
+
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                    /* should not be thrown */
+                }
+            }
+        }
+
+        return false;
     }
 }

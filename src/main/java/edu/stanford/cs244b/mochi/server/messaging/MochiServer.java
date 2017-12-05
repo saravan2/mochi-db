@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.stanford.cs244b.mochi.server.MochiContext;
+import edu.stanford.cs244b.mochi.server.Utils;
 
 /* Should allow to be instantiated multiple times per JVM */
 public class MochiServer implements Closeable {
@@ -56,6 +57,8 @@ public class MochiServer implements Closeable {
 
     public void start() {
         LOG.info("Starting mochi server {}", serverId);
+        final boolean portAvailable = Utils.portAvailable(serverPort);
+        Utils.assertTrue(portAvailable, String.format("Port %s is not available", serverPort));
         mochiServerThread = new Thread(new MochiServerListener(), getMochiServerThreadName());
         mochiServerThread.setDaemon(true);
         mochiServerThread.start();
@@ -71,28 +74,42 @@ public class MochiServer implements Closeable {
 
     private class MochiServerListener implements Runnable {
         public void run() {
-            try {
-                if (closed) {
-                    LOG.warn("Server is closed. Nothing to do");
+            while (true) {
+                try {
+                    startServer();
+                    final int retryStartServerTime = 1000;
+                    Thread.sleep(retryStartServerTime);
+                } catch (InterruptedException e) {
                     return;
                 }
-                try {
-                    LOG.info("Mochi Server starting netty listener at {}", BIND_ON_ALL_HOST);
-                    startNettyListener();
-                } catch (CertificateException e) {
-                    LOG.error("CertificateException when starting netty listener:", e);
-                } catch (SSLException e) {
-                    LOG.error("SSLException when starting netty listener:", e);
-                }
+            }
+        }
+
+        public void startServer() throws InterruptedException {
+            if (closed) {
+                LOG.warn("Server is closed. Nothing to do");
+                return;
+            }
+            try {
+                LOG.info("Mochi Server starting netty listener at {}", BIND_ON_ALL_HOST);
+                startNettyListener();
+            } catch (CertificateException e) {
+                LOG.error("CertificateException when starting netty listener:", e);
+            } catch (SSLException e) {
+                LOG.error("SSLException when starting netty listener:", e);
             } catch (InterruptedException e) {
                 LOG.info("InterruptedException. Exiting Mochi");
-                return;
+                throw e;
+            } catch (java.net.BindException e) {
+                LOG.info("BindException. Bad stuff.");
+            } catch (Exception e) {
+                LOG.error("Exception when starting netty listener:", e);
             }
         }
 
     }
 
-    public void startNettyListener() throws InterruptedException, CertificateException, SSLException {
+    public void startNettyListener() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -102,6 +119,9 @@ public class MochiServer implements Closeable {
                     .childHandler(new MochiServerInitializer(requestHandlerDispatcher));
 
             b.bind(BIND_ON_ALL_HOST, serverPort).sync().channel().closeFuture().sync();
+        } catch (Exception ex) {
+            LOG.error("Exception caught when creating server:", ex);
+            throw ex;
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

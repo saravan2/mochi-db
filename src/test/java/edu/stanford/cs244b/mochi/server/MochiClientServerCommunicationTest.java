@@ -159,7 +159,7 @@ public class MochiClientServerCommunicationTest {
         ms1.close();
     }
 
-    @Test
+    @Test(dependsOnMethods = { "testWriteOperation" })
     public void testReadOperation() throws InterruptedException, ExecutionException {
         
         final int numberOfServersToTest = 4;
@@ -211,9 +211,11 @@ public class MochiClientServerCommunicationTest {
         Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
         LOG.info("Read transaction executed successfully");
         
+        mochiVirtualCluster.close();
+        mochiDBclient.close();
     }
 
-    @Test
+    @Test(dependsOnMethods = { "testHelloToFromServerAsync" })
     public void testWriteOperation() throws InterruptedException, ExecutionException {
         final int numberOfServersToTest = 4;
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
