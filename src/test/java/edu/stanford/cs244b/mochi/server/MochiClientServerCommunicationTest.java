@@ -326,6 +326,7 @@ public class MochiClientServerCommunicationTest {
             Assert.assertTrue(r.getTestPassed());
         }
 
+        // Thread.sleep(120 * 1000);
         LOG.info("Now executing test concurrently");
 
         final ExecutorService threadPoolExecutor = new ThreadPoolExecutor(numberOfCurrentClients,

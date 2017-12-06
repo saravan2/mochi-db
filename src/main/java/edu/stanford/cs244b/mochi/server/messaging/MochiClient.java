@@ -9,8 +9,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.io.Closeable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,15 +128,20 @@ public class MochiClient implements Closeable {
             }
         }
         if (eventLoopGroup != null) {
+            // final Future f = eventLoopGroup.shutdownGracefully(10, 1000,
+            // TimeUnit.MILLISECONDS);
             final Future f = eventLoopGroup.shutdownGracefully();
-            // try {
-            // f.get();
-            // } catch (InterruptedException e) {
-            // Thread.currentThread().interrupt();
-            // } catch (ExecutionException e) {
-            // LOG.error("Failed to close");
-            // throw new RuntimeException(e);
-            // }
+            try {
+                f.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                LOG.debug("Sleep interrupted");
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                LOG.error("Failed to close");
+                throw new RuntimeException(e);
+            } catch (TimeoutException e) {
+                LOG.error("Took too long to close");
+            }
         }
     }
 }
