@@ -33,7 +33,7 @@ public class MochiServer implements Closeable {
     public static final int DEFAULT_PORT = 8081;
     private static final String BIND_ON_ALL_HOST = "0.0.0.0";
 
-    private final int executorCorePoolSize = 3;
+    private final int executorCorePoolSize = 2;
     private final int executorMaxPoolSize = 20;
     private final long executorKeepAliveTime = 5000;
     private final BlockingQueue<Runnable> exeutorQueue = new LinkedBlockingQueue<Runnable>();

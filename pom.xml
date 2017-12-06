@@ -50,19 +50,19 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
-		    <version>3.7</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.jcabi</groupId>
-		    <artifactId>jcabi-aspects</artifactId>
-		    <version>0.22.6</version>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-aspects</artifactId>
+			<version>0.22.6</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.aspectj</groupId>
-		    <artifactId>aspectjrt</artifactId>
-		    <version>1.8.13</version>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.13</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -89,24 +89,48 @@
 				<artifactId>jcabi-maven-plugin</artifactId>
 				<version>0.14.1</version>
 				<executions>
-				    <execution>
-				        <id>modify src classes</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>ajc</goal>
-                        </goals>
-                        <configuration>
-                            <classesDirectory>target/classes/</classesDirectory>
-                        </configuration>
-                    </execution>
 					<execution>
-					    <id>modify test classes</id>
-					    <phase>test-compile</phase>
+						<id>modify src classes</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>ajc</goal>
+						</goals>
+						<configuration>
+							<classesDirectory>target/classes/</classesDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>modify test classes</id>
+						<phase>test-compile</phase>
 						<goals>
 							<goal>ajc</goal>
 						</goals>
 						<configuration>
 							<classesDirectory>target/test-classes/</classesDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/*Tests.java</include>
+								<include>**/*Test.java</include>
+							</includes>
+							<excludes>
+								<exclude>**/Abstract*.java</exclude>
+							</excludes>
+							<systemPropertyVariables>
+								<io.netty.eventLoopThreads>2</io.netty.eventLoopThreads>
+							</systemPropertyVariables>
 						</configuration>
 					</execution>
 				</executions>

@@ -6,9 +6,11 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.io.Closeable;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,8 @@ public class MochiClient implements Closeable {
     }
 
     protected void start() {
-        eventLoopGroup = new NioEventLoopGroup();
+        ThreadFactory tf = new DefaultThreadFactory(getClass(), Thread.MAX_PRIORITY);
+        eventLoopGroup = new NioEventLoopGroup(0, tf);
         Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new MochiClientInitializer());
 
@@ -122,7 +125,15 @@ public class MochiClient implements Closeable {
             }
         }
         if (eventLoopGroup != null) {
-            eventLoopGroup.shutdownGracefully();
+            final Future f = eventLoopGroup.shutdownGracefully();
+            // try {
+            // f.get();
+            // } catch (InterruptedException e) {
+            // Thread.currentThread().interrupt();
+            // } catch (ExecutionException e) {
+            // LOG.error("Failed to close");
+            // throw new RuntimeException(e);
+            // }
         }
     }
 }
