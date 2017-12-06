@@ -7,22 +7,26 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.codahale.metrics.JmxReporter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.jcabi.aspects.Loggable;
 
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
-import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Transaction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.TransactionResult;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Write1OkFromServer;
@@ -42,9 +46,21 @@ public class MochiDBClient implements Closeable {
     private final MochiMessaging mochiMessaging = new MochiMessaging();
     private final Set<Server> servers = new HashSet<Server>();
 
+    private final MetricRegistry metricRegistry = new MetricRegistry();
+    private volatile JmxReporter metricsJMXreporter;
+
+    final Timer metricsReadTransactionsTimer = metricRegistry.timer(getMetricName("read-transactions"));
+    final Timer metricsWriteTransactionsTimer = metricRegistry.timer(getMetricName("write-transactions"));
+
     public MochiDBClient() {
+        exposeMetricsOverJXM();
     };
     
+    protected void exposeMetricsOverJXM() {
+        metricsJMXreporter = JmxReporter.forRegistry(metricRegistry).build();
+        metricsJMXreporter.start();
+    }
+
     public void addServers(final Server... servers) {
         for (final Server s : servers) {
             this.servers.add(s);
@@ -64,19 +80,32 @@ public class MochiDBClient implements Closeable {
         }
     }
 
+    protected String getMetricName(final String name) {
+        return String.format("%s-%s-%s", this.getClass().getSimpleName(), this.mochiDBClientID, name);
+    }
+
     public long getNextOperationNumber() {
         return operationNumberCounter.getAndIncrement();
     }
     
     @Loggable()
     public TransactionResult executeReadTransaction(final Transaction transactionToExecute) {
+        final Timer.Context context = this.metricsReadTransactionsTimer.time();
+        try {
+            return executeReadTransactionBL(transactionToExecute);
+        } finally {
+            context.stop();
+        }
+    }
+
+    private TransactionResult executeReadTransactionBL(final Transaction transactionToExecute) {
         final ReadToServer.Builder rbuilder = ReadToServer.newBuilder();
         rbuilder.setClientId(Utils.getUUID());
         rbuilder.setNonce(Utils.getUUID());
         rbuilder.setTransaction(transactionToExecute);
-        
-        final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder,
-                servers, mochiMessaging);
+
+        final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder, servers,
+                mochiMessaging);
         Utils.busyWaitForFutures(readResponseFutures);
         LOG.debug("Resolved readResponse futures");
         final List<ProtocolMessage> readResponseProtocalMessages = Utils.getFutures(readResponseFutures);
@@ -91,15 +120,25 @@ public class MochiDBClient implements Closeable {
         final ReadFromServer someReadFromServer = readFromServers.get(0);
         final TransactionResult transactionResult = someReadFromServer.getResult();
         return transactionResult;
-        
     }
 
     @Loggable()
     public TransactionResult executeWriteTransaction(final Transaction transactionToExecute) {
+        final Timer.Context context = this.metricsWriteTransactionsTimer.time();
+        try {
+            return executeWriteTransactionBL(transactionToExecute);
+        } finally {
+            context.stop();
+        }
+    }
 
+    public TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
         Random rand = new Random();
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
-        /* We dont have to send value in write1 message. Lets rebuild transaction */
+        /*
+         * We dont have to send value in write1 message. Lets rebuild
+         * transaction
+         */
         final TransactionBuilder tb = TransactionBuilder.startNewTransaction();
         List<Operation> transactionOps = transactionToExecute.getOperationsList();
         for (final Operation op : transactionOps) {
@@ -123,7 +162,7 @@ public class MochiDBClient implements Closeable {
             if (pm.getPayloadCase() == PayloadCase.WRITE1OKFROMSERVER) {
                 messages1FromServers.add(writeOkFromServer);
             } else if (pm.getPayloadCase() == PayloadCase.WRITE1REFUSEDFROMSERVER) {
-                allWriteOk=false;
+                allWriteOk = false;
                 messages1FromServers.add(writeRefusedFromServer);
             } else if (pm.getPayloadCase() == PayloadCase.REQUESTFAILEDFROMSERVER) {
                 allWriteOk = false;
@@ -143,7 +182,7 @@ public class MochiDBClient implements Closeable {
                 Utils.assertNotNull(mg, "server1MultiGrant is null");
                 Utils.assertNotNull(mg.getServerId(), "serverId is null");
                 write1mutiGrants.put(mg.getServerId(), mg);
-            } else if (messageFromServer instanceof Write1RefusedFromServer){
+            } else if (messageFromServer instanceof Write1RefusedFromServer) {
                 final MultiGrant mg = ((Write1RefusedFromServer) messageFromServer).getMultiGrant();
                 Utils.assertNotNull(mg, "server1MultiGrant is null");
                 Utils.assertNotNull(mg.getServerId(), "serverId is null");
@@ -152,14 +191,14 @@ public class MochiDBClient implements Closeable {
                 throw new UnsupportedOperationException();
             }
         }
-        
+
         if (allWriteOk) {
-                LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
-                        write1mutiGrants.values());
+            LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
+                    write1mutiGrants.values());
         } else {
-                LOG.info("Got refused grant from servers {} {} *Aborting* ", write1RefusedMultiGrants.keySet(),
-                        write1RefusedMultiGrants.values());
-                throw new UnsupportedOperationException();
+            LOG.info("Got refused grant from servers {} {} *Aborting* ", write1RefusedMultiGrants.keySet(),
+                    write1RefusedMultiGrants.values());
+            throw new UnsupportedOperationException();
         }
 
         // Step 2:
@@ -196,6 +235,9 @@ public class MochiDBClient implements Closeable {
 
     @Override
     public void close() {
+        if (metricsJMXreporter != null) {
+            metricsJMXreporter.close();
+        }
         mochiMessaging.close();
     }
 
