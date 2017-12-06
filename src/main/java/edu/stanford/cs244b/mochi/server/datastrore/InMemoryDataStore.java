@@ -84,38 +84,48 @@ public class InMemoryDataStore implements DataStore {
     protected Triplet<Grant, WriteCertificate, Boolean> processWrite(final Operation op, final String clientId,
             final Write1ToServer writeToServer) {
         final String interestedKey = op.getOperand1();
-        Grant grantAtTS = null;
+        final Grant grantAtTS;
         checkOp1IsNonEmptyKeyError(interestedKey);
         LOG.debug("Performing processWrite on key: {}", interestedKey);
-        final StoreValueObjectContainer storeValue = getOrCreateStoreValue(interestedKey);
+        final StoreValueObjectContainer<String> storeValue;
+        if (op.getAction() == OperationAction.WRITE) {
+            storeValue  = getOrCreateStoreValue(interestedKey);
+        } else {
+            storeValue = getStoreValue(interestedKey);
+        } 
         synchronized (storeValue) {
-            long prospectiveTS = storeValue.getCurrentEpoch() + writeToServer.getSeed();
-            if (storeValue.isGivenWrite1GrantsEmpty() || ((grantAtTS = storeValue.getGrantIfExistsAtTimeStamp(prospectiveTS)) == null)) {
-                /* There is no current grant on that timestamp */
-
-                final Grant.Builder grantBuilder = Grant.newBuilder();
-                grantBuilder.setObjectId(interestedKey);
-                grantBuilder.setTransactionHash(writeToServer.getTransactionHash());
-
-                grantBuilder.setTimestamp(prospectiveTS);
-                LOG.debug("Grant awarded in epoch {} ts {} for key {}", storeValue.getCurrentEpoch(), prospectiveTS, interestedKey);
-                final Grant newGrant = grantBuilder.build();
-
-                storeValue.addGivenWrite1Grant(prospectiveTS, grantBuilder.build());
-                return Triplet.with(newGrant, storeValue.getCurrentC(), true);
-            } else {
-                /* Could be a retry */
-                if (writeToServer.getTransactionHash().equals(grantAtTS.getTransactionHash())) {
-                    return Triplet.with(grantAtTS, storeValue.getCurrentC(), true);
+            if (storeValue != null) {
+                long prospectiveTS = storeValue.getCurrentEpoch() + writeToServer.getSeed();
+                if (storeValue.isGivenWrite1GrantsEmpty() || ((grantAtTS = storeValue.getGrantIfExistsAtTimeStamp(prospectiveTS)) == null)) {
+                    /* There is no current grant on that timestamp */
+    
+                    final Grant.Builder grantBuilder = Grant.newBuilder();
+                    grantBuilder.setObjectId(interestedKey);
+                    grantBuilder.setTransactionHash(writeToServer.getTransactionHash());
+    
+                    grantBuilder.setTimestamp(prospectiveTS);
+                    LOG.debug("Grant awarded in epoch {} ts {} for key {}", storeValue.getCurrentEpoch(), prospectiveTS, interestedKey);
+                    final Grant newGrant = grantBuilder.build();
+    
+                    storeValue.addGivenWrite1Grant(prospectiveTS, grantBuilder.build());
+                    return Triplet.with(newGrant, storeValue.getCurrentC(), true);
                 } else {
-                    /* Someone else has the grant */
-                    return Triplet.with(grantAtTS, storeValue.getCurrentC(), false);
+                    /* Could be a retry */
+                    if (writeToServer.getTransactionHash().equals(grantAtTS.getTransactionHash())) {
+                        return Triplet.with(grantAtTS, storeValue.getCurrentC(), true);
+                    } else {
+                        /* Someone else has the grant */
+                        return Triplet.with(grantAtTS, storeValue.getCurrentC(), false);
+                    }
                 }
+            } else {
+                /* Delete write1 request failed */
+                return Triplet.with(null, null, false);
             }
-        }
+        } 
     }
 
-    protected StoreValueObjectContainer getOrCreateStoreValue(final String interestedKey) {
+    protected StoreValueObjectContainer<String> getOrCreateStoreValue(final String interestedKey) {
         final StoreValueObjectContainer<String> valueContainer;
         final ConcurrentHashMap<String, StoreValueObjectContainer<String>> dataMap = getDataMap(interestedKey);
         if (dataMap.contains(interestedKey)) {
@@ -132,6 +142,17 @@ public class InMemoryDataStore implements DataStore {
             }
         }
         assert valueContainer != null;
+        return valueContainer;
+    }
+    
+    protected StoreValueObjectContainer<String> getStoreValue(final String interestedKey) {
+        final StoreValueObjectContainer<String> valueContainer;
+        final ConcurrentHashMap<String, StoreValueObjectContainer<String>> dataMap = getDataMap(interestedKey);
+        if (dataMap.contains(interestedKey)) {
+            valueContainer = dataMap.get(interestedKey);
+        } else {
+            valueContainer = null;
+        }
         return valueContainer;
     }
 
@@ -195,14 +216,19 @@ public class InMemoryDataStore implements DataStore {
         final Map<String, Grant> rejectedGrants = new HashMap<String, Grant>();
         boolean allWriteOk = true;
         for (Operation op : operations) {
-            if (op.getAction() == OperationAction.WRITE) {
+            if ((op.getAction() == OperationAction.WRITE) ||
+                (op.getAction() == OperationAction.DELETE)) {
                 Triplet<Grant, WriteCertificate, Boolean> wrteResult = processWrite(op, write1ToServer.getClientId(),
                         write1ToServer);
                 final Grant grant = wrteResult.getValue0();
-                Utils.assertNotNull(grant, "Grant cannot be null");
+                final String objectId;
+                if (grant != null) {
+                    objectId = grant.getObjectId();
+                } else {
+                    objectId = op.getOperand1();
+                }
                 final WriteCertificate writeCertificate = wrteResult.getValue1();
                 final boolean grantWasGranted = wrteResult.getValue2();
-                final String objectId = grant.getObjectId();
                 Utils.assertNotNull(objectId, "objectId cannot be null");
 
                 if (grantWasGranted == false) {
@@ -218,7 +244,7 @@ public class InMemoryDataStore implements DataStore {
                     }
                     grants.put(objectId, grant);
                 }
-            }
+            } 
 
         }
 
@@ -421,16 +447,23 @@ public class InMemoryDataStore implements DataStore {
             throw new IllegalStateException("Cannot apply operation since write lock is not held");
         }
         final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
-        if (op.getAction() == OperationAction.WRITE) {
+        if ((op.getAction() == OperationAction.WRITE) || (op.getAction() == OperationAction.DELETE)) {
+            final String oldValue;
+            final boolean wasAvailable;
             final String newValue = op.getOperand2();
-            final String oldValue = storeValueContainer.setValue(newValue);
-            final boolean wasAvailable = storeValueContainer.setValueAvailble(true);
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
             long timestamp = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
             storeValueContainer.deleteGivenWrite1Grant(timestamp);
             storeValueContainer.moveToNextEpochIfNecessary(timestamp);
             resultBuilder.setCurrentCertificate(writeCertificateIfAny);
+            if (op.getAction() == OperationAction.WRITE) {
+                oldValue = storeValueContainer.setValue(newValue);
+                wasAvailable = storeValueContainer.setValueAvailble(true);
+            } else {
+                oldValue = storeValueContainer.setValue(null);
+                wasAvailable = storeValueContainer.setValueAvailble(false);
+            }
             resultBuilder.setExisted(wasAvailable);
             if (oldValue != null) {
                 resultBuilder.setResult(oldValue);
@@ -439,7 +472,6 @@ public class InMemoryDataStore implements DataStore {
             final OperationResult oprationResult = resultBuilder.build();
             return oprationResult;
         } else {
-            // TODO: handle other operations, such as delete for example
             throw new UnsupportedOperationException();
         }
     }
@@ -452,14 +484,13 @@ public class InMemoryDataStore implements DataStore {
             throw new IllegalStateException("Cannot apply operation since write lock is not held");
         }
         final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
-        if (op.getAction() == OperationAction.WRITE) {
+        if ((op.getAction() == OperationAction.WRITE) || (op.getAction() == OperationAction.DELETE)) {
             resultBuilder.setCurrentCertificate(storeValueContainer.getCurrentC());
             resultBuilder.setExisted(true);
             resultBuilder.setResult(storeValueContainer.getValue());
             final OperationResult oprationResult = resultBuilder.build();
             return oprationResult;
         } else {
-            // TODO: handle other operations, such as delete for example
             throw new UnsupportedOperationException();
         }
     }
