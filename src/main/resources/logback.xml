@@ -21,7 +21,6 @@
 	<logger name="org.hibernate" level="info"></logger>
 
 	<root level="debug">
-		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE-DEBUG" />
 	</root>
 

@@ -448,7 +448,6 @@ public class InMemoryDataStore implements DataStore {
         }
         final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
         if ((op.getAction() == OperationAction.WRITE) || (op.getAction() == OperationAction.DELETE)) {
-            final String oldValue;
             final boolean wasAvailable;
             final String newValue = op.getOperand2();
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
@@ -458,17 +457,15 @@ public class InMemoryDataStore implements DataStore {
             storeValueContainer.moveToNextEpochIfNecessary(timestamp);
             resultBuilder.setCurrentCertificate(writeCertificateIfAny);
             if (op.getAction() == OperationAction.WRITE) {
-                oldValue = storeValueContainer.setValue(newValue);
+                storeValueContainer.setValue(newValue);
                 wasAvailable = storeValueContainer.setValueAvailble(true);
             } else {
-                oldValue = storeValueContainer.setValue(null);
+                storeValueContainer.setValue(null);
                 wasAvailable = storeValueContainer.setValueAvailble(false);
             }
             resultBuilder.setExisted(wasAvailable);
-            if (oldValue != null) {
-                resultBuilder.setResult(oldValue);
-                LOG.debug("Moving epoch to {} for key {}", storeValueContainer.getCurrentEpoch(), op.getOperand1());
-            }
+            resultBuilder.setResult(newValue);
+            LOG.debug("Moving epoch to {} for key {}", storeValueContainer.getCurrentEpoch(), op.getOperand1());
             final OperationResult oprationResult = resultBuilder.build();
             return oprationResult;
         } else {
@@ -496,26 +493,28 @@ public class InMemoryDataStore implements DataStore {
     }
     
     private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer, final Set<String> listOfObjectsWhoseTimestampIsOld) {
-        final Map<String, Grant> grantsToExecute = multiGrant.getGrantsMap();
-        final List<OperationResult> operationResults = new ArrayList<OperationResult>(grantsToExecute.size());
-        for (final String object : grantsToExecute.keySet()) {
-            final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
-            final Grant grantForObject = grantsToExecute.get(object);
-            final Transaction transaction = write2ToServer.getTransaction();
-            final String txnHash = Utils.objectSHA512(transaction);
+        final List<OperationResult> operationResults = new ArrayList<OperationResult>(multiGrant.getGrantsMap().size());
+        final Transaction transaction = write2ToServer.getTransaction();
+        final String txnHash = Utils.objectSHA512(transaction);  
+        final List<Operation> transactionOps = transaction.getOperationsList();
+        for (final Operation op : transactionOps) {
+            final Grant grantForObject = multiGrant.getGrantsMap().get(op.getOperand1());
+            Utils.assertNotNull(grantForObject, "No grant for object in txn");
             if (grantForObject.getTransactionHash().equals(txnHash)) {
-                final List<Operation> transactionOps = transaction.getOperationsList();
-                for (final Operation op : transactionOps) {
-                    if (op.getOperand1().equals(storeValueContainer.getKey())) {
-                        if (listOfObjectsWhoseTimestampIsOld.contains(object)) {
-                            operationResults.add(readOperation(op));
-                        } else {
-                            operationResults.add(applyOperation(op, write2ToServer.getWriteCertificate()));
-                        }
+                final StoreValueObjectContainer<String> storeValueContainer = getDataMap(op.getOperand1()).get(op.getOperand1());
+                if (op.getOperand1().equals(storeValueContainer.getKey())) {
+                    if (listOfObjectsWhoseTimestampIsOld.contains(op.getOperand1())) {
+                        operationResults.add(readOperation(op));
+                    } else {
+                        operationResults.add(applyOperation(op, write2ToServer.getWriteCertificate()));
                     }
+                } else {
+                    // TODO: Handle Malicious client
+                    // Previous write1 should have created the storeValueContainer
+                    throw new UnsupportedOperationException();
                 }
             } else {
-                // TODO: Handle malicious client
+                // TODO: Handle Malicious client
                 throw new UnsupportedOperationException();
             }
         }

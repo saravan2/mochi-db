@@ -72,6 +72,10 @@ public class MochiDBClient implements Closeable {
             this.servers.add(s);
         }
     }
+    
+    public String getClientID() {
+        return mochiDBClientID;
+    }
 
     public void waitForConnectionToBeEstablishedToServers() {
         for (final Server s : servers) {
@@ -198,7 +202,7 @@ public class MochiDBClient implements Closeable {
         } else {
             LOG.info("Got refused grant from servers {} {} *Aborting* ", write1RefusedMultiGrants.keySet(),
                     write1RefusedMultiGrants.values());
-            throw new UnsupportedOperationException();
+            throw new RequestRefusedException();
         }
 
         // Step 2:

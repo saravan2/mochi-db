@@ -17,6 +17,8 @@ import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.client.MochiDBClient;
 import edu.stanford.cs244b.mochi.client.TransactionBuilder;
+import edu.stanford.cs244b.mochi.client.RequestFailedException;
+import edu.stanford.cs244b.mochi.client.RequestRefusedException;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
@@ -160,7 +162,7 @@ public class MochiClientServerCommunicationTest {
         ms1.close();
     }
 
-    @Test(dependsOnMethods = { "testWriteOperation" })
+    @Test(dependsOnMethods = { "testHelloToFromServerAsync" })
     public void testReadOperation() throws InterruptedException, ExecutionException {
         
         final int numberOfServersToTest = 4;
@@ -185,12 +187,13 @@ public class MochiClientServerCommunicationTest {
         final OperationResult or2tr1 = Utils.getOperationResult(transaction1result, 1);
         Assert.assertNotNull(or1tr1);
         Assert.assertNotNull(or2tr1);
+        Assert.assertEquals(or1tr1.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+        Assert.assertEquals(or2tr1.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
+
 
         Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
         Assert.assertNotNull(or2tr1.getCurrentCertificate(), "write ceritificate for op2 in transaction 1 is null");
-        Assert.assertTrue(StringUtils.isEmpty(or1tr1.getResult()));
         Assert.assertFalse(or1tr1.getExisted());
-        Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
         Assert.assertFalse(or2tr1.getExisted());
         
         LOG.info("Second write transaction executed succesfully. Executing read transaction");
@@ -216,7 +219,7 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.close();
     }
 
-    @Test(dependsOnMethods = { "testHelloToFromServerAsync" })
+    @Test(dependsOnMethods = { "testReadOperation" })
     public void testWriteOperation() throws InterruptedException, ExecutionException {
         final int numberOfServersToTest = 4;
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
@@ -240,12 +243,12 @@ public class MochiClientServerCommunicationTest {
         final OperationResult or2tr1 = Utils.getOperationResult(transaction1result, 1);
         Assert.assertNotNull(or1tr1);
         Assert.assertNotNull(or2tr1);
+        Assert.assertEquals(or1tr1.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+        Assert.assertEquals(or2tr1.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
 
         Assert.assertNotNull(or1tr1.getCurrentCertificate(), "write ceritificate for op1 in transaction 1 is null");
         Assert.assertNotNull(or2tr1.getCurrentCertificate(), "write ceritificate for op2 in transaction 1 is null");
-        Assert.assertTrue(StringUtils.isEmpty(or1tr1.getResult()));
         Assert.assertFalse(or1tr1.getExisted());
-        Assert.assertTrue(StringUtils.isEmpty(or2tr1.getResult()));
         Assert.assertFalse(or2tr1.getExisted());
 
         LOG.info("First write transaction executed successfully. Executing second write transaction");
@@ -261,9 +264,9 @@ public class MochiClientServerCommunicationTest {
                 String.format("Wrong size of operation list = %s", operationList2.size()));
         final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
         final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
-        Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+        Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2");
         Assert.assertTrue(or1tr2.getExisted());
-        Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
+        Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2");
         Assert.assertTrue(or2tr2.getExisted());
 
         LOG.info("Second write transaction executed succesfully. Executing read transaction");
@@ -284,14 +287,13 @@ public class MochiClientServerCommunicationTest {
         Assert.assertEquals(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2");
         Assert.assertEquals(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2");
         LOG.info("Read transaction executed successfully");
-        
-        
-
         mochiVirtualCluster.close();
         mochiDBclient.close();
     }
     
-    @Test(dependsOnMethods = { "testWriteOperation" }, enabled = false)
+    @Test(dependsOnMethods = { "testWriteOperation" })
+    // TODO Most of the asserts in concurrent client test case are invalid. We should make
+    // our test clients accept write and read failures.
     public void testWriteOperationConcurrent() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrent");
         final int numberOfServersToTest = 4;
@@ -375,46 +377,66 @@ public class MochiClientServerCommunicationTest {
         }
 
         public void runTest() {
+            LOG.info("Concurrent Client {} starts test", mochiDBclient.getClientID());
             final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction()
                     .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_1")
                     .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_1");
-
-            final TransactionResult transaction1result = mochiDBclient.executeWriteTransaction(tb1.build());
+            TransactionResult transaction1result = null;
+            try {
+                transaction1result  = mochiDBclient.executeWriteTransaction(tb1.build());
+            } catch (RequestRefusedException Ex) {
+                LOG.info("Concurrent Client {} First write transaction's write1 request was refused", mochiDBclient.getClientID());
+                throw new RuntimeException(Ex);
+            } catch (RequestFailedException Ex) {
+                LOG.info("Concurrent Client {} First write transaction's write1 request failed", mochiDBclient.getClientID());
+                throw new RuntimeException(Ex);
+            }
             Assert.assertNotNull(transaction1result);
 
             final List<OperationResult> operationList = transaction1result.getOperationsList();
             Assert.assertNotNull(operationList);
-            Assert.assertTrue(operationList.size() == 2);
+            Assert.assertTrue(operationList.size() == 2,
+                    String.format("Wrong size of operation list = %s on Concurrent Client {}. Objects could have been deleted by concurrent write", mochiDBclient.getClientID(), operationList.size()));
+            
             final OperationResult or1tr1 = Utils.getOperationResult(transaction1result, 0);
             final OperationResult or2tr1 = Utils.getOperationResult(transaction1result, 1);
             Assert.assertNotNull(or1tr1);
             Assert.assertNotNull(or2tr1);
+            Assert.assertEquals(or1tr1.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1", String.format("Concurrent Client {} Write value NEW_VALUE_FOR_KEY_1_TR_1 has been overwritten with {}", mochiDBclient.getClientID(), or1tr1.getResult()));
+            Assert.assertEquals(or2tr1.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1", String.format("Concurrent Client {} Write value NEW_VALUE_FOR_KEY_2_TR_1 has been overwritten with {}", mochiDBclient.getClientID(), or2tr1.getResult()));
 
             Assert.assertNotNull(or1tr1.getCurrentCertificate(),
-                    "write ceritificate for op1 in transaction 1 is null");
+                    String.format("Concurrent Client {} write ceritificate for op1 in transaction 1 is null", mochiDBclient.getClientID()));
             Assert.assertNotNull(or2tr1.getCurrentCertificate(),
-                    "write ceritificate for op2 in transaction 1 is null");
+                    String.format("Concurrent Client {} write ceritificate for op2 in transaction 1 is null", mochiDBclient.getClientID()));
 
-            LOG.info("First write transaction executed successfully. Executing second write transaction");
+            LOG.info("Concurrent Client {} First write transaction executed successfully. Executing second write transaction", mochiDBclient.getClientID());
             final TransactionBuilder tb2 = TransactionBuilder.startNewTransaction()
                     .addWriteOperation("DEMO_KEY_1", "NEW_VALUE_FOR_KEY_1_TR_2")
                     .addWriteOperation("DEMO_KEY_2", "NEW_VALUE_FOR_KEY_2_TR_2");
-
-            final TransactionResult transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
+            TransactionResult transaction2result = null;
+            try {
+                transaction2result = mochiDBclient.executeWriteTransaction(tb2.build());
+            } catch (RequestRefusedException Ex) {
+                LOG.info("Concurrent Client {} Second write transaction's write1 request was refused", mochiDBclient.getClientID());
+                throw new RuntimeException(Ex);
+            } catch (RequestFailedException Ex) {
+                LOG.info("Concurrent Client {} Second write transaction's write1 request failed", mochiDBclient.getClientID());
+                throw new RuntimeException(Ex);
+            }
             Assert.assertNotNull(transaction2result);
             final List<OperationResult> operationList2 = transaction2result.getOperationsList();
             Assert.assertNotNull(operationList2);
             Assert.assertTrue(operationList2.size() == 2,
-                    String.format("Wrong size of operation list = %s", operationList2.size()));
+                    String.format("Wrong size of operation list = %s on Concurrent Client {}. Objects could have been deleted by concurrent write", mochiDBclient.getClientID(), operationList2.size()));
+             
             final OperationResult or1tr2 = Utils.getOperationResult(transaction2result, 0);
             final OperationResult or2tr2 = Utils.getOperationResult(transaction2result, 1);
-            Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1");
+            Assert.assertEquals(or1tr2.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2", String.format("Concurrent Client {} Write value NEW_VALUE_FOR_KEY_1_TR_2 has been overwritten with {}", mochiDBclient.getClientID(), or1tr2.getResult()));
             Assert.assertTrue(or1tr2.getExisted());
-            Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1");
+            Assert.assertEquals(or2tr2.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2", String.format("Concurrent Client {} Write value NEW_VALUE_FOR_KEY_2_TR_2 has been overwritten with {}", mochiDBclient.getClientID(), or2tr2.getResult()));
             Assert.assertTrue(or2tr2.getExisted());
-
-            LOG.info("Second write transaction executed succesfully. Executing read transaction");
-
+            LOG.info("Concurrent Client {} Second write transaction executed succesfully. Executing read transaction", mochiDBclient.getClientID());
             final TransactionBuilder tb3 = TransactionBuilder.startNewTransaction().addReadOperation("DEMO_KEY_1")
                     .addReadOperation("DEMO_KEY_2");
 
@@ -423,13 +445,13 @@ public class MochiClientServerCommunicationTest {
             final List<OperationResult> operationList3 = transaction3result.getOperationsList();
             Assert.assertNotNull(operationList3);
             Assert.assertTrue(operationList3.size() == 2,
-                    String.format("Wrong size of operation list = %s", operationList3.size()));
+                    String.format("Wrong size of operation list = %s on Concurrent Client {}. Objects could ould have been deleted by concurrent write", mochiDBclient.getClientID(), operationList3.size()));
             final OperationResult or1tr3 = Utils.getOperationResult(transaction3result, 0);
             final OperationResult or2tr3 = Utils.getOperationResult(transaction3result, 1);
-            Assert.assertEquals(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2");
-            Assert.assertEquals(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2");
-            LOG.info("Read transaction executed successfully");
-
+            Assert.assertEquals(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2",  String.format("Concurrent Client {} Expected Read value NEW_VALUE_FOR_KEY_1_TR_2 has been overwritten with {}", mochiDBclient.getClientID(), or1tr3.getResult()));
+            Assert.assertEquals(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2",  String.format("Concurrent Client {} Expected Read value NEW_VALUE_FOR_KEY_2_TR_2 has been overwritten with {}", mochiDBclient.getClientID(), or2tr3.getResult()));
+            LOG.info("Concurrent Client {} Read transaction executed successfully", mochiDBclient.getClientID());
+            LOG.info("Concurrent Client {} ends test", mochiDBclient.getClientID());
         }
 
         public Boolean getTestPassed() {
