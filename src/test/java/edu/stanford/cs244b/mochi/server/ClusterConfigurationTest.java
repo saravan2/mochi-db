@@ -88,6 +88,11 @@ public class ClusterConfigurationTest {
         final Map<String, String> tokenProperties = putTokensAroundRingProps(servers);
         final String constructedPropertyServers = tokenProperties.get(ClusterConfiguration.PROPERTY_SERVERS);
         Assert.assertNotNull(constructedPropertyServers);
+        Assert.assertEquals(constructedPropertyServers, "a,b,c,d");
+        Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_a_TOKENS"));
+        Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_b_TOKENS"));
+        Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_c_TOKENS"));
+        Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_d_TOKENS"));
 
         // cc.loadInitialConfigurationFromProperties(props);
         // TODO

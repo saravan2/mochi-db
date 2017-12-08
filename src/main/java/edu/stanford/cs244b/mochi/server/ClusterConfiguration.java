@@ -12,7 +12,7 @@ public class ClusterConfiguration {
 
     public static final char CONFIG_DELIMITER = ',';
     public static final String PROPERTY_SERVERS = "_CONFIG_SERVERS";
-    public static final String PROPERTY_PREF_SERVERS = "_CONFIG_SERVER_%s_TOKENS=";
+    public static final String PROPERTY_PREF_SERVERS = "_CONFIG_SERVER_%s_TOKENS";
 
     public ConcurrentHashMap<Long, String> tokensToServers;
     private final MochiContext mochiContext;
