@@ -1,5 +1,12 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.tomcat.util.buf.StringUtils;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,5 +41,56 @@ public class ClusterConfigurationTest {
 
         LOG.info("testTokenNumberToTokenValue: {} -> {}, {} -> {}, {} -> {}, {} -> {} (max {})", token1, token1Value,
                 token2, token2Value, token3, token3Value, token4, token4Value, maxInt);
+    }
+
+    public Map<String, String> putTokensAroundRingProps(final List<String> servers) {
+        final int numberOfServers = servers.size();
+        
+        final List<List<String>> assignedTokensToServers = new ArrayList<List<String>>(numberOfServers);
+        for (int i = 0; i < numberOfServers; i++) {
+            assignedTokensToServers.add(new ArrayList<String>(ClusterConfiguration.SHARD_TOKENS / numberOfServers));
+        }
+
+        int secondaryIndex = 0;
+        for (int i = 0; i < ClusterConfiguration.SHARD_TOKENS; i++) {
+            if (secondaryIndex == numberOfServers) {
+                secondaryIndex = 0;
+            }
+            final List<String> tokenForServerX = assignedTokensToServers.get(secondaryIndex);
+            tokenForServerX.add(Integer.toString(i));
+        }
+
+        final Map<String, String> serverToTokensProps = new HashMap<String, String>();
+        
+        // Adding _CONFIG_SERVER_ property
+        for (int i = 0; i < numberOfServers; i++) {
+            final String propKey = String.format(ClusterConfiguration.PROPERTY_PREF_SERVERS, servers.get(i));
+            final String propValue = StringUtils.join(assignedTokensToServers.get(i),
+                    ClusterConfiguration.CONFIG_DELIMITER);
+            serverToTokensProps.put(propKey, propValue);
+        }
+        // Adding property servers
+        final String propServersValue = StringUtils.join(servers, ClusterConfiguration.CONFIG_DELIMITER);
+        serverToTokensProps.put(ClusterConfiguration.PROPERTY_SERVERS, propServersValue);
+        return serverToTokensProps;
+    }
+
+    @Test
+    public void testPutTokensAroundRingProps() {
+        ClusterConfiguration cc = new ClusterConfiguration(Mockito.mock(MochiContext.class));
+        final Properties props = new Properties();
+
+        final List<String> servers = new ArrayList<String>();
+        servers.add("a");
+        servers.add("b");
+        servers.add("c");
+        servers.add("d");
+        final Map<String, String> tokenProperties = putTokensAroundRingProps(servers);
+        final String constructedPropertyServers = tokenProperties.get(ClusterConfiguration.PROPERTY_SERVERS);
+        Assert.assertNotNull(constructedPropertyServers);
+
+        // cc.loadInitialConfigurationFromProperties(props);
+        // TODO
+        // cc.getServerForToken(token)
     }
 }

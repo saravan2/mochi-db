@@ -10,13 +10,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import com.google.protobuf.TextFormat;
 
 import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
 import edu.stanford.cs244b.mochi.server.MochiContext;
@@ -59,6 +56,11 @@ public class InMemoryDataStore implements DataStore {
         } else {
             return data;
         }
+    }
+
+    protected void checkObjectForShardCorrect(final String key) {
+        int keyHash = key.hashCode();
+        // TODO: go to cluster configuration
     }
 
     protected OperationResult processRead(final Operation op) {
