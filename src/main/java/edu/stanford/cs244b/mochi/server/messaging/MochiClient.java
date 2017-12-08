@@ -25,6 +25,7 @@ public class MochiClient implements Closeable {
 
     private final String server;
     private final int serverPort;
+    private final String clientUUID;
 
     private volatile EventLoopGroup eventLoopGroup = null;
     private volatile MochiClientHandler clientHandler;
@@ -32,9 +33,10 @@ public class MochiClient implements Closeable {
     private volatile ChannelFuture channelFuture = null;
     private volatile Thread connectionThread = null;
 
-    public MochiClient(String server, int serverPort) {
+    public MochiClient(String server, int serverPort, final String clientUUID) {
         this.server = server;
         this.serverPort = serverPort;
+        this.clientUUID = clientUUID;
     }
 
     public Future<ProtocolMessage> sendAndReceive(Object messageOrBuilder) {
@@ -43,7 +45,7 @@ public class MochiClient implements Closeable {
     }
 
     protected void start() {
-        ThreadFactory tf = new DefaultThreadFactory(getClass(), Thread.MAX_PRIORITY);
+        ThreadFactory tf = new DefaultThreadFactory(getPoolName(), Thread.MAX_PRIORITY);
         eventLoopGroup = new NioEventLoopGroup(0, tf);
         Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new MochiClientInitializer());
@@ -59,6 +61,10 @@ public class MochiClient implements Closeable {
         }
         // Get the handler instance to initiate the request.
         clientHandler = channel.pipeline().get(MochiClientHandler.class);
+    }
+
+    protected String getPoolName() {
+        return String.format("mochi-client-%s-to-%s:%s", clientUUID, server, serverPort);
     }
 
     protected void restart() {
@@ -128,11 +134,14 @@ public class MochiClient implements Closeable {
             }
         }
         if (eventLoopGroup != null) {
-            // final Future f = eventLoopGroup.shutdownGracefully(10, 1000,
-            // TimeUnit.MILLISECONDS);
             final Future f = eventLoopGroup.shutdownGracefully();
             try {
-                f.get(1000, TimeUnit.MILLISECONDS);
+                final boolean waitForever = false;
+                if (waitForever) {
+                    f.get();
+                } else {
+                    f.get(1000, TimeUnit.MILLISECONDS);
+                }
             } catch (InterruptedException e) {
                 LOG.debug("Sleep interrupted");
                 Thread.currentThread().interrupt();

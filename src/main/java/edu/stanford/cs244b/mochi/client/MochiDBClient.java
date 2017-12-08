@@ -43,7 +43,7 @@ public class MochiDBClient implements Closeable {
 
     private final AtomicLong operationNumberCounter = new AtomicLong(1);
     private final String mochiDBClientID = Utils.getUUIDwithPref(Utils.UUID_PREFIXES.CLIENT);
-    private final MochiMessaging mochiMessaging = new MochiMessaging();
+    private final MochiMessaging mochiMessaging = new MochiMessaging(mochiDBClientID);
     private final Set<Server> servers = new HashSet<Server>();
 
     private final MetricRegistry metricRegistry = new MetricRegistry();
@@ -136,7 +136,7 @@ public class MochiDBClient implements Closeable {
         }
     }
 
-    public TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
+    private TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
         Random rand = new Random();
         final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
         /*

@@ -23,13 +23,18 @@ public class MochiMessaging implements Closeable {
 
     public static final String CLIENT_HELLO_MESSAGE = "Client hello";
     public static final String CLIENT_HELLO2_MESSAGE = "Client hello 2";
+    private final String initiatorUUID;
+
+    public MochiMessaging(final String initiatorUUID) {
+        this.initiatorUUID = initiatorUUID;
+    }
 
     protected MochiClient getClient(final Server server) {
         synchronized (clients) {
             if (clients.contains(server)) {
                 return clients.get(server);
             } else {
-                MochiClient mc = new MochiClient(server.getServerName(), server.getPort());
+                MochiClient mc = new MochiClient(server.getServerName(), server.getPort(), initiatorUUID);
                 clients.put(server, mc);
                 mc.startConnectionThreadIfNeeded();
                 return mc;
@@ -94,6 +99,7 @@ public class MochiMessaging implements Closeable {
     }
 
     public void close() {
+        LOG.debug("Closing messaging for {}", initiatorUUID);
         synchronized (clients) {
             for (MochiClient cl : clients.values()) {
                 cl.close();

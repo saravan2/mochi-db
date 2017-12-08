@@ -2,6 +2,7 @@ package edu.stanford.cs244b.mochi.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -43,7 +44,7 @@ public class MochiClientServerCommunicationTest {
         ms.start();
         LOG.info("Mochi server started");
 
-        final MochiMessaging mm = new MochiMessaging();
+        final MochiMessaging mm = new MochiMessaging("testHelloToFromServer");
 
         HelloFromServer hfs = null;
         for (int i = 0; i < 10; i++) {
@@ -66,7 +67,7 @@ public class MochiClientServerCommunicationTest {
 
     @Test(expectedExceptions = { ConnectionNotReadyException.class, java.net.UnknownHostException.class })
     public void testConnectionNotKnownServer() {
-        final MochiMessaging mm = new MochiMessaging();
+        final MochiMessaging mm = new MochiMessaging("testConnectionNotKnownServer");
         final HelloFromServer hfs = mm.sayHelloToServer(new Server("some_unknown_host", MochiServer.DEFAULT_PORT));
 
         mm.close();
@@ -82,7 +83,7 @@ public class MochiClientServerCommunicationTest {
         ms2.start();
         LOG.info("Mochi servers started");
 
-        final MochiMessaging mm = new MochiMessaging();
+        final MochiMessaging mm = new MochiMessaging("testHelloToFromServerMultiple");
         mm.waitForConnectionToBeEstablished(ms1.toServer());
         mm.waitForConnectionToBeEstablished(ms2.toServer());
 
@@ -119,7 +120,7 @@ public class MochiClientServerCommunicationTest {
         MochiServer ms1 = newMochiServer(serverPort1);
         ms1.start();
 
-        final MochiMessaging mm = new MochiMessaging();
+        final MochiMessaging mm = new MochiMessaging("testHelloToFromServerAsync");
         mm.waitForConnectionToBeEstablished(ms1.toServer());
 
         for (int i = 0; i < 2; i++) {
@@ -569,6 +570,129 @@ public class MochiClientServerCommunicationTest {
             return testPassed;
         }
     };
+
+    @Test(dependsOnMethods = { "testWriteOperationConcurrent" }, enabled = false)
+    public void testWriteOperationConcurrentStressTest() throws InterruptedException, ExecutionException {
+        LOG.debug("Starting testWriteOperationConcurrentStressTest");
+        final int numberOfServersToTest = 4;
+        final int keyRange = 20;
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
+        mochiVirtualCluster.startAllServers();
+
+        final int numberOfCurrentClients = 5;
+        final List<MochiDBClient> clients = new ArrayList<MochiDBClient>(numberOfCurrentClients);
+        final List<MochiConcurrentStreeTestRunnable> runnables = new ArrayList<MochiConcurrentStreeTestRunnable>(
+                numberOfCurrentClients);
+        int rangePos = 0;
+        for (int i = 0; i < numberOfCurrentClients; i++) {
+            final MochiDBClient mochiDBclient = new MochiDBClient();
+            mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+            mochiDBclient.waitForConnectionToBeEstablishedToServers();
+
+            clients.add(mochiDBclient);
+            final MochiConcurrentStreeTestRunnable mctr = new MochiConcurrentStreeTestRunnable(mochiDBclient, rangePos,
+                    keyRange);
+            runnables.add(mctr);
+            rangePos += keyRange;
+        }
+        LOG.info("Concurrent test: add variables have been initialized");
+
+        for (final MochiDBClient c : clients) {
+            c.waitForConnectionToBeEstablishedToServers();
+        }
+        LOG.info("Concurrent test: connection was established. Trying one by one");
+
+        final ExecutorService threadPoolExecutor = new ThreadPoolExecutor(numberOfCurrentClients,
+                numberOfCurrentClients, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        final List<Future<Void>> futures = new ArrayList<Future<Void>>(numberOfCurrentClients);
+        for (final Runnable r : runnables) {
+            final Future<?> f = threadPoolExecutor.submit(r);
+            futures.add((Future<Void>) f);
+        }
+
+        Utils.busyWaitForFutures(futures);
+
+        int i = 0;
+        for (final MochiConcurrentStreeTestRunnable r : runnables) {
+            LOG.info("Succeeded stress test operation for client {}", i);
+            i++;
+            Assert.assertTrue(r.getTestPassed());
+        }
+        mochiVirtualCluster.close();
+        for (final MochiDBClient c : clients) {
+            c.close();
+        }
+    }
+    
+    private class MochiConcurrentStreeTestRunnable implements Runnable {
+        private final MochiDBClient mochiDBclient;
+        private volatile Boolean testPassed = null;
+        private final int initialNumberStart;
+        private final int regionSize;
+        private int keyEndingNums[];
+        
+        public MochiConcurrentStreeTestRunnable(MochiDBClient mochiDBclient, int initialNumberStart, int regionSize) {
+            this.mochiDBclient = mochiDBclient;
+            this.initialNumberStart = initialNumberStart;
+            this.regionSize = regionSize;
+            if (regionSize % 2 != 0) {
+                throw new IllegalStateException("regionSize should be divisible by 2");
+            }
+            keyEndingNums = new int[regionSize];
+            for (int i = 0; i < regionSize; i++) {
+                keyEndingNums[i] = initialNumberStart + i;
+            }
+            shuffleArray(keyEndingNums);
+        }
+
+
+        public void run() {
+            LOG.debug("MochiConcurrentTestRunnable starting test");
+            testPassed = null;
+            try {
+                runTest();
+                testPassed = true;
+            } catch (Exception ex) {
+                LOG.info("Test failed !!!");
+                testPassed = false;
+                throw new RuntimeException(ex);
+            }
+        }
+
+        public void runTest() {
+            LOG.info("Concurrent Client {} starts stree test", mochiDBclient.getClientID());
+
+            LOG.info("Step 0: Executing writes to all keys single. Client {}", mochiDBclient.getClientID());
+            for (int i = 0; i < keyEndingNums.length; i++) {
+                final String key = String.format("DEMO_KEY_STRESS_TEST_%s", keyEndingNums[i]);
+                final String val = String.format("New Value for key %s", key);
+                final TransactionBuilder tb = TransactionBuilder.startNewTransaction().addWriteOperation(key, val);
+                mochiDBclient.executeWriteTransaction(tb.build());
+            }
+            LOG.info("Step 0: finished. Client {}", mochiDBclient.getClientID());
+            
+            // TODO: add reads
+            LOG.info("Concurrent Client {} ends test", mochiDBclient.getClientID());
+        }
+
+        public Boolean getTestPassed() {
+            return testPassed;
+        }
+    };
+
+    private static void shuffleArray(int[] array) {
+        int index;
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            index = random.nextInt(i + 1);
+            if (index != i) {
+                array[index] ^= array[i];
+                array[i] ^= array[index];
+                array[index] ^= array[i];
+            }
+        }
+    }
+
 
     /*
      * Specify the remote server, port via command line arguments
