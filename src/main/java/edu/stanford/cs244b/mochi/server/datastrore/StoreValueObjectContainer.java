@@ -88,10 +88,9 @@ public class StoreValueObjectContainer<T> {
     }
 
 
-    public boolean setValueAvailble(boolean valueAvailble) {
-        final boolean oldAvailable = this.valueAvailble;
-        this.valueAvailble = valueAvailble;
-        return oldAvailable;
+    public boolean setValueAvailble(boolean valueAvailable) {
+        this.valueAvailble = valueAvailable;
+        return valueAvailable;
     }
    
     public HashMap<Long, HashMap<Long, Pair<String, Grant>>> getGivenWrite1Grants() {

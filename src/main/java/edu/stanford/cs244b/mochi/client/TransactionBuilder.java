@@ -31,6 +31,14 @@ public class TransactionBuilder {
         return this;
     }
     
+    public TransactionBuilder addDeleteOperation(final String key) {
+        final Operation.Builder oBuilder = Operation.newBuilder();
+        oBuilder.setAction(OperationAction.DELETE);
+        oBuilder.setOperand1(key);
+        operations.add(oBuilder.build());
+        return this;
+    }
+    
     public TransactionBuilder addReadOperation(final String key) {
         final Operation.Builder oBuilder = Operation.newBuilder();
         oBuilder.setAction(OperationAction.READ);

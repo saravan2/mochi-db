@@ -76,7 +76,10 @@ public class InMemoryDataStore implements DataStore {
             currentC = keyStoreValue.getCurrentC();
         }
         final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
-        operationResultBuilder.setResult(valueForTheKey);
+        if (valueForTheKey != null) {
+            operationResultBuilder.setResult(valueForTheKey);
+        }
+        operationResultBuilder.setExisted(keyStoreValue.isValueAvailble());
         operationResultBuilder.setCurrentCertificate(currentC);
         return operationResultBuilder.build();
     }
@@ -448,7 +451,7 @@ public class InMemoryDataStore implements DataStore {
         }
         final OperationResult.Builder resultBuilder = OperationResult.newBuilder();
         if ((op.getAction() == OperationAction.WRITE) || (op.getAction() == OperationAction.DELETE)) {
-            final boolean wasAvailable;
+            final boolean isAvailable;
             final String newValue = op.getOperand2();
             Utils.assertNotNull(writeCertificateIfAny, "writeCertificate is null");
             storeValueContainer.setCurrentC(writeCertificateIfAny);
@@ -458,12 +461,12 @@ public class InMemoryDataStore implements DataStore {
             resultBuilder.setCurrentCertificate(writeCertificateIfAny);
             if (op.getAction() == OperationAction.WRITE) {
                 storeValueContainer.setValue(newValue);
-                wasAvailable = storeValueContainer.setValueAvailble(true);
+                isAvailable = storeValueContainer.setValueAvailble(true);
             } else {
                 storeValueContainer.setValue(null);
-                wasAvailable = storeValueContainer.setValueAvailble(false);
+                isAvailable = storeValueContainer.setValueAvailble(false);
             }
-            resultBuilder.setExisted(wasAvailable);
+            resultBuilder.setExisted(isAvailable);
             resultBuilder.setResult(newValue);
             LOG.debug("Moving epoch to {} for key {}", storeValueContainer.getCurrentEpoch(), op.getOperand1());
             final OperationResult oprationResult = resultBuilder.build();
