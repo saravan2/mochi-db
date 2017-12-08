@@ -37,6 +37,7 @@ public class MochiClient implements Closeable {
         this.server = server;
         this.serverPort = serverPort;
         this.clientUUID = clientUUID;
+        LOG.info("Created mochi client for {}:{} and clientUUID = {}", server, serverPort, clientUUID);
     }
 
     public Future<ProtocolMessage> sendAndReceive(Object messageOrBuilder) {
@@ -134,6 +135,7 @@ public class MochiClient implements Closeable {
             }
         }
         if (eventLoopGroup != null) {
+            LOG.debug("Shutting down mochi client threadPool for {}", getPoolName());
             final Future f = eventLoopGroup.shutdownGracefully();
             try {
                 final boolean waitForever = false;

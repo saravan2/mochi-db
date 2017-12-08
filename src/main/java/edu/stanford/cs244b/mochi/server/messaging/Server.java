@@ -45,4 +45,9 @@ public class Server {
     public int getPort() {
         return port;
     }
+
+    @Override
+    public String toString() {
+        return "Server [serverName=" + serverName + ", port=" + port + "]";
+    }
 }

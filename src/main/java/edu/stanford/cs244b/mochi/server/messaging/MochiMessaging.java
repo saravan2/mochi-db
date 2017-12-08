@@ -27,14 +27,16 @@ public class MochiMessaging implements Closeable {
 
     public MochiMessaging(final String initiatorUUID) {
         this.initiatorUUID = initiatorUUID;
+        LOG.debug("Created MochiMessaging for {}", initiatorUUID);
     }
 
     protected MochiClient getClient(final Server server) {
         synchronized (clients) {
-            if (clients.contains(server)) {
+            if (clients.containsKey(server)) {
                 return clients.get(server);
             } else {
-                MochiClient mc = new MochiClient(server.getServerName(), server.getPort(), initiatorUUID);
+                LOG.trace("Creating client for server {} since not found.", server);
+                final MochiClient mc = new MochiClient(server.getServerName(), server.getPort(), initiatorUUID);
                 clients.put(server, mc);
                 mc.startConnectionThreadIfNeeded();
                 return mc;
