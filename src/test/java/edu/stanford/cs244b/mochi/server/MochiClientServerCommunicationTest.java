@@ -16,9 +16,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import edu.stanford.cs244b.mochi.client.MochiDBClient;
-import edu.stanford.cs244b.mochi.client.TransactionBuilder;
 import edu.stanford.cs244b.mochi.client.RequestFailedException;
 import edu.stanford.cs244b.mochi.client.RequestRefusedException;
+import edu.stanford.cs244b.mochi.client.TransactionBuilder;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.HelloFromServer2;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
@@ -347,7 +347,6 @@ public class MochiClientServerCommunicationTest {
             i++;
             Assert.assertTrue(r.getTestPassed());
         }
-
         mochiVirtualCluster.close();
         for (final MochiDBClient c : clients) {
             c.close();
@@ -451,6 +450,18 @@ public class MochiClientServerCommunicationTest {
             Assert.assertEquals(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2",  String.format("Concurrent Client {} Expected Read value NEW_VALUE_FOR_KEY_1_TR_2 has been overwritten with {}", mochiDBclient.getClientID(), or1tr3.getResult()));
             Assert.assertEquals(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2",  String.format("Concurrent Client {} Expected Read value NEW_VALUE_FOR_KEY_2_TR_2 has been overwritten with {}", mochiDBclient.getClientID(), or2tr3.getResult()));
             LOG.info("Concurrent Client {} Read transaction executed successfully", mochiDBclient.getClientID());
+
+            LOG.info("Running more transactions");
+            final TransactionBuilder tb4 = TransactionBuilder.startNewTransaction().addWriteOperation(
+                    "DEMO_KEY_TEST_1", "1");
+            final TransactionResult transaction4result = mochiDBclient.executeWriteTransaction(tb4.build());
+            Assert.assertNotNull(transaction4result);
+
+            final TransactionBuilder tb5 = TransactionBuilder.startNewTransaction().addWriteOperation(
+                    "DEMO_KEY_TEST_2", "2");
+            final TransactionResult transaction5result = mochiDBclient.executeWriteTransaction(tb5.build());
+            Assert.assertNotNull(transaction5result);
+
             LOG.info("Concurrent Client {} ends test", mochiDBclient.getClientID());
         }
 
