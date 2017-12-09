@@ -51,6 +51,8 @@ public class MochiDBClient implements Closeable {
     private volatile JmxReporter metricsJMXreporter;
 
     final Timer metricsReadTransactionsTimer = metricRegistry.timer(getMetricName("read-transactions"));
+    final Timer metricsReadTransactionsStep1WaitTimer = metricRegistry
+            .timer(getMetricName("read-transactions-step1-future-wait"));
     final Timer metricsWriteTransactionsTimer = metricRegistry.timer(getMetricName("write-transactions"));
 
     public MochiDBClient() {
@@ -111,7 +113,13 @@ public class MochiDBClient implements Closeable {
 
         final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder, servers,
                 mochiMessaging);
-        Utils.busyWaitForFutures(readResponseFutures);
+
+        final Timer.Context context = this.metricsReadTransactionsStep1WaitTimer.time();
+        try {
+            Utils.busyWaitForFutures(readResponseFutures);
+        } finally {
+            context.stop();
+        }
         LOG.debug("Resolved readResponse futures");
         final List<ProtocolMessage> readResponseProtocalMessages = Utils.getFutures(readResponseFutures);
         

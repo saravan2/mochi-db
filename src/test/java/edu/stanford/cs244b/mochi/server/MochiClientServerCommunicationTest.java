@@ -463,6 +463,7 @@ public class MochiClientServerCommunicationTest {
         private volatile Boolean testPassed = null;
         
         public MochiConcurrentTestRunnable(MochiDBClient mochiDBclient) {
+            Assert.assertNotNull(mochiDBclient);
             this.mochiDBclient = mochiDBclient;
         }
 
@@ -474,10 +475,10 @@ public class MochiClientServerCommunicationTest {
                 runTest();
                 LOG.info("MochiConcurrentTestRunnable: Passed test mochiClient {}", mochiDBclient.getClientID());
                 testPassed = true;
-            } catch (Exception ex) {
+            } catch (Throwable t) {
                 LOG.info("MochiConcurrentTestRunnable: Test failed for mochiClient {}", mochiDBclient.getClientID());
                 testPassed = false;
-                throw new RuntimeException(ex);
+                throw new RuntimeException(t);
             }
         }
 
