@@ -580,7 +580,7 @@ public class MochiClientServerCommunicationTest {
     public void testWriteOperationConcurrentStressTest() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrentStressTest");
         final int numberOfServersToTest = 4;
-        final int keyRange = 20;
+        final int numberOfKeysToEachClient = 40;
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
         mochiVirtualCluster.startAllServers();
 
@@ -596,9 +596,9 @@ public class MochiClientServerCommunicationTest {
 
             clients.add(mochiDBclient);
             final MochiConcurrentStreeTestRunnable mctr = new MochiConcurrentStreeTestRunnable(mochiDBclient, rangePos,
-                    keyRange);
+                    numberOfKeysToEachClient);
             runnables.add(mctr);
-            rangePos += keyRange;
+            rangePos += numberOfKeysToEachClient;
         }
         LOG.info("Concurrent test: add variables have been initialized");
 
