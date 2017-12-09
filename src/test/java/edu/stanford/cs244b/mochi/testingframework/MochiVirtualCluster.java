@@ -59,6 +59,7 @@ public class MochiVirtualCluster implements Closeable {
             final Map<String, String> serverProps = cc
                     .putTokensAroundRingProps(new ArrayList<String>(servers.keySet()));
             props.putAll(serverProps);
+            props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(servers.size()));
             cc.loadInitialConfigurationFromProperties(props);
         }
     }

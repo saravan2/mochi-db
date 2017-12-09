@@ -20,9 +20,11 @@ public class ClusterConfiguration {
 
     public static final char CONFIG_DELIMITER = ',';
     public static final String PROPERTY_SERVERS = "_CONFIG_SERVERS";
+    public static final String PROPERTY_BFT_REPLICATION = "_CONFIG_BFT_REPLICATION";
     public static final String PROPERTY_PREF_SERVERS = "_CONFIG_SERVER_%s_TOKENS";
 
-    public ConcurrentHashMap<Long, String> tokensToServers;
+    private ConcurrentHashMap<Long, String> tokensToServers;
+    private int bftReplicationFactor = -1;
     private final MochiContext mochiContext;
 
     public ClusterConfiguration(final MochiContext mochiContext) {
@@ -92,16 +94,28 @@ public class ClusterConfiguration {
                         token, i, tokensToServers.size()));
             }
         }
+        {
+            final String bftProperty = props.getProperty(PROPERTY_BFT_REPLICATION);
+            if (bftProperty == null) {
+                throw new IllegalArgumentException(String.format("BFT replication factor is non defined in %s",
+                        props.stringPropertyNames()));
+            }
+            final int inBftReplicationFactor = Integer.parseInt(bftProperty);
+            Utils.assertTrue(inBftReplicationFactor >= 4, "BFT replication factor should be > 4");
+            Utils.assertTrue(inBftReplicationFactor <= tokensToServers.values().size(),
+                    "BFT replication factor should be less or equal than number of servers");
+            this.bftReplicationFactor = inBftReplicationFactor;
+        }
     }
 
     public String getServerForObject(final String object) {
-        // TODO: remove hardcoded 4
-        final List<String> servers = getServersForObjectHashCode(object.hashCode(), 4);
+        final List<String> servers = getServersForObjectHashCode(object.hashCode(), bftReplicationFactor);
         return servers.get(0);
     }
 
     public List<String> getServersForObjectHashCode(int hashCode, int bftReplicationFactor) {
-        Utils.assertTrue(bftReplicationFactor >= 4, "Replication factor for BFT should be >= 4");
+        Utils.assertTrue(bftReplicationFactor >= 4,
+                String.format("Replication factor for BFT should be >= 4. %s specified", bftReplicationFactor));
         final Long hashCodeUnsigned = intToUnsignedLong(hashCode);
         final Integer tokenValStart = (int) (hashCodeUnsigned / SHARD_TOKEN_VALUE_RANGE);
         final List<String> servers = new ArrayList<String>(bftReplicationFactor);
@@ -110,7 +124,8 @@ public class ClusterConfiguration {
             final Long token = tokenNumberToTokenValue(i);
             final String server = getServerForToken(token);
             if (servers.contains(server)) {
-                throw new IllegalStateException(String.format(
+                throw new IllegalStateException(
+                        String.format(
                                 "BFT requires all servers to be unique. Found collision for server %s. Replication factor %s, starting from token %s (%s). Collision token %s. All servers %s",
                                 server, bftReplicationFactor, ithTokenValue, token, i, servers));
             }

@@ -64,6 +64,7 @@ public class ClusterConfigurationTest {
         Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_c_TOKENS"));
         Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_d_TOKENS"));
         props.putAll(tokenProperties);
+        props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(servers.size()));
 
         cc.loadInitialConfigurationFromProperties(props);
 
