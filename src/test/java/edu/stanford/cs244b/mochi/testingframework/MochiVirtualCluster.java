@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,8 +56,10 @@ public class MochiVirtualCluster implements Closeable {
             final InMemoryDSMochiContextImpl context = vs.getContext();
             final ClusterConfiguration cc = context.getClusterConfiguration();
             final Properties props = new Properties();
-            props.setProperty(ClusterConfiguration.PROPERTY_SERVERS, allServers);
-            // TODO: pass tokens
+            final Map<String, String> serverProps = cc
+                    .putTokensAroundRingProps(new ArrayList<String>(servers.keySet()));
+            props.putAll(serverProps);
+            cc.loadInitialConfigurationFromProperties(props);
         }
     }
 
