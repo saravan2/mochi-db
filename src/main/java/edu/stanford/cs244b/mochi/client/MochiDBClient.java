@@ -21,6 +21,7 @@ import com.codahale.metrics.Timer;
 import com.jcabi.aspects.Loggable;
 
 import edu.stanford.cs244b.mochi.server.Utils;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
@@ -135,74 +136,115 @@ public class MochiDBClient implements Closeable {
             context.stop();
         }
     }
+    
+    private boolean isUniformTimeStampInMultiGrants(Map<String, MultiGrant> write1multiGrants, Transaction transaction) {
+        Utils.assertNotNull(write1multiGrants, "MultiGrants map should not be null");
+        Long timestamp = null;
+        for (final MultiGrant multiGrant : write1multiGrants.values()) {
+            final Map<String, Grant> allGrants = multiGrant.getGrantsMap();
+            Utils.assertNotNull(allGrants, "Grants map should not be null");
+            final List<Operation> transactionOps = transaction.getOperationsList();
+            for (final Operation op : transactionOps) {
+                final Grant grantForCurrentKey = allGrants.get(op.getOperand1());
+                Utils.assertNotNull(grantForCurrentKey, "grantForCurrentKey map should not be null");
+                long timestampFromGrant = grantForCurrentKey.getTimestamp();
+                if (timestamp == null) {
+                    timestamp = timestampFromGrant;
+                } else {
+                    // Checking that is exactly the same
+                    if (timestamp != timestampFromGrant) {
+                        
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
     private TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
-        Random rand = new Random();
-        final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
-        /*
-         * We dont have to send value in write1 message. Lets rebuild
-         * transaction
-         */
-        final TransactionBuilder tb = TransactionBuilder.startNewTransaction();
-        List<Operation> transactionOps = transactionToExecute.getOperationsList();
-        for (final Operation op : transactionOps) {
-            tb.addWriteWithoutValueOperation(op.getOperand1());
-        }
-        write1toServerBuilder.setTransaction(tb.build());
-        write1toServerBuilder.setSeed(rand.nextInt(1000));
-        write1toServerBuilder.setTransactionHash(Utils.objectSHA512(transactionToExecute));
-        final List<Future<ProtocolMessage>> write1responseFutures = Utils.sendMessageToServers(write1toServerBuilder,
-                servers, mochiMessaging);
-        Utils.busyWaitForFutures(write1responseFutures);
-        LOG.debug("Resolved write1response futures");
-        final List<ProtocolMessage> write1responseProtocalMessages = Utils.getFutures(write1responseFutures);
-
-        final List<Object> messages1FromServers = new ArrayList<Object>(servers.size());
-        // TODO: consider majority of votes
-        boolean allWriteOk = true;
-        for (ProtocolMessage pm : write1responseProtocalMessages) {
-            final Write1OkFromServer writeOkFromServer = pm.getWrite1OkFromServer();
-            final Write1RefusedFromServer writeRefusedFromServer = pm.getWrite1RefusedFromServer();
-            if (pm.getPayloadCase() == PayloadCase.WRITE1OKFROMSERVER) {
-                messages1FromServers.add(writeOkFromServer);
-            } else if (pm.getPayloadCase() == PayloadCase.WRITE1REFUSEDFROMSERVER) {
-                allWriteOk = false;
-                messages1FromServers.add(writeRefusedFromServer);
-            } else if (pm.getPayloadCase() == PayloadCase.REQUESTFAILEDFROMSERVER) {
-                allWriteOk = false;
-                throw new RequestFailedException();
-            } else {
-                allWriteOk = false;
-                // TODO: handle other responses
-                Utils.assertNotNull(writeOkFromServer, "Expected write1ok from the server");
+        Map<String, MultiGrant> write1mutiGrants, write1RefusedMultiGrants;
+        while (true) {
+            Random rand = new Random();
+            final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
+            /*
+             * We dont have to send value in write1 message. Lets rebuild
+             * transaction
+             */
+            final TransactionBuilder tb = TransactionBuilder.startNewTransaction();
+            List<Operation> transactionOps = transactionToExecute.getOperationsList();
+            for (final Operation op : transactionOps) {
+                tb.addWriteWithoutValueOperation(op.getOperand1());
             }
-        }
-
-        final Map<String, MultiGrant> write1mutiGrants = new HashMap<String, MultiGrant>();
-        final Map<String, MultiGrant> write1RefusedMultiGrants = new HashMap<String, MultiGrant>();
-        for (Object messageFromServer : messages1FromServers) {
-            if (messageFromServer instanceof Write1OkFromServer) {
-                final MultiGrant mg = ((Write1OkFromServer) messageFromServer).getMultiGrant();
-                Utils.assertNotNull(mg, "server1MultiGrant is null");
-                Utils.assertNotNull(mg.getServerId(), "serverId is null");
-                write1mutiGrants.put(mg.getServerId(), mg);
-            } else if (messageFromServer instanceof Write1RefusedFromServer) {
-                final MultiGrant mg = ((Write1RefusedFromServer) messageFromServer).getMultiGrant();
-                Utils.assertNotNull(mg, "server1MultiGrant is null");
-                Utils.assertNotNull(mg.getServerId(), "serverId is null");
-                write1RefusedMultiGrants.put(mg.getServerId(), mg);
-            } else {
-                throw new UnsupportedOperationException();
+            write1toServerBuilder.setTransaction(tb.build());
+            write1toServerBuilder.setSeed(rand.nextInt(1000));
+            write1toServerBuilder.setTransactionHash(Utils.objectSHA512(transactionToExecute));
+            final List<Future<ProtocolMessage>> write1responseFutures = Utils.sendMessageToServers(write1toServerBuilder,
+                    servers, mochiMessaging);
+            Utils.busyWaitForFutures(write1responseFutures);
+            LOG.debug("Resolved write1response futures");
+            final List<ProtocolMessage> write1responseProtocalMessages = Utils.getFutures(write1responseFutures);
+    
+            final List<Object> messages1FromServers = new ArrayList<Object>(servers.size());
+            // TODO: consider majority of votes
+            boolean allWriteOk = true;
+            for (ProtocolMessage pm : write1responseProtocalMessages) {
+                final Write1OkFromServer writeOkFromServer = pm.getWrite1OkFromServer();
+                final Write1RefusedFromServer writeRefusedFromServer = pm.getWrite1RefusedFromServer();
+                if (pm.getPayloadCase() == PayloadCase.WRITE1OKFROMSERVER) {
+                    messages1FromServers.add(writeOkFromServer);
+                } else if (pm.getPayloadCase() == PayloadCase.WRITE1REFUSEDFROMSERVER) {
+                    allWriteOk = false;
+                    messages1FromServers.add(writeRefusedFromServer);
+                } else if (pm.getPayloadCase() == PayloadCase.REQUESTFAILEDFROMSERVER) {
+                    allWriteOk = false;
+                    throw new RequestFailedException();
+                } else {
+                    allWriteOk = false;
+                    // TODO: handle other responses
+                    Utils.assertNotNull(writeOkFromServer, "Expected write1ok from the server");
+                }
             }
-        }
-
-        if (allWriteOk) {
-            LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
-                    write1mutiGrants.values());
-        } else {
-            LOG.info("Got refused grant from servers {} {} *Aborting* ", write1RefusedMultiGrants.keySet(),
-                    write1RefusedMultiGrants.values());
-            throw new RequestRefusedException();
+    
+            write1mutiGrants = new HashMap<String, MultiGrant>();
+            write1RefusedMultiGrants = new HashMap<String, MultiGrant>();
+            
+            for (Object messageFromServer : messages1FromServers) {
+                if (messageFromServer instanceof Write1OkFromServer) {
+                    final MultiGrant mg = ((Write1OkFromServer) messageFromServer).getMultiGrant();
+                    Utils.assertNotNull(mg, "server1MultiGrant is null");
+                    Utils.assertNotNull(mg.getServerId(), "serverId is null");
+                    write1mutiGrants.put(mg.getServerId(), mg);
+                } else if (messageFromServer instanceof Write1RefusedFromServer) {
+                    final MultiGrant mg = ((Write1RefusedFromServer) messageFromServer).getMultiGrant();
+                    Utils.assertNotNull(mg, "server1MultiGrant is null");
+                    Utils.assertNotNull(mg.getServerId(), "serverId is null");
+                    write1RefusedMultiGrants.put(mg.getServerId(), mg);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            }
+            
+            if (isUniformTimeStampInMultiGrants(write1mutiGrants, transactionToExecute) == false) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                LOG.info("Going to retry as timestamps on multigrants did not match");
+                continue;
+            }
+    
+            if (allWriteOk) {
+                LOG.info("Got write gratns servers {}. Progressing to step 2. Multigrants: ", write1mutiGrants.keySet(),
+                        write1mutiGrants.values());
+                break;
+            } else {
+                LOG.info("Got refused grant from servers {} {} *Aborting* ", write1RefusedMultiGrants.keySet(),
+                        write1RefusedMultiGrants.values());
+                throw new RequestRefusedException();
+            }
         }
 
         // Step 2:

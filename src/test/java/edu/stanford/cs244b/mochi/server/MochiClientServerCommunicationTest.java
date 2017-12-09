@@ -394,7 +394,7 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.close();
     }
     
-    @Test(dependsOnMethods = { "testWriteOperation" }, enabled = false)
+    @Test(dependsOnMethods = { "testWriteOperation" })
     // TODO Most of the asserts in concurrent client test case are invalid. We should make
     // our test clients accept write and read failures.
     public void testWriteOperationConcurrent() throws InterruptedException, ExecutionException {
@@ -435,7 +435,7 @@ public class MochiClientServerCommunicationTest {
         LOG.info("Now executing test concurrently");
 
         final ExecutorService threadPoolExecutor = new ThreadPoolExecutor(numberOfCurrentClients,
-                numberOfCurrentClients, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+                numberOfCurrentClients, 360, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         final List<Future<Void>> futures = new ArrayList<Future<Void>>(numberOfCurrentClients);
         for (final Runnable r : runnables) {
             final Future<?> f = threadPoolExecutor.submit(r);
@@ -573,7 +573,7 @@ public class MochiClientServerCommunicationTest {
         }
     };
 
-    @Test(dependsOnMethods = { "testWriteOperationConcurrent" }, enabled = false)
+    @Test(dependsOnMethods = { "testWriteOperationConcurrent" })
     public void testWriteOperationConcurrentStressTest() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrentStressTest");
         final int numberOfServersToTest = 4;
@@ -605,7 +605,7 @@ public class MochiClientServerCommunicationTest {
         LOG.info("Concurrent test: connection was established. Trying one by one");
 
         final ExecutorService threadPoolExecutor = new ThreadPoolExecutor(numberOfCurrentClients,
-                numberOfCurrentClients, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+                numberOfCurrentClients, 240, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         final List<Future<Void>> futures = new ArrayList<Future<Void>>(numberOfCurrentClients);
         for (final Runnable r : runnables) {
             final Future<?> f = threadPoolExecutor.submit(r);
