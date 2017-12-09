@@ -65,7 +65,7 @@ public class MochiClientServerCommunicationTest {
         mm.close();
     }
 
-    @Test(expectedExceptions = { ConnectionNotReadyException.class, java.net.UnknownHostException.class })
+    @Test(expectedExceptions = { ConnectionNotReadyException.class, java.net.UnknownHostException.class }, enabled = false)
     public void testConnectionNotKnownServer() {
         final MochiMessaging mm = new MochiMessaging("testConnectionNotKnownServer");
         try {
@@ -75,7 +75,7 @@ public class MochiClientServerCommunicationTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void testHelloToFromServerMultiple() throws InterruptedException {
         final int serverPort1 = 8001;
         final int serverPort2 = 8002;
@@ -120,7 +120,7 @@ public class MochiClientServerCommunicationTest {
         }
     }
 
-    @Test(dependsOnMethods = { "testHelloToFromServerMultiple" })
+    @Test(dependsOnMethods = { "testHelloToFromServerMultiple" }, enabled = false)
     public void testHelloToFromServerAsync() throws InterruptedException, ExecutionException {
         final int serverPort1 = 8001;
         MochiServer ms1 = newMochiServer(serverPort1);
@@ -169,7 +169,7 @@ public class MochiClientServerCommunicationTest {
         ms1.close();
     }
 
-    @Test(dependsOnMethods = { "testHelloToFromServerAsync" })
+    @Test()
     public void testReadOperation() throws InterruptedException, ExecutionException {
         
         final int numberOfServersToTest = 4;
@@ -686,6 +686,14 @@ public class MochiClientServerCommunicationTest {
                 Assert.assertEquals(gotVal, val);
             }
             LOG.info("Step 1 finished. Client {}", mochiDBclient.getClientID());
+            LOG.info("Step 2: Performing deletes");
+            for (int i = 0; i < keyEndingNums.length; i++) {
+                final String key = String.format("DEMO_KEY_STRESS_TEST_%s", keyEndingNums[i]);
+                final TransactionBuilder tb = TransactionBuilder.startNewTransaction().addDeleteOperation(key);
+                mochiDBclient.executeWriteTransaction(tb.build());
+            }
+            LOG.info("Step 2 finished. Client {}", mochiDBclient.getClientID());
+
             // TODO: add reads
             LOG.info("Concurrent Client {} ends test", mochiDBclient.getClientID());
         }
