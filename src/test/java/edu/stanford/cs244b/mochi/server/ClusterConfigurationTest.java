@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.tomcat.util.buf.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import edu.stanford.cs244b.mochi.testingframework.TestUtils;
 
 public class ClusterConfigurationTest {
     final static Logger LOG = LoggerFactory.getLogger(ClusterConfigurationTest.class);
@@ -43,38 +45,6 @@ public class ClusterConfigurationTest {
                 token2, token2Value, token3, token3Value, token4, token4Value, maxInt);
     }
 
-    public Map<String, String> putTokensAroundRingProps(final List<String> servers) {
-        final int numberOfServers = servers.size();
-        
-        final List<List<String>> assignedTokensToServers = new ArrayList<List<String>>(numberOfServers);
-        for (int i = 0; i < numberOfServers; i++) {
-            assignedTokensToServers.add(new ArrayList<String>(ClusterConfiguration.SHARD_TOKENS / numberOfServers));
-        }
-
-        int secondaryIndex = 0;
-        for (int i = 0; i < ClusterConfiguration.SHARD_TOKENS; i++) {
-            if (secondaryIndex == numberOfServers) {
-                secondaryIndex = 0;
-            }
-            final List<String> tokenForServerX = assignedTokensToServers.get(secondaryIndex);
-            tokenForServerX.add(Integer.toString(i));
-        }
-
-        final Map<String, String> serverToTokensProps = new HashMap<String, String>();
-        
-        // Adding _CONFIG_SERVER_ property
-        for (int i = 0; i < numberOfServers; i++) {
-            final String propKey = String.format(ClusterConfiguration.PROPERTY_PREF_SERVERS, servers.get(i));
-            final String propValue = StringUtils.join(assignedTokensToServers.get(i),
-                    ClusterConfiguration.CONFIG_DELIMITER);
-            serverToTokensProps.put(propKey, propValue);
-        }
-        // Adding property servers
-        final String propServersValue = StringUtils.join(servers, ClusterConfiguration.CONFIG_DELIMITER);
-        serverToTokensProps.put(ClusterConfiguration.PROPERTY_SERVERS, propServersValue);
-        return serverToTokensProps;
-    }
-
     @Test
     public void testPutTokensAroundRingProps() {
         ClusterConfiguration cc = new ClusterConfiguration(Mockito.mock(MochiContext.class));
@@ -85,7 +55,7 @@ public class ClusterConfigurationTest {
         servers.add("b");
         servers.add("c");
         servers.add("d");
-        final Map<String, String> tokenProperties = putTokensAroundRingProps(servers);
+        final Map<String, String> tokenProperties = cc.putTokensAroundRingProps(servers);
         final String constructedPropertyServers = tokenProperties.get(ClusterConfiguration.PROPERTY_SERVERS);
         Assert.assertNotNull(constructedPropertyServers);
         Assert.assertEquals(constructedPropertyServers, "a,b,c,d");
@@ -93,9 +63,38 @@ public class ClusterConfigurationTest {
         Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_b_TOKENS"));
         Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_c_TOKENS"));
         Assert.assertNotNull(tokenProperties.get("_CONFIG_SERVER_d_TOKENS"));
+        props.putAll(tokenProperties);
 
-        // cc.loadInitialConfigurationFromProperties(props);
-        // TODO
-        // cc.getServerForToken(token)
+        cc.loadInitialConfigurationFromProperties(props);
+
+        final String server = cc.getServerForObject("hello");
+        final String[] abcd = { "a", "b", "c", "d" };
+        TestUtils.assertIn(server, abcd);
+
+        final String server2 = cc.getServerForObject("hello2");
+        TestUtils.assertIn(server2, abcd);
+
+        // Checking distribution
+        final int numberOfRandomStringsToCheck = 200;
+        final int minNumberOfServerOccurences = 20;
+        Assert.assertTrue(minNumberOfServerOccurences < (numberOfRandomStringsToCheck / servers.size()));
+        final Map<String, Integer> serversToTokenCounter = new HashMap<String, Integer>(servers.size());
+        for (int i = 0; i < numberOfRandomStringsToCheck; i++) {
+            final String randObject = RandomStringUtils.random(10);
+            final String s = cc.getServerForObject(randObject);
+            if (serversToTokenCounter.containsKey(s) == false) {
+                serversToTokenCounter.put(s, 0);
+            }
+            serversToTokenCounter.put(s, serversToTokenCounter.get(s) + 1);
+        }
+        LOG.info("Random token distribution stats: {}", serversToTokenCounter);
+        for (final String s : serversToTokenCounter.keySet()) {
+            Assert.assertTrue(serversToTokenCounter.get(s) >= minNumberOfServerOccurences, String.format(
+                    "Too little tokens given to server {}: {}, expected at least {}", s, serversToTokenCounter.get(s),
+                    minNumberOfServerOccurences));
+        }
+
     }
+
+
 }
