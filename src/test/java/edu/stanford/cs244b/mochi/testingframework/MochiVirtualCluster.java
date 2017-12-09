@@ -11,6 +11,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 
+import edu.stanford.cs244b.mochi.client.MochiDBClient;
 import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
 import edu.stanford.cs244b.mochi.server.MochiContext;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
@@ -46,6 +47,12 @@ public class MochiVirtualCluster implements Closeable {
         setInitialMochiServersConfiguration();
     }
     
+    public MochiDBClient getMochiDBClient() {
+        final MochiDBClient mochiDBclient = new MochiDBClient();
+        mochiDBclient.addServers(this.getAllServers());
+        return mochiDBclient;
+    }
+
     private void giveTokensToServers(int initialNumberOfServers) {
         final String[] serverIds = servers.keySet().toArray(new String[0]);
         Arrays.sort(serverIds); // To have determinism during tests

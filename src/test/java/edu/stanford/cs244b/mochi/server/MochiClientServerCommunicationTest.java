@@ -173,12 +173,10 @@ public class MochiClientServerCommunicationTest {
     @Test()
     public void testReadOperation() throws InterruptedException, ExecutionException {
 
-        final int numberOfServersToTest = 4;
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
-        final MochiDBClient mochiDBclient = new MochiDBClient();
-        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+        final MochiDBClient mochiDBclient = mochiVirtualCluster.getMochiDBClient();
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
         final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction()
@@ -230,8 +228,7 @@ public class MochiClientServerCommunicationTest {
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
-        final MochiDBClient mochiDBclient = new MochiDBClient();
-        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+        final MochiDBClient mochiDBclient = mochiVirtualCluster.getMochiDBClient();
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
         final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction()
@@ -323,8 +320,7 @@ public class MochiClientServerCommunicationTest {
         final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
-        final MochiDBClient mochiDBclient = new MochiDBClient();
-        mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+        final MochiDBClient mochiDBclient = mochiVirtualCluster.getMochiDBClient();
         mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
         final TransactionBuilder tb1 = TransactionBuilder.startNewTransaction()
@@ -401,8 +397,7 @@ public class MochiClientServerCommunicationTest {
         final List<MochiConcurrentTestRunnable> runnables = new ArrayList<MochiConcurrentTestRunnable>(
                 numberOfCurrentClients);
         for (int i = 0; i < numberOfCurrentClients; i++) {
-            final MochiDBClient mochiDBclient = new MochiDBClient();
-            mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+            final MochiDBClient mochiDBclient = mochiVirtualCluster.getMochiDBClient();
             mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
             clients.add(mochiDBclient);
@@ -619,8 +614,7 @@ public class MochiClientServerCommunicationTest {
                 numberOfCurrentClients);
         int rangePos = 0;
         for (int i = 0; i < numberOfCurrentClients; i++) {
-            final MochiDBClient mochiDBclient = new MochiDBClient();
-            mochiDBclient.addServers(mochiVirtualCluster.getAllServers());
+            final MochiDBClient mochiDBclient = mochiVirtualCluster.getMochiDBClient();
             mochiDBclient.waitForConnectionToBeEstablishedToServers();
 
             clients.add(mochiDBclient);
