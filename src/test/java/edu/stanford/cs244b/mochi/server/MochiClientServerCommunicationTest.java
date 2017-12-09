@@ -578,12 +578,16 @@ public class MochiClientServerCommunicationTest {
                             mochiDBclient.getClientID(), operationList3.size()));
             final OperationResult or1tr3 = Utils.getOperationResult(transaction3result, 0);
             final OperationResult or2tr3 = Utils.getOperationResult(transaction3result, 1);
-            Assert.assertEquals(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_2", String.format(
+            Assert.assertTrue(TestUtils.checkIn(or1tr3.getResult(), "NEW_VALUE_FOR_KEY_1_TR_1",
+                    "NEW_VALUE_FOR_KEY_1_TR_2"), String.format(
                     "Concurrent Client %s Expected Read value NEW_VALUE_FOR_KEY_1_TR_2 has been overwritten with %s",
                     mochiDBclient.getClientID(), or1tr3.getResult()));
-            Assert.assertEquals(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_2", String.format(
+
+            Assert.assertTrue(TestUtils.checkIn(or2tr3.getResult(), "NEW_VALUE_FOR_KEY_2_TR_1",
+                    "NEW_VALUE_FOR_KEY_2_TR_2"), String.format(
                     "Concurrent Client %s Expected Read value NEW_VALUE_FOR_KEY_2_TR_2 has been overwritten with %s",
                     mochiDBclient.getClientID(), or2tr3.getResult()));
+
             LOG.info("Concurrent Client {} Read transaction executed successfully", mochiDBclient.getClientID());
 
             LOG.info("Running more transactions");
