@@ -22,14 +22,22 @@ public class ClusterConfiguration {
     public static final String PROPERTY_SERVERS = "_CONFIG_SERVERS";
     public static final String PROPERTY_BFT_REPLICATION = "_CONFIG_BFT_REPLICATION";
     public static final String PROPERTY_PREF_SERVERS = "_CONFIG_SERVER_%s_TOKENS";
+    public static final String PROPERTY_URL_SERVERS = "_CONFIG_SERVER_%s_URL";
 
     private ConcurrentHashMap<Long, String> tokensToServers;
     private int bftReplicationFactor = -1;
-    private final MochiContext mochiContext;
+    private int clusterConfigurationstamp = 1;
 
-    public ClusterConfiguration(final MochiContext mochiContext) {
-        this.mochiContext = mochiContext;
+    public ClusterConfiguration() {
         tokensToServers = new ConcurrentHashMap<Long, String>(getShardTokens());
+    }
+
+    public ClusterConfiguration(final ClusterConfiguration existingCC) {
+        synchronized (existingCC) {
+            this.bftReplicationFactor = existingCC.bftReplicationFactor;
+            this.clusterConfigurationstamp = existingCC.clusterConfigurationstamp;
+            this.tokensToServers = new ConcurrentHashMap<Long, String>(existingCC.tokensToServers);
+        }
     }
 
     public Map<String, String> putTokensAroundRingProps(final List<String> servers) {
@@ -160,5 +168,9 @@ public class ClusterConfiguration {
 
     public int getShardTokens() {
         return SHARD_TOKENS;
+    }
+
+    public int getClusterConfigurationstamp() {
+        return clusterConfigurationstamp;
     }
 }

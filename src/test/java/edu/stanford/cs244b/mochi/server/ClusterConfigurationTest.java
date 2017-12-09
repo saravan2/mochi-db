@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -20,7 +19,7 @@ public class ClusterConfigurationTest {
 
     @Test
     public void testTokenNumberToTokenValue() {
-        ClusterConfiguration cc = new ClusterConfiguration(Mockito.mock(MochiContext.class));
+        ClusterConfiguration cc = new ClusterConfiguration();
         Assert.assertTrue(ClusterConfiguration.SHARD_TOKEN_VALUE_RANGE > 0);
 
         int token1 = 0;
@@ -47,7 +46,7 @@ public class ClusterConfigurationTest {
 
     @Test
     public void testPutTokensAroundRingProps() {
-        ClusterConfiguration cc = new ClusterConfiguration(Mockito.mock(MochiContext.class));
+        ClusterConfiguration cc = new ClusterConfiguration();
         final Properties props = new Properties();
 
         final List<String> servers = new ArrayList<String>();

@@ -13,10 +13,26 @@ import edu.stanford.cs244b.mochi.server.requesthandlers.Write1ToServerRequestHan
 import edu.stanford.cs244b.mochi.server.requesthandlers.Write2ToServerRequestHandler;
 
 public class MochiContextImpl implements MochiContext {
-    private final String serverId = Utils.getUUIDwithPref(Utils.UUID_PREFIXES.SERVER);
+    private volatile String serverId;
     private volatile Map<Class, ServerRequestHandler<?>> handlers = null;
     private volatile DataStore dataStore = null;
-    private final ClusterConfiguration clusterConfiguration = new ClusterConfiguration(this);
+    private volatile ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
+
+    public MochiContextImpl() {
+        setServerId(null);
+    }
+
+    protected void setServerId(final String serverId) {
+        if (serverId == null) {
+            this.serverId = generateNewServerId();
+        } else {
+            this.serverId = serverId;
+        }
+    }
+
+    public static String generateNewServerId() {
+        return Utils.getUUIDwithPref(Utils.UUID_PREFIXES.SERVER);
+    }
 
     public synchronized Map<Class, ServerRequestHandler<?>> getBeanRequestHandlers() {
         if (handlers != null) {

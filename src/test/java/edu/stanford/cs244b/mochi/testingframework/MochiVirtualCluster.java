@@ -4,16 +4,17 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 
 import edu.stanford.cs244b.mochi.client.MochiDBClient;
 import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
 import edu.stanford.cs244b.mochi.server.MochiContext;
+import edu.stanford.cs244b.mochi.server.MochiContextImpl;
 import edu.stanford.cs244b.mochi.server.messaging.MochiServer;
 import edu.stanford.cs244b.mochi.server.messaging.Server;
 
@@ -29,6 +30,9 @@ public class MochiVirtualCluster implements Closeable {
     private final HashMap<Integer, String> tokenDivision;
     private volatile int bftReplicationFactor;
     
+    // We have the same cluster configuration for all tests
+    final ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
+
     public MochiVirtualCluster() {
         this(5, 4);
     }
@@ -37,18 +41,26 @@ public class MochiVirtualCluster implements Closeable {
         Assert.assertTrue(initialNumberOfServers >= 4);
         Assert.assertTrue(bftReplicationFactor >= 4);
         Assert.assertTrue(bftReplicationFactor <= initialNumberOfServers);
+        
         servers = new HashMap<String, VirtualServer>(initialNumberOfServers * 2);
         tokenDivision = new HashMap<Integer, String>(ClusterConfiguration.SHARD_TOKENS);
-        for (int i = 0 ; i < initialNumberOfServers; i++) {
-            addMochiServer();
-        }
         this.bftReplicationFactor = bftReplicationFactor;
+
+        for (int i = 0; i < initialNumberOfServers; i++) {
+            servers.put(MochiContextImpl.generateNewServerId(), null);
+        }
         giveTokensToServers(initialNumberOfServers);
-        setInitialMochiServersConfiguration();
+
+        setInitialMochiClusterConfiguration();
+
+        for (final String serverId : new HashSet<String>(servers.keySet())) {
+            addMochiServer(serverId);
+        }
+
     }
     
     public MochiDBClient getMochiDBClient() {
-        final MochiDBClient mochiDBclient = new MochiDBClient();
+        final MochiDBClient mochiDBclient = new MochiDBClient(clusterConfiguration);
         mochiDBclient.addServers(this.getAllServers());
         return mochiDBclient;
     }
@@ -62,19 +74,14 @@ public class MochiVirtualCluster implements Closeable {
         }
     }
 
-    private void setInitialMochiServersConfiguration() {
-        final String allServers = StringUtils.join(servers.keySet(), ClusterConfiguration.CONFIG_DELIMITER);
+    private void setInitialMochiClusterConfiguration() {
         // Dividing tokens between servers
-        for (final VirtualServer vs : servers.values()) {
-            final InMemoryDSMochiContextImpl context = vs.getContext();
-            final ClusterConfiguration cc = context.getClusterConfiguration();
-            final Properties props = new Properties();
-            final Map<String, String> serverProps = cc
-                    .putTokensAroundRingProps(new ArrayList<String>(servers.keySet()));
-            props.putAll(serverProps);
-            props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(this.bftReplicationFactor));
-            cc.loadInitialConfigurationFromProperties(props);
-        }
+        final ClusterConfiguration cc = this.clusterConfiguration;
+        final Properties props = new Properties();
+        final Map<String, String> serverProps = cc.putTokensAroundRingProps(new ArrayList<String>(servers.keySet()));
+        props.putAll(serverProps);
+        props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(this.bftReplicationFactor));
+        cc.loadInitialConfigurationFromProperties(props);
     }
 
     private void checkNumberOfFaultyCorrect(int servers, int bftFautlyReplicas) {
@@ -84,12 +91,13 @@ public class MochiVirtualCluster implements Closeable {
         }
     }
 
-    private void addMochiServer() {
-        final InMemoryDSMochiContextImpl mochiContext = new InMemoryDSMochiContextImpl();
+    private void addMochiServer(final String serverId) {
+        final InMemoryDSMochiContextImpl mochiContext = new InMemoryDSMochiContextImpl(clusterConfiguration, serverId);
         final MochiServer ms = newMochiServer(nextPort, mochiContext);
         nextPort += 1;
         final VirtualServer vs = new VirtualServer(ms, mochiContext);
-        servers.put(mochiContext.getServerId(), vs);
+        Assert.assertEquals(mochiContext.getServerId(), serverId);
+        servers.put(serverId, vs);
     }
 
     private MochiServer newMochiServer(final int serverPort, final MochiContext mochiContext) {

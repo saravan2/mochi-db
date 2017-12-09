@@ -20,6 +20,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.jcabi.aspects.Loggable;
 
+import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
 import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
@@ -50,16 +51,19 @@ public class MochiDBClient implements Closeable {
     private final MetricRegistry metricRegistry = new MetricRegistry();
     private volatile JmxReporter metricsJMXreporter;
 
-    final Timer metricsReadTransactionsTimer = metricRegistry.timer(getMetricName("read-transactions"));
-    final Timer metricsReadTransactionsStep1WaitTimer = metricRegistry
+    private final Timer metricsReadTransactionsTimer = metricRegistry.timer(getMetricName("read-transactions"));
+    private final Timer metricsReadTransactionsStep1WaitTimer = metricRegistry
             .timer(getMetricName("read-transactions-step1-future-wait"));
-    final Timer metricsWriteTransactionsTimer = metricRegistry.timer(getMetricName("write-transactions"));
+    private final Timer metricsWriteTransactionsTimer = metricRegistry.timer(getMetricName("write-transactions"));
 
-    public MochiDBClient() {
-        exposeMetricsOverJXM();
+    private final ClusterConfiguration clusterConfiguration;
+
+    public MochiDBClient(final ClusterConfiguration clusterConfiguration) {
+        this.clusterConfiguration = clusterConfiguration;
+        exposeMetricsOverJMX();
     };
     
-    protected void exposeMetricsOverJXM() {
+    protected void exposeMetricsOverJMX() {
         metricsJMXreporter = JmxReporter.forRegistry(metricRegistry).build();
         metricsJMXreporter.start();
     }

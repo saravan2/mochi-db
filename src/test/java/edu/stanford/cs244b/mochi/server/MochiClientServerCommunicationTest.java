@@ -764,10 +764,12 @@ public class MochiClientServerCommunicationTest {
     }
 
     private MochiServer newMochiServer() {
-        return new MochiServer(new InMemoryDSMochiContextImpl());
+        return new MochiServer(new InMemoryDSMochiContextImpl(new ClusterConfiguration(),
+                MochiContextImpl.generateNewServerId()));
     }
 
     private MochiServer newMochiServer(final int serverPort) {
-        return new MochiServer(serverPort, new InMemoryDSMochiContextImpl());
+        return new MochiServer(serverPort, new InMemoryDSMochiContextImpl(new ClusterConfiguration(),
+                MochiContextImpl.generateNewServerId()));
     }
 }
