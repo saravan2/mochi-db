@@ -174,7 +174,7 @@ public class MochiClientServerCommunicationTest {
     public void testReadOperation() throws InterruptedException, ExecutionException {
 
         final int numberOfServersToTest = 4;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();
@@ -227,8 +227,7 @@ public class MochiClientServerCommunicationTest {
     @Test(dependsOnMethods = { "testReadOperation" })
     public void testDeleteOperation() throws InterruptedException, ExecutionException {
 
-        final int numberOfServersToTest = 4;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();
@@ -321,8 +320,7 @@ public class MochiClientServerCommunicationTest {
 
     @Test(dependsOnMethods = { "testDeleteOperation" })
     public void testWriteOperation() throws InterruptedException, ExecutionException {
-        final int numberOfServersToTest = 4;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
         final MochiDBClient mochiDBclient = new MochiDBClient();
@@ -395,8 +393,7 @@ public class MochiClientServerCommunicationTest {
     // our test clients accept write and read failures.
     public void testWriteOperationConcurrent() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrent");
-        final int numberOfServersToTest = 4;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
         final int numberOfCurrentClients = 5;
@@ -612,9 +609,8 @@ public class MochiClientServerCommunicationTest {
     @Test(dependsOnMethods = { "testWriteOperationConcurrent" })
     public void testWriteOperationConcurrentStressTest() throws InterruptedException, ExecutionException {
         LOG.debug("Starting testWriteOperationConcurrentStressTest");
-        final int numberOfServersToTest = 4;
         final int numberOfKeysToEachClient = 40;
-        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster(numberOfServersToTest, 1);
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
         mochiVirtualCluster.startAllServers();
 
         final int numberOfCurrentClients = 5;

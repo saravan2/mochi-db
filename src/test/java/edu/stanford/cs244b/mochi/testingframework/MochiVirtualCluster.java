@@ -26,16 +26,22 @@ public class MochiVirtualCluster implements Closeable {
 
     private final HashMap<String, VirtualServer> servers;
     private final HashMap<Integer, String> tokenDivision;
+    private volatile int bftReplicationFactor;
     
-    public MochiVirtualCluster(int initialNumberOfServers, int bftFautlyReplicas) {
-        Assert.assertTrue(initialNumberOfServers > 0);
-        Assert.assertTrue(bftFautlyReplicas > 0);
-        checkNumberOfFaultyCorrect(initialNumberOfServers, bftFautlyReplicas);
+    public MochiVirtualCluster() {
+        this(5, 4);
+    }
+
+    public MochiVirtualCluster(int initialNumberOfServers, int bftReplicationFactor) {
+        Assert.assertTrue(initialNumberOfServers >= 4);
+        Assert.assertTrue(bftReplicationFactor >= 4);
+        Assert.assertTrue(bftReplicationFactor <= initialNumberOfServers);
         servers = new HashMap<String, VirtualServer>(initialNumberOfServers * 2);
         tokenDivision = new HashMap<Integer, String>(ClusterConfiguration.SHARD_TOKENS);
         for (int i = 0 ; i < initialNumberOfServers; i++) {
             addMochiServer();
         }
+        this.bftReplicationFactor = bftReplicationFactor;
         giveTokensToServers(initialNumberOfServers);
         setInitialMochiServersConfiguration();
     }
@@ -59,7 +65,7 @@ public class MochiVirtualCluster implements Closeable {
             final Map<String, String> serverProps = cc
                     .putTokensAroundRingProps(new ArrayList<String>(servers.keySet()));
             props.putAll(serverProps);
-            props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(servers.size()));
+            props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(this.bftReplicationFactor));
             cc.loadInitialConfigurationFromProperties(props);
         }
     }
