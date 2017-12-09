@@ -50,9 +50,9 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.dropwizard</groupId>
-		    <artifactId>dropwizard-core</artifactId>
-		    <version>1.2.2</version>
+			<groupId>io.dropwizard</groupId>
+			<artifactId>dropwizard-core</artifactId>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -136,6 +136,11 @@
 							<systemPropertyVariables>
 								<io.netty.eventLoopThreads>2</io.netty.eventLoopThreads>
 							</systemPropertyVariables>
+							<argLine>-Dcom.sun.management.jmxremote
+										-Dcom.sun.management.jmxremote.port=9010
+										-Dcom.sun.management.jmxremote.local.only=false
+										-Dcom.sun.management.jmxremote.authenticate=false
+										-Dcom.sun.management.jmxremote.ssl=false</argLine>
 						</configuration>
 					</execution>
 				</executions>
