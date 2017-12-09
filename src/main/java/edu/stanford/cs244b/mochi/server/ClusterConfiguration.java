@@ -95,14 +95,28 @@ public class ClusterConfiguration {
     }
 
     public String getServerForObject(final String object) {
-        return getServerForObjectHashCode(object.hashCode());
+        // TODO: remove hardcoded 4
+        final List<String> servers = getServersForObjectHashCode(object.hashCode(), 4);
+        return servers.get(0);
     }
 
-    public String getServerForObjectHashCode(int hashCode) {
+    public List<String> getServersForObjectHashCode(int hashCode, int bftReplicationFactor) {
+        Utils.assertTrue(bftReplicationFactor >= 4, "Replication factor for BFT should be >= 4");
         final Long hashCodeUnsigned = intToUnsignedLong(hashCode);
-        final Integer tokenVal = (int) (hashCodeUnsigned / SHARD_TOKEN_VALUE_RANGE);
-        final Long token = tokenNumberToTokenValue(tokenVal);
-        return getServerForToken(token);
+        final Integer tokenValStart = (int) (hashCodeUnsigned / SHARD_TOKEN_VALUE_RANGE);
+        final List<String> servers = new ArrayList<String>(bftReplicationFactor);
+        for (int i = 0; i < bftReplicationFactor; i++) {
+            final int ithTokenValue = (tokenValStart + i) % SHARD_TOKENS;
+            final Long token = tokenNumberToTokenValue(i);
+            final String server = getServerForToken(token);
+            if (servers.contains(server)) {
+                throw new IllegalStateException(String.format(
+                                "BFT requires all servers to be unique. Found collision for server %s. Replication factor %s, starting from token %s (%s). Collision token %s. All servers %s",
+                                server, bftReplicationFactor, ithTokenValue, token, i, servers));
+            }
+            servers.add(server);
+        }
+        return servers;
     }
 
     public String getServerForToken(Long token) {
