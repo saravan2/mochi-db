@@ -79,41 +79,45 @@ public class MochiClientServerCommunicationTest {
     public void testHelloToFromServerMultiple() throws InterruptedException {
         final int serverPort1 = 8001;
         final int serverPort2 = 8002;
-        MochiServer ms1 = newMochiServer(serverPort1);
-        ms1.start();
-        MochiServer ms2 = newMochiServer(serverPort2);
-        ms2.start();
-        LOG.info("Mochi servers started");
-
+        final MochiServer ms1 = newMochiServer(serverPort1);
+        final MochiServer ms2 = newMochiServer(serverPort2);
         final MochiMessaging mm = new MochiMessaging("testHelloToFromServerMultiple");
-        mm.waitForConnectionToBeEstablished(ms1.toServer());
-        mm.waitForConnectionToBeEstablished(ms2.toServer());
 
-        for (int i = 0; i < 2; i++) {
-            LOG.info("testHelloToFromServerMultiple iteration {}", i);
-            HelloFromServer hfs1 = mm.sayHelloToServer(ms1.toServer());
-            HelloFromServer hfs2 = mm.sayHelloToServer(ms2.toServer());
-            Assert.assertTrue(hfs1 != null);
-            Assert.assertTrue(hfs2 != null);
-            HelloFromServer2 hfs21 = mm.sayHelloToServer2(ms1.toServer());
-            HelloFromServer2 hfs22 = mm.sayHelloToServer2(ms2.toServer());
-            Assert.assertTrue(hfs21 != null);
-            Assert.assertTrue(hfs22 != null);
+        try {
+            ms1.start();
+            ms2.start();
+            LOG.info("Mochi servers started");
 
-            Assert.assertEquals(hfs1.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
-            Assert.assertEquals(hfs2.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
-            Assert.assertEquals(hfs1.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
-            Assert.assertEquals(hfs2.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+            mm.waitForConnectionToBeEstablished(ms1.toServer());
+            mm.waitForConnectionToBeEstablished(ms2.toServer());
 
-            Assert.assertEquals(hfs21.getClientMsg(), MochiMessaging.CLIENT_HELLO2_MESSAGE);
-            Assert.assertEquals(hfs22.getClientMsg(), MochiMessaging.CLIENT_HELLO2_MESSAGE);
-            Assert.assertEquals(hfs21.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
-            Assert.assertEquals(hfs22.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
+            for (int i = 0; i < 2; i++) {
+                LOG.info("testHelloToFromServerMultiple iteration {}", i);
+                HelloFromServer hfs1 = mm.sayHelloToServer(ms1.toServer());
+                HelloFromServer hfs2 = mm.sayHelloToServer(ms2.toServer());
+                Assert.assertTrue(hfs1 != null);
+                Assert.assertTrue(hfs2 != null);
+                HelloFromServer2 hfs21 = mm.sayHelloToServer2(ms1.toServer());
+                HelloFromServer2 hfs22 = mm.sayHelloToServer2(ms2.toServer());
+                Assert.assertTrue(hfs21 != null);
+                Assert.assertTrue(hfs22 != null);
+
+                Assert.assertEquals(hfs1.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+                Assert.assertEquals(hfs2.getClientMsg(), MochiMessaging.CLIENT_HELLO_MESSAGE);
+                Assert.assertEquals(hfs1.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+                Assert.assertEquals(hfs2.getMsg(), HelloToServerRequestHandler.HELLO_RESPONSE);
+
+                Assert.assertEquals(hfs21.getClientMsg(), MochiMessaging.CLIENT_HELLO2_MESSAGE);
+                Assert.assertEquals(hfs22.getClientMsg(), MochiMessaging.CLIENT_HELLO2_MESSAGE);
+                Assert.assertEquals(hfs21.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
+                Assert.assertEquals(hfs22.getMsg(), HelloToServer2RequestHandler.HELLO_RESPONSE);
+            }
+        } finally {
+
+            mm.close();
+            ms1.close();
+            ms2.close();
         }
-
-        mm.close();
-        ms1.close();
-        ms2.close();
     }
 
     @Test(dependsOnMethods = { "testHelloToFromServerMultiple" })
@@ -444,10 +448,8 @@ public class MochiClientServerCommunicationTest {
 
         Utils.busyWaitForFutures(futures);
 
-        i = 0;
         for (final MochiConcurrentTestRunnable r : runnables) {
-            LOG.info("Succeeded operation for client {}", i);
-            i++;
+            LOG.info("Succeeded operation for client {}", r.mochiDBclient.getClientID());
             Assert.assertTrue(r.getTestPassed());
         }
         mochiVirtualCluster.close();
@@ -466,13 +468,14 @@ public class MochiClientServerCommunicationTest {
 
 
         public void run() {
-            LOG.debug("MochiConcurrentTestRunnable starting test");
+            LOG.debug("MochiConcurrentTestRunnable starting test for client {}", mochiDBclient.getClientID());
             testPassed = null;
             try {
                 runTest();
+                LOG.info("MochiConcurrentTestRunnable: Passed test mochiClient {}", mochiDBclient.getClientID());
                 testPassed = true;
             } catch (Exception ex) {
-                LOG.info("Test failed !!!");
+                LOG.info("MochiConcurrentTestRunnable: Test failed for mochiClient {}", mochiDBclient.getClientID());
                 testPassed = false;
                 throw new RuntimeException(ex);
             }
@@ -614,12 +617,12 @@ public class MochiClientServerCommunicationTest {
 
         Utils.busyWaitForFutures(futures);
 
-        int i = 0;
         for (final MochiConcurrentStreeTestRunnable r : runnables) {
-            LOG.info("Succeeded stress test operation for client {}", i);
-            i++;
+            LOG.info("Succeeded stress test operation for client {}", r.mochiDBclient.getClientID());
             Assert.assertTrue(r.getTestPassed());
         }
+
+        // Thread.sleep(120 * 1000);
         mochiVirtualCluster.close();
         for (final MochiDBClient c : clients) {
             c.close();
@@ -672,7 +675,17 @@ public class MochiClientServerCommunicationTest {
                 mochiDBclient.executeWriteTransaction(tb.build());
             }
             LOG.info("Step 0: finished. Client {}", mochiDBclient.getClientID());
-            
+            shuffleArray(keyEndingNums);
+            LOG.info("Step 1: Executing reads");
+            for (int i = 0; i < keyEndingNums.length; i++) {
+                final String key = String.format("DEMO_KEY_STRESS_TEST_%s", keyEndingNums[i]);
+                final String val = String.format("New Value for key %s", key);
+                final TransactionBuilder tb = TransactionBuilder.startNewTransaction().addReadOperation(key);
+                TransactionResult tr = mochiDBclient.executeReadTransaction(tb.build());
+                final String gotVal = tr.getOperationsList().get(0).getResult();
+                Assert.assertEquals(gotVal, val);
+            }
+            LOG.info("Step 1 finished. Client {}", mochiDBclient.getClientID());
             // TODO: add reads
             LOG.info("Concurrent Client {} ends test", mochiDBclient.getClientID());
         }
