@@ -18,4 +18,4 @@ docker images "${mochi_docker_tag}"
 
 echo "Trying to push"
 #docker push "${aws_docker}" || echo "Pushing docker image failed"
-docker push "${mochi_docker_tag}" || echo "Pushing docker image failed"
+docker push "${dockerhub_tag}" || echo "Pushing docker image failed"
