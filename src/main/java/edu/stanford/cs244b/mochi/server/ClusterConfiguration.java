@@ -159,6 +159,15 @@ public class ClusterConfiguration {
     public List<String> getServersForObject(final String object) {
         return getServersForObjectHashCode(object.hashCode(), bftReplicationFactor);
     }
+    
+    public Set<Server> getServerSetStoringObject(final String object) {
+        List<String> serverNames = getServersForObject(object);
+        Set<Server> serverSet = new HashSet<Server>();
+        for (String name : serverNames ) {
+            serverSet.add(servers.get(name));
+        }
+        return serverSet;
+    }
 
     public List<String> getServersForObjectHashCode(int hashCode, int bftReplicationFactor) {
         Utils.assertTrue(bftReplicationFactor >= 4,

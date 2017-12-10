@@ -2,6 +2,7 @@ package edu.stanford.cs244b.mochi.client;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,8 +116,13 @@ public class MochiDBClient implements Closeable {
         rbuilder.setNonce(Utils.getUUID());
         rbuilder.setTransaction(transactionToExecute);
 
-        final Set<Server> relevantServers = clusterConfiguration.getAllServers();
-        // TODO: get servers which are only needed for transactionToExecute
+        Set<Server> relevantServers = new HashSet<Server>();
+        final List<Operation> transactionOps = transactionToExecute.getOperationsList();
+        for (final Operation op : transactionOps) {
+            Set<Server> serverSet = clusterConfiguration.getServerSetStoringObject(op.getOperand1());
+            relevantServers.addAll(serverSet);
+        }
+        
         final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder, relevantServers,
                 mochiMessaging);
 
@@ -127,6 +133,7 @@ public class MochiDBClient implements Closeable {
             context.stop();
         }
         LOG.debug("Resolved readResponse futures");
+        
         final List<ProtocolMessage> readResponseProtocalMessages = Utils.getFutures(readResponseFutures);
         
         final List<ReadFromServer> readFromServers = new ArrayList<ReadFromServer>(relevantServers.size());
@@ -137,8 +144,38 @@ public class MochiDBClient implements Closeable {
         }
         // To get transaction result, we can select any readFromServers
         // TODO: build TransactionResult by getting different responses
-        final ReadFromServer someReadFromServer = readFromServers.get(0);
-        final TransactionResult transactionResult = someReadFromServer.getResult();
+        int[] consistentTRCount = new int[transactionOps.size()];
+        List<OperationResult> coalescedResult = new ArrayList<OperationResult>(transactionOps.size());
+        
+        for (int index = 0; index < transactionOps.size(); index++) {
+            coalescedResult.add(null);
+            consistentTRCount[index] = 0;
+        }
+        
+        for (ReadFromServer response : readFromServers) {
+            TransactionResult tr = response.getResult();
+            final List<OperationResult> operations = tr.getOperationsList();
+            if (operations.size() != transactionOps.size()) {
+                throw new InconsistentReadException();
+            }
+            for (int index = 0; index < transactionOps.size(); index++) {
+                OperationResult or = operations.get(index);
+                if (or.getStatus() != OperationResultStatus.WRONG_SHARD) {
+                    consistentTRCount[index] = consistentTRCount[index] + 1;
+                    coalescedResult.set(index, or);
+                }
+            }
+        }
+        
+        for (int index = 0; index < transactionOps.size(); index++) {
+            if (consistentTRCount[index] < clusterConfiguration.getServerMajority()) {
+                throw new InconsistentReadException();
+            }
+        }
+                
+        final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
+        transactionResultBuilder.addAllOperations(coalescedResult);
+        final TransactionResult transactionResult = transactionResultBuilder.build();
         return transactionResult;
     }
 
