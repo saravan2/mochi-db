@@ -133,4 +133,8 @@ public class MochiServer implements Closeable {
         mochiServerThread.interrupt();
         workerThreads.shutdownNow();
     }
+
+    public int getServerPort() {
+        return serverPort;
+    }
 }

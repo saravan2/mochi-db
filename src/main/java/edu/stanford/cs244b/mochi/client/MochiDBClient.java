@@ -2,9 +2,7 @@ package edu.stanford.cs244b.mochi.client;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -48,7 +46,6 @@ public class MochiDBClient implements Closeable {
     private final AtomicLong operationNumberCounter = new AtomicLong(1);
     private final String mochiDBClientID = Utils.getUUIDwithPref(Utils.UUID_PREFIXES.CLIENT);
     private final MochiMessaging mochiMessaging = new MochiMessaging(mochiDBClientID);
-    private final Set<Server> servers = new HashSet<Server>();
 
     private final MetricRegistry metricRegistry = new MetricRegistry();
     private volatile JmxReporter metricsJMXreporter;
@@ -70,24 +67,12 @@ public class MochiDBClient implements Closeable {
         metricsJMXreporter.start();
     }
 
-    public void addServers(final Server... servers) {
-        for (final Server s : servers) {
-            this.servers.add(s);
-        }
-    }
-
-    public void addServers(final Collection<Server> servers) {
-        for (final Server s : servers) {
-            this.servers.add(s);
-        }
-    }
-    
     public String getClientID() {
         return mochiDBClientID;
     }
 
     public void waitForConnectionToBeEstablishedToServers() {
-        for (final Server s : servers) {
+        for (final Server s : clusterConfiguration.getAllServers()) {
             mochiMessaging.waitForConnectionToBeEstablished(s);
             LOG.debug("Connection to server {} was established", s);
         }
@@ -130,7 +115,8 @@ public class MochiDBClient implements Closeable {
         rbuilder.setNonce(Utils.getUUID());
         rbuilder.setTransaction(transactionToExecute);
 
-        final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder, servers,
+        final Set<Server> relevantServers = clusterConfiguration.getAllServers();
+        final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder, relevantServers,
                 mochiMessaging);
 
         final Timer.Context context = this.metricsReadTransactionsStep1WaitTimer.time();
@@ -142,7 +128,7 @@ public class MochiDBClient implements Closeable {
         LOG.debug("Resolved readResponse futures");
         final List<ProtocolMessage> readResponseProtocalMessages = Utils.getFutures(readResponseFutures);
         
-        final List<ReadFromServer> readFromServers = new ArrayList<ReadFromServer>(servers.size());
+        final List<ReadFromServer> readFromServers = new ArrayList<ReadFromServer>(relevantServers.size());
         for (final ProtocolMessage pm : readResponseProtocalMessages) {
             final ReadFromServer readFromServer = pm.getReadFromServer();
             Utils.assertNotNull(readFromServer, "readFromServer is null");
@@ -193,6 +179,8 @@ public class MochiDBClient implements Closeable {
 
     private TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
         Map<String, MultiGrant> write1mutiGrants, write1RefusedMultiGrants;
+        final Set<Server> relevantServers = clusterConfiguration.getAllServers();
+
         while (true) {
             Random rand = new Random();
             final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
@@ -208,13 +196,13 @@ public class MochiDBClient implements Closeable {
             write1toServerBuilder.setTransaction(tb.build());
             write1toServerBuilder.setSeed(rand.nextInt(1000));
             write1toServerBuilder.setTransactionHash(Utils.objectSHA512(transactionToExecute));
-            final List<Future<ProtocolMessage>> write1responseFutures = Utils.sendMessageToServers(write1toServerBuilder,
-                    servers, mochiMessaging);
+            final List<Future<ProtocolMessage>> write1responseFutures = Utils.sendMessageToServers(
+                    write1toServerBuilder, relevantServers, mochiMessaging);
             Utils.busyWaitForFutures(write1responseFutures);
             LOG.debug("Resolved write1response futures");
             final List<ProtocolMessage> write1responseProtocalMessages = Utils.getFutures(write1responseFutures);
     
-            final List<Object> messages1FromServers = new ArrayList<Object>(servers.size());
+            final List<Object> messages1FromServers = new ArrayList<Object>(relevantServers.size());
             // TODO: consider majority of votes
             boolean allWriteOk = true;
             for (ProtocolMessage pm : write1responseProtocalMessages) {
@@ -286,12 +274,13 @@ public class MochiDBClient implements Closeable {
         write2ToServerBuilder.setTransaction(transactionToExecute);
 
         final List<Future<ProtocolMessage>> write2responseFutures = Utils.sendMessageToServers(write2ToServerBuilder,
-                servers, mochiMessaging);
+                relevantServers, mochiMessaging);
         Utils.busyWaitForFutures(write2responseFutures);
         LOG.debug("Resolved write2response futures");
         final List<ProtocolMessage> write2responseProtocolMessages = Utils.getFutures(write2responseFutures);
 
-        final List<Write2AnsFromServer> write2ansFromServers = new ArrayList<Write2AnsFromServer>(servers.size());
+        final List<Write2AnsFromServer> write2ansFromServers = new ArrayList<Write2AnsFromServer>(
+                relevantServers.size());
         for (final ProtocolMessage pm : write2responseProtocolMessages) {
             final Write2AnsFromServer write2AnsFromServer = pm.getWrite2AnsFromServer();
             Utils.assertNotNull(write2AnsFromServer, "write2AnsFromServer is null");

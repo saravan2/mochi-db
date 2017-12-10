@@ -1,8 +1,17 @@
 package edu.stanford.cs244b.mochi.server.messaging;
 
+import edu.stanford.cs244b.mochi.server.Utils;
+
 public class Server {
     private final String serverName;
     private final int port;
+
+    public Server(final String serverUrl) {
+        final String[] hostPort = serverUrl.split(":");
+        Utils.assertTrue(hostPort.length == 2, String.format("Invalid format for '%s'", serverUrl));
+        this.serverName = hostPort[0];
+        this.port = Integer.parseInt(hostPort[1]);
+    }
 
     public Server(String serverName, int port) {
         super();

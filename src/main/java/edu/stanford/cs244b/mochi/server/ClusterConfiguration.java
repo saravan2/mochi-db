@@ -2,14 +2,18 @@ package edu.stanford.cs244b.mochi.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import edu.stanford.cs244b.mochi.server.messaging.Server;
 
 public class ClusterConfiguration {
     private final static Logger LOG = LoggerFactory.getLogger(ClusterConfiguration.class);
@@ -25,11 +29,13 @@ public class ClusterConfiguration {
     public static final String PROPERTY_URL_SERVERS = "_CONFIG_SERVER_%s_URL";
 
     private ConcurrentHashMap<Long, String> tokensToServers;
+    private ConcurrentHashMap<String, Server> servers;
     private int bftReplicationFactor = -1;
     private int clusterConfigurationstamp = 1;
 
     public ClusterConfiguration() {
         tokensToServers = new ConcurrentHashMap<Long, String>(getShardTokens());
+        servers = new ConcurrentHashMap<String, Server>();
     }
 
     public ClusterConfiguration(final ClusterConfiguration existingCC) {
@@ -37,6 +43,7 @@ public class ClusterConfiguration {
             this.bftReplicationFactor = existingCC.bftReplicationFactor;
             this.clusterConfigurationstamp = existingCC.clusterConfigurationstamp;
             this.tokensToServers = new ConcurrentHashMap<Long, String>(existingCC.tokensToServers);
+            this.servers = new ConcurrentHashMap<String, Server>(existingCC.servers);
         }
     }
 
@@ -73,13 +80,41 @@ public class ClusterConfiguration {
         return serverToTokensProps;
     }
 
+    public Set<Server> getAllServers() {
+        final Set<Server> outServers = new HashSet<Server>();
+        for (final Server s : servers.values()) {
+            outServers.add(s);
+        }
+        return outServers;
+    }
+
+    public Set<String> getAllServerIds() {
+        return servers.keySet();
+    }
+
+    public Map<String, Server> getSeverIdToServerMapping() {
+        final Map<String, Server> outServers = new HashMap<String, Server>();
+        for (final String serverId : servers.keySet()) {
+            outServers.put(serverId, servers.get(serverId));
+        }
+        return outServers;
+    }
+
     public void loadInitialConfigurationFromProperties(final Properties props) {
         LOG.debug("Loading initial configuration from properties {}", props);
         final String[] allServers = splitMultiple(props.getProperty(PROPERTY_SERVERS, ""));
-        for (final String s : allServers) {
-            final String[] tokensForServer = splitMultiple(props.getProperty(String.format(PROPERTY_PREF_SERVERS, s),
+        for (final String serverId : allServers) {
+            // Getting server
+            final String serverUrl = props.getProperty(String.format(PROPERTY_URL_SERVERS, serverId), null);
+            if (serverUrl == null) {
+                throw new IllegalStateException(String.format("Missing server url for id %s", serverId));
+            }
+            servers.put(serverId, new Server(serverUrl));
+            
+            // Getting token
+            final String[] tokensForServer = splitMultiple(props.getProperty(String.format(PROPERTY_PREF_SERVERS, serverId),
                     ""));
-            LOG.debug("{} tokens are given to server {}", tokensForServer.length, s);
+            LOG.debug("{} tokens are given to server {}", tokensForServer.length, serverId);
             for (final String tokenS : tokensForServer) {
                 Integer tokenNumber = Integer.parseInt(tokenS);
                 if (tokenNumber >= SHARD_TOKENS) {
@@ -90,7 +125,7 @@ public class ClusterConfiguration {
                     throw new IllegalStateException(String.format("Mutple mapping for token: %s (number %s)", token,
                             tokenNumber));
                 }
-                tokensToServers.put(token, s);
+                tokensToServers.put(token, serverId);
 
             }
         }

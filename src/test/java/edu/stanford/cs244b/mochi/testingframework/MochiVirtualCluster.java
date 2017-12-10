@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -53,15 +52,26 @@ public class MochiVirtualCluster implements Closeable {
 
         setInitialMochiClusterConfiguration();
 
-        for (final String serverId : new HashSet<String>(servers.keySet())) {
-            addMochiServer(serverId);
+        final Map<String,Server> servrs = clusterConfiguration.getSeverIdToServerMapping();
+        
+        for (final String serverId : servrs.keySet()) {
+            final InMemoryDSMochiContextImpl mochiContext = new InMemoryDSMochiContextImpl(clusterConfiguration,
+                    serverId);
+            final int serverPort = servrs.get(serverId).getPort();
+            final MochiServer ms = newMochiServer(serverPort, mochiContext);
+            final VirtualServer vs = new VirtualServer(ms, mochiContext);
+            Assert.assertEquals(mochiContext.getServerId(), serverId);
+            servers.put(serverId, vs);
         }
 
     }
     
+    protected String toPropertyUrl(final int port) {
+        return String.format("127.0.0.1:%s", port);
+    }
+
     public MochiDBClient getMochiDBClient() {
         final MochiDBClient mochiDBclient = new MochiDBClient(clusterConfiguration);
-        mochiDBclient.addServers(this.getAllServers());
         return mochiDBclient;
     }
 
@@ -81,6 +91,14 @@ public class MochiVirtualCluster implements Closeable {
         final Map<String, String> serverProps = cc.putTokensAroundRingProps(new ArrayList<String>(servers.keySet()));
         props.putAll(serverProps);
         props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, Integer.toString(this.bftReplicationFactor));
+
+        // Adding properties for servers
+        for (final String serverId : servers.keySet()) {
+            final String propKey = String.format(ClusterConfiguration.PROPERTY_URL_SERVERS, serverId);
+            final String propValue = toPropertyUrl(nextPort);
+            nextPort += 1;
+            props.put(propKey, propValue);
+        }
         cc.loadInitialConfigurationFromProperties(props);
     }
 
@@ -89,15 +107,6 @@ public class MochiVirtualCluster implements Closeable {
         if (servers < minNumberOfServers) {
             throw new IllegalStateException("Too little servers to support specified BFT");
         }
-    }
-
-    private void addMochiServer(final String serverId) {
-        final InMemoryDSMochiContextImpl mochiContext = new InMemoryDSMochiContextImpl(clusterConfiguration, serverId);
-        final MochiServer ms = newMochiServer(nextPort, mochiContext);
-        nextPort += 1;
-        final VirtualServer vs = new VirtualServer(ms, mochiContext);
-        Assert.assertEquals(mochiContext.getServerId(), serverId);
-        servers.put(serverId, vs);
     }
 
     private MochiServer newMochiServer(final int serverPort, final MochiContext mochiContext) {
