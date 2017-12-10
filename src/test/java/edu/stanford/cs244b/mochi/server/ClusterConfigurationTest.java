@@ -98,7 +98,17 @@ public class ClusterConfigurationTest {
                     minNumberOfServerOccurences));
         }
 
-    }
+        props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, "4");
+        cc.loadInitialConfigurationFromProperties(props);
+        
+        Assert.assertEquals(cc.getServerMajority(), 3);
+        
+        // 3 * 2 + 1
+        props.put(ClusterConfiguration.PROPERTY_BFT_REPLICATION, "7");
+        cc.loadInitialConfigurationFromProperties(props);
+        // 2 * 2 + 1 = 5
+        Assert.assertEquals(cc.getServerMajority(), 5);
 
+    }
 
 }

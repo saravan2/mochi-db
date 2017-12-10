@@ -212,4 +212,13 @@ public class ClusterConfiguration {
     public int getClusterConfigurationstamp() {
         return clusterConfigurationstamp;
     }
+
+    public int getReplicationFactor() {
+        return bftReplicationFactor;
+    }
+
+    public int getServerMajority() {
+        final int f = getReplicationFactor() / 3;
+        return 2 * f + 1;
+    }
 }
