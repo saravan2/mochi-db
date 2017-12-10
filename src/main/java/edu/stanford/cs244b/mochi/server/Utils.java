@@ -52,6 +52,10 @@ public class Utils {
         }
     }
 
+    public static void assertNotNull(final Object o) {
+        assertNotNull(o, "Object is null");
+    }
+
     public static void assertNotNull(final Object o, final String msg) {
         if (o == null) {
             throw new IllegalStateException(msg);

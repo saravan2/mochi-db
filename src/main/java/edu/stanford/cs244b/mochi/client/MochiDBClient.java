@@ -25,6 +25,8 @@ import edu.stanford.cs244b.mochi.server.Utils;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Grant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResultStatus;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ProtocolMessage.PayloadCase;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
@@ -99,11 +101,24 @@ public class MochiDBClient implements Closeable {
         return operationNumberCounter.getAndIncrement();
     }
     
+    protected void validateThatAllResponsesAreOk(final TransactionResult tr) {
+        Utils.assertNotNull(tr);
+        final List<OperationResult> operationResult = tr.getOperationsList();
+        for (OperationResult result : operationResult) {
+            if (result.getStatus() == OperationResultStatus.WRONG_SHARD) {
+                throw new IllegalStateException(
+                        "Response should not contain wrong shard. Client should have merged the results");
+            }
+        }
+    }
+
     @Loggable()
     public TransactionResult executeReadTransaction(final Transaction transactionToExecute) {
         final Timer.Context context = this.metricsReadTransactionsTimer.time();
         try {
-            return executeReadTransactionBL(transactionToExecute);
+            final TransactionResult tr = executeReadTransactionBL(transactionToExecute);
+            validateThatAllResponsesAreOk(tr);
+            return tr;
         } finally {
             context.stop();
         }
@@ -143,7 +158,9 @@ public class MochiDBClient implements Closeable {
     public TransactionResult executeWriteTransaction(final Transaction transactionToExecute) {
         final Timer.Context context = this.metricsWriteTransactionsTimer.time();
         try {
-            return executeWriteTransactionBL(transactionToExecute);
+            final TransactionResult tr = executeWriteTransactionBL(transactionToExecute);
+            validateThatAllResponsesAreOk(tr);
+            return tr;
         } finally {
             context.stop();
         }

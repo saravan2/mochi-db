@@ -121,6 +121,10 @@ public class ClusterConfiguration {
         return servers.get(0);
     }
 
+    public List<String> getServersForObject(final String object) {
+        return getServersForObjectHashCode(object.hashCode(), bftReplicationFactor);
+    }
+
     public List<String> getServersForObjectHashCode(int hashCode, int bftReplicationFactor) {
         Utils.assertTrue(bftReplicationFactor >= 4,
                 String.format("Replication factor for BFT should be >= 4. %s specified", bftReplicationFactor));

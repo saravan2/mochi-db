@@ -42,10 +42,17 @@ message Transaction {
     repeated .edu.stanford.cs244b.mochi.server.messages.Operation operations = 1;
 }
 
+enum OperationResultStatus {
+    OK = 0;
+    WRONG_SHARD = 1;
+}
+
 message OperationResult {
     string result = 1;
     WriteCertificate currentCertificate = 2;
-    bool existed = 3; 
+    bool existed = 3;
+    OperationResultStatus status = 4;
+    
 }
 
 message TransactionResult {

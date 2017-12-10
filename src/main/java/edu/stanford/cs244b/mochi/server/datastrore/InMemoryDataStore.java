@@ -24,6 +24,7 @@ import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.MultiGrant;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.Operation;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationAction;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResult;
+import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.OperationResultStatus;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadFromServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.ReadToServer;
 import edu.stanford.cs244b.mochi.server.messages.MochiProtocol.RequestFailedFromServer;
@@ -58,9 +59,15 @@ public class InMemoryDataStore implements DataStore {
         }
     }
 
-    protected void checkObjectForShardCorrect(final String key) {
-        int keyHash = key.hashCode();
-        // TODO: go to cluster configuration
+    protected boolean objectBelongsToCurrentShardServer(final String key) {
+        if (key.startsWith(CONFIG_KEY_PREFIX)) {
+            return true;
+        }
+        final List<String> serversForKey = clusterConfiguration.getServersForObject(key);
+        final String currentServerId = mochiContext.getServerId();
+        Utils.assertNotNull(serversForKey);
+        Utils.assertNotNull(currentServerId);
+        return serversForKey.contains(currentServerId);
     }
 
     protected OperationResult processRead(final Operation op) {
@@ -68,6 +75,11 @@ public class InMemoryDataStore implements DataStore {
         checkOp1IsNonEmptyKeyError(interestedKey);
         LOG.debug("Performing processRead on key: {}", interestedKey);
         final StoreValueObjectContainer<String> keyStoreValue = getDataMap(interestedKey).get(interestedKey);
+        final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
+        if (objectBelongsToCurrentShardServer(interestedKey) == false) {
+            operationResultBuilder.setStatus(OperationResultStatus.WRONG_SHARD);
+            return operationResultBuilder.build();
+        }
         final String valueForTheKey;
         final WriteCertificate currentC;
         if (keyStoreValue == null) {
@@ -77,12 +89,13 @@ public class InMemoryDataStore implements DataStore {
             valueForTheKey = keyStoreValue.getValue();
             currentC = keyStoreValue.getCurrentC();
         }
-        final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
+
         if (valueForTheKey != null) {
             operationResultBuilder.setResult(valueForTheKey);
         }
         operationResultBuilder.setExisted(keyStoreValue.isValueAvailble());
         operationResultBuilder.setCurrentCertificate(currentC);
+        operationResultBuilder.setStatus(OperationResultStatus.OK);
         return operationResultBuilder.build();
     }
 
@@ -470,6 +483,7 @@ public class InMemoryDataStore implements DataStore {
             }
             resultBuilder.setExisted(isAvailable);
             resultBuilder.setResult(newValue);
+            resultBuilder.setStatus(OperationResultStatus.OK);
             LOG.debug("Moving epoch to {} for key {}", storeValueContainer.getCurrentEpoch(), op.getOperand1());
             final OperationResult oprationResult = resultBuilder.build();
             return oprationResult;
@@ -490,6 +504,7 @@ public class InMemoryDataStore implements DataStore {
             resultBuilder.setCurrentCertificate(storeValueContainer.getCurrentC());
             resultBuilder.setExisted(true);
             resultBuilder.setResult(storeValueContainer.getValue());
+            resultBuilder.setStatus(OperationResultStatus.OK);
             final OperationResult oprationResult = resultBuilder.build();
             return oprationResult;
         } else {
