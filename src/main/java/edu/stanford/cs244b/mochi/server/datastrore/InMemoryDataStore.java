@@ -76,6 +76,7 @@ public class InMemoryDataStore implements DataStore {
         LOG.debug("Performing processRead on key: {}", interestedKey);
         final StoreValueObjectContainer<String> keyStoreValue = getDataMap(interestedKey).get(interestedKey);
         final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
+        // TODO: do exactly the same stuff for write and delete
         if (objectBelongsToCurrentShardServer(interestedKey) == false) {
             operationResultBuilder.setStatus(OperationResultStatus.WRONG_SHARD);
             return operationResultBuilder.build();

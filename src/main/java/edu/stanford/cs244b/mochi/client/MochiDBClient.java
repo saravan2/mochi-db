@@ -116,6 +116,7 @@ public class MochiDBClient implements Closeable {
         rbuilder.setTransaction(transactionToExecute);
 
         final Set<Server> relevantServers = clusterConfiguration.getAllServers();
+        // TODO: get servers which are only needed for transactionToExecute
         final List<Future<ProtocolMessage>> readResponseFutures = Utils.sendMessageToServers(rbuilder, relevantServers,
                 mochiMessaging);
 
@@ -135,6 +136,7 @@ public class MochiDBClient implements Closeable {
             readFromServers.add(readFromServer);
         }
         // To get transaction result, we can select any readFromServers
+        // TODO: build TransactionResult by getting different responses
         final ReadFromServer someReadFromServer = readFromServers.get(0);
         final TransactionResult transactionResult = someReadFromServer.getResult();
         return transactionResult;
@@ -179,6 +181,8 @@ public class MochiDBClient implements Closeable {
 
     private TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
         Map<String, MultiGrant> write1mutiGrants, write1RefusedMultiGrants;
+
+        // TODO: make request to reveral servers only
         final Set<Server> relevantServers = clusterConfiguration.getAllServers();
 
         while (true) {
@@ -243,13 +247,12 @@ public class MochiDBClient implements Closeable {
             }
             
             if (isUniformTimeStampInMultiGrants(write1mutiGrants, transactionToExecute) == false) {
+                LOG.info("Going to retry as timestamps on multigrants did not match");
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
-                LOG.info("Going to retry as timestamps on multigrants did not match");
                 continue;
             }
     
@@ -288,6 +291,7 @@ public class MochiDBClient implements Closeable {
         }
 
         // To get transaction result, we can select any write2ansFromServers
+        // TODO build TransactionResult by combining different responses
         final Write2AnsFromServer someWrite2AnsFromServer = write2ansFromServers.get(0);
         final TransactionResult transactionResult = someWrite2AnsFromServer.getResult();
         return transactionResult;
