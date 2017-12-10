@@ -109,6 +109,7 @@ message Grant {
     int64 timestamp = 2;
     int64 configstamp = 3;
     string transactionHash = 4;
+    OperationResultStatus status = 5;
 }
 
 
