@@ -10,4 +10,4 @@ EXPOSE 8080
 # Mochi communication
 EXPOSE 8081
 WORKDIR /opt/mochi-db/
-CMD java -jar /opt/mochi-db/mochi-db-*.jar
+CMD java -jar -DclusterConfig="${CLUSTER_CONFIG}" -DclusterCurrentServer="${CLUSTER_CURRENT_SERVER}" /opt/mochi-db/mochi-db-*.jar
