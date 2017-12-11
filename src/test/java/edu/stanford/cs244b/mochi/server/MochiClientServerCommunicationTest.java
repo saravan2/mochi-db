@@ -222,6 +222,38 @@ public class MochiClientServerCommunicationTest {
         mochiDBclient.close();
     }
 
+    // @Test(dependsOnMethods = { "testReadOperation" })
+    @Test
+    public void testDemo() throws InterruptedException, ExecutionException {
+
+        final MochiVirtualCluster mochiVirtualCluster = new MochiVirtualCluster();
+        mochiVirtualCluster.startAllServers();
+        final MochiDBClient mochiDBclient = mochiVirtualCluster.getMochiDBClient();
+        mochiDBclient.waitForConnectionToBeEstablishedToServers();
+
+        // Start
+
+        final TransactionBuilder wtb = TransactionBuilder.startNewTransaction().addWriteOperation("KEY1", "Hello")
+                .addWriteOperation("KE2", "World");
+        mochiDBclient.executeWriteTransaction(wtb.build());
+
+        final TransactionBuilder rtb = TransactionBuilder.startNewTransaction().addReadOperation("KEY1")
+                .addReadOperation("KE2");
+
+        final TransactionResult readTransactionResult = mochiDBclient.executeReadTransaction(rtb.build());
+        final OperationResult or1tr2 = Utils.getOperationResult(readTransactionResult, 0);
+        final OperationResult or2tr2 = Utils.getOperationResult(readTransactionResult, 1);
+        Assert.assertEquals(or1tr2.getResult(), "Hello");
+        Assert.assertEquals(or2tr2.getResult(), "World");
+
+        // End
+
+        // Thread.currentThread().sleep(100 * 60 * 1000);
+
+        mochiVirtualCluster.close();
+        mochiDBclient.close();
+    }
+
     @Test(dependsOnMethods = { "testReadOperation" })
     public void testDeleteOperation() throws InterruptedException, ExecutionException {
 

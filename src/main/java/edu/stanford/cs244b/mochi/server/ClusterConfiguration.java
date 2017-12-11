@@ -1,5 +1,10 @@
 package edu.stanford.cs244b.mochi.server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +33,8 @@ public class ClusterConfiguration {
     public static final String PROPERTY_PREF_SERVERS = "_CONFIG_SERVER_%s_TOKENS";
     public static final String PROPERTY_URL_SERVERS = "_CONFIG_SERVER_%s_URL";
 
+    public static final String PATH_TO_PROPS_CONFIG_KEY = "clusterConfig";
+
     private ConcurrentHashMap<Long, String> tokensToServers;
     private ConcurrentHashMap<String, Server> servers;
     private int bftReplicationFactor = -1;
@@ -36,6 +43,7 @@ public class ClusterConfiguration {
     public ClusterConfiguration() {
         tokensToServers = new ConcurrentHashMap<Long, String>(getShardTokens());
         servers = new ConcurrentHashMap<String, Server>();
+        loadConfigurationFromFile();
     }
 
     public ClusterConfiguration(final ClusterConfiguration existingCC) {
@@ -45,6 +53,29 @@ public class ClusterConfiguration {
             this.tokensToServers = new ConcurrentHashMap<Long, String>(existingCC.tokensToServers);
             this.servers = new ConcurrentHashMap<String, Server>(existingCC.servers);
         }
+    }
+
+    private void loadConfigurationFromFile() {
+        final String pathToConfig = System.getProperty(PATH_TO_PROPS_CONFIG_KEY);
+        if (pathToConfig == null) {
+            LOG.info("No configuration specified");
+            return;
+        }
+        LOG.info("Loading configuration from {}", pathToConfig);
+        Utils.assertTrue(new File(pathToConfig).exists());
+        Properties props = new Properties();
+        InputStream input = null;
+        try {
+            input = new FileInputStream(pathToConfig);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            props.load(input);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        loadInitialConfigurationFromProperties(props);
     }
 
     public Map<String, String> putTokensAroundRingProps(final List<String> servers) {
