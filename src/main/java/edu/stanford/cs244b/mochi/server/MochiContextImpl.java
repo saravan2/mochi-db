@@ -22,6 +22,10 @@ public class MochiContextImpl implements MochiContext {
         setServerId(null);
     }
 
+    public MochiContextImpl(final String serverId) {
+        setServerId(serverId);
+    }
+
     protected void setServerId(final String serverId) {
         if (serverId == null) {
             this.serverId = generateNewServerId();
