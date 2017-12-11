@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,38 +192,61 @@ public class MochiDBClient implements Closeable {
         }
     }
     
-    private boolean isUniformTimeStampInMultiGrants(Map<String, MultiGrant> write1multiGrants, Transaction transaction) {
-        Utils.assertNotNull(write1multiGrants, "MultiGrants map should not be null");
-        Long timestamp = null;
-        for (final MultiGrant multiGrant : write1multiGrants.values()) {
+    private boolean isUniformTimeStampInMultiGrants(Map<String, MultiGrant> multiGrantsFromAllServers, Transaction transaction) {      
+        Utils.assertNotNull(multiGrantsFromAllServers, "MultiGrants map should not be null");
+        HashMap<String, Pair<Long, Grant>> coalescedTxnGrantMap = new HashMap<String, Pair<Long, Grant>>();
+        for (final MultiGrant multiGrant : multiGrantsFromAllServers.values()) {
             final Map<String, Grant> allGrants = multiGrant.getGrantsMap();
             Utils.assertNotNull(allGrants, "Grants map should not be null");
             final List<Operation> transactionOps = transaction.getOperationsList();
-            for (final Operation op : transactionOps) {
-                final Grant grantForCurrentKey = allGrants.get(op.getOperand1());
-                Utils.assertNotNull(grantForCurrentKey, "grantForCurrentKey map should not be null");
-                long timestampFromGrant = grantForCurrentKey.getTimestamp();
-                if (timestamp == null) {
-                    timestamp = timestampFromGrant;
-                } else {
-                    // Checking that is exactly the same
-                    if (timestamp != timestampFromGrant) {
-                        
-                        return false;
+                for (final Operation op : transactionOps) {
+                    final Grant grantForCurrentKey = allGrants.get(op.getOperand1());
+                    if (grantForCurrentKey == null) {
+                        continue;
+                    }
+                    long timestampFromGrant = grantForCurrentKey.getTimestamp();
+                    if (coalescedTxnGrantMap.containsKey(op.getOperand1())) {
+                        if (coalescedTxnGrantMap.get(op.getOperand1()).getValue0() != timestampFromGrant) {
+                            return false;
+                        }   
+                    } else {
+                        Pair<Long, Grant> entry = new Pair<Long, Grant>(timestampFromGrant, grantForCurrentKey);
+                        coalescedTxnGrantMap.put(op.getOperand1(), entry);
                     }
                 }
-            }
         }
         return true;
+    }
+    
+    private MultiGrant removeWrongShardGrantFromMultiGrant(MultiGrant mg) {
+        Map<String, Grant> grants = mg.getGrantsMap();
+        Set<String> interestedKeys = grants.keySet();
+        for (String interestedKey : interestedKeys) {
+            if (grants.get(interestedKey).getStatus() == OperationResultStatus.WRONG_SHARD) {
+                grants.remove(interestedKey);
+            }
+        }
+        final MultiGrant.Builder mgb = MultiGrant.newBuilder();
+        mgb.setClientId(mg.getClientId());
+        mgb.setServerId(mg.getServerId());
+        mgb.putAllGrants(grants);
+        return mgb.build();
+        
     }
 
     private TransactionResult executeWriteTransactionBL(final Transaction transactionToExecute) {
         Map<String, MultiGrant> write1mutiGrants, write1RefusedMultiGrants;
-
-        // TODO: make request to reveral servers only
-        final Set<Server> relevantServers = clusterConfiguration.getAllServers();
+        Set<Server> relevantServers = new HashSet<Server>();
+        final List<Operation> transactionOperations = transactionToExecute.getOperationsList();
+        for (final Operation ops : transactionOperations) {
+            Set<Server> serverSet = clusterConfiguration.getServerSetStoringObject(ops.getOperand1());
+            relevantServers.addAll(serverSet);
+        }
+     
 
         while (true) {
+
+
             Random rand = new Random();
             final Write1ToServer.Builder write1toServerBuilder = Write1ToServer.newBuilder();
             /*
@@ -269,15 +293,15 @@ public class MochiDBClient implements Closeable {
             
             for (Object messageFromServer : messages1FromServers) {
                 if (messageFromServer instanceof Write1OkFromServer) {
-                    final MultiGrant mg = ((Write1OkFromServer) messageFromServer).getMultiGrant();
+                    MultiGrant mg = ((Write1OkFromServer) messageFromServer).getMultiGrant();
                     Utils.assertNotNull(mg, "server1MultiGrant is null");
                     Utils.assertNotNull(mg.getServerId(), "serverId is null");
-                    write1mutiGrants.put(mg.getServerId(), mg);
+                    write1mutiGrants.put(mg.getServerId(), removeWrongShardGrantFromMultiGrant(mg));
                 } else if (messageFromServer instanceof Write1RefusedFromServer) {
-                    final MultiGrant mg = ((Write1RefusedFromServer) messageFromServer).getMultiGrant();
+                    MultiGrant mg = ((Write1RefusedFromServer) messageFromServer).getMultiGrant();
                     Utils.assertNotNull(mg, "server1MultiGrant is null");
                     Utils.assertNotNull(mg.getServerId(), "serverId is null");
-                    write1RefusedMultiGrants.put(mg.getServerId(), mg);
+                    write1RefusedMultiGrants.put(mg.getServerId(), removeWrongShardGrantFromMultiGrant(mg));
                 } else {
                     throw new UnsupportedOperationException();
                 }
@@ -326,11 +350,40 @@ public class MochiDBClient implements Closeable {
             Utils.assertNotNull(write2AnsFromServer, "write2AnsFromServer is null");
             write2ansFromServers.add(write2AnsFromServer);
         }
-
-        // To get transaction result, we can select any write2ansFromServers
-        // TODO build TransactionResult by combining different responses
-        final Write2AnsFromServer someWrite2AnsFromServer = write2ansFromServers.get(0);
-        final TransactionResult transactionResult = someWrite2AnsFromServer.getResult();
+        
+        
+        int[] consistentTRCount = new int[transactionOperations.size()];
+        List<OperationResult> coalescedResult = new ArrayList<OperationResult>(transactionOperations.size());
+        
+        for (int index = 0; index < transactionOperations.size(); index++) {
+            coalescedResult.add(null);
+            consistentTRCount[index] = 0;
+        }
+        
+        for (Write2AnsFromServer response : write2ansFromServers) {
+            TransactionResult tr = response.getResult();
+            final List<OperationResult> operations = tr.getOperationsList();
+            if (operations.size() != transactionOperations.size()) {
+                throw new InconsistentReadException();
+            }
+            for (int index = 0; index < transactionOperations.size(); index++) {
+                OperationResult or = operations.get(index);
+                if (or.getStatus() != OperationResultStatus.WRONG_SHARD) {
+                    consistentTRCount[index] = consistentTRCount[index] + 1;
+                    coalescedResult.set(index, or);
+                }
+            }
+        }
+        
+        for (int index = 0; index < transactionOperations.size(); index++) {
+            if (consistentTRCount[index] < clusterConfiguration.getServerMajority()) {
+                throw new InconsistentWriteException();
+            }
+        }
+                
+        final TransactionResult.Builder transactionResultBuilder = TransactionResult.newBuilder();
+        transactionResultBuilder.addAllOperations(coalescedResult);
+        final TransactionResult transactionResult = transactionResultBuilder.build();
         return transactionResult;
     }
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.javatuples.Pair;
 import org.springframework.util.StringUtils;
 
 import edu.stanford.cs244b.mochi.server.ClusterConfiguration;
@@ -106,6 +108,14 @@ public class InMemoryDataStore implements DataStore {
         final Grant grantAtTS;
         checkOp1IsNonEmptyKeyError(interestedKey);
         LOG.debug("Performing processWrite on key: {}", interestedKey);
+        if (objectBelongsToCurrentShardServer(interestedKey) == false) {
+            final Grant.Builder grantBuilder = Grant.newBuilder();
+            grantBuilder.setObjectId(interestedKey);
+            grantBuilder.setStatus(OperationResultStatus.WRONG_SHARD);
+            grantBuilder.setTransactionHash(writeToServer.getTransactionHash());
+            grantAtTS = grantBuilder.build();
+            return Triplet.with(grantAtTS, null, true);
+        }
         final StoreValueObjectContainer<String> storeValue;
         if (op.getAction() == OperationAction.WRITE) {
             storeValue  = getOrCreateStoreValue(interestedKey);
@@ -227,6 +237,7 @@ public class InMemoryDataStore implements DataStore {
         if (operations == null) {
             return null;
         }
+        final List<String> objectsToWriteLock = acquireWriteLocksAndReturnList(transaction);
         final Map<String, WriteCertificate> currentObjectCertificates = new HashMap<String, WriteCertificate>(
                 operations.size());
         final Map<String, WriteCertificate> currentRejectedObjectCertificates = new HashMap<String, WriteCertificate>(
@@ -266,6 +277,8 @@ public class InMemoryDataStore implements DataStore {
             } 
 
         }
+        
+        releaseWriteLocks(objectsToWriteLock);
 
         if (allWriteOk) {
             final MultiGrant.Builder mgb = MultiGrant.newBuilder();
@@ -322,12 +335,51 @@ public class InMemoryDataStore implements DataStore {
         return objectsToLock;
     }
     
+    private List<String> getObjectsToWriteLock(final Transaction transaction) {
+        List<String> objectsFromTransaction = new ArrayList<String>();
+        final List<Operation> operations = transaction.getOperationsList();
+        if (operations == null)
+            return objectsFromTransaction;
+        
+        for (Operation op : operations) {
+            if ((op.getAction() == OperationAction.WRITE) ||
+                    (op.getAction() == OperationAction.DELETE))  {
+                final String interestedKey = op.getOperand1();
+                if (StringUtils.isEmpty(interestedKey) == false) {
+                    
+                    objectsFromTransaction.add(interestedKey);
+                }
+            }
+        }
+      
+        final List<String> objectsToWriteLock = new ArrayList<String>(objectsFromTransaction);
+        // Need to do in order to avoid deadlock
+        Collections.sort(objectsToWriteLock);
+        return objectsToWriteLock;
+    }
+    
     private void acquireWriteLocks(final MultiGrant multiGrant) {
         final List<String> objectsToWriteLock = getObjectsToWriteLock(multiGrant);
         for (String object : objectsToWriteLock) {
             final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
             storeValueContianer.acquireObjectWriteLockIfNotHeld();
         }
+    }
+    
+    private List<String> acquireWriteLocksAndReturnList(Transaction transaction) {
+        final List<String> objectsToReadLock = getObjectsToWriteLock(transaction);
+        // Sharding proof
+        for (Iterator<String> iterator = objectsToReadLock.iterator(); iterator.hasNext();) {
+            String object = iterator.next();
+            final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
+            if (storeValueContainer !=  null) {
+                // Acquire lock if and only if SVOC is part of this server
+                storeValueContainer.acquireObjectWriteLockIfNotHeld();
+            } else {
+                iterator.remove();
+            }
+        }
+        return objectsToReadLock;
     }
     
     private List<String> acquireWriteLocksAndReturnList(final MultiGrant multiGrant) {
@@ -338,6 +390,7 @@ public class InMemoryDataStore implements DataStore {
         }
         return objectsToWriteLock;
     }
+
 
     /*
      * Attempt to acquire locks on object which are referenced by write grants,
@@ -425,9 +478,16 @@ public class InMemoryDataStore implements DataStore {
     
     private List<String> acquireReadLocksAndReturnList(Transaction transaction) {
         final List<String> objectsToReadLock = getObjectsToReadLock(transaction);
-        for (String object : objectsToReadLock) {
-            final StoreValueObjectContainer<String> storeValueContianer = getDataMap(object).get(object);
-            storeValueContianer.acquireObjectReadLock();
+        // Sharding proof
+        for (Iterator<String> iterator = objectsToReadLock.iterator(); iterator.hasNext();) {
+            String object = iterator.next();
+            final StoreValueObjectContainer<String> storeValueContainer = getDataMap(object).get(object);
+            if (storeValueContainer !=  null) {
+                // Acquire lock if and only if SVOC is part of this server
+                storeValueContainer.acquireObjectReadLock();
+            } else {
+                iterator.remove();
+            }
         }
         return objectsToReadLock;
     }
@@ -513,18 +573,26 @@ public class InMemoryDataStore implements DataStore {
         }
     }
     
-    private List<OperationResult> write2apply(final MultiGrant multiGrant, final Write2ToServer write2ToServer, final Set<String> listOfObjectsWhoseTimestampIsOld) {
-        final List<OperationResult> operationResults = new ArrayList<OperationResult>(multiGrant.getGrantsMap().size());
+    private List<OperationResult> write2apply(HashMap<String, Pair<Long, List<Grant>>> coalescedTxnGrantMap, final Write2ToServer write2ToServer) {
         final Transaction transaction = write2ToServer.getTransaction();
-        final String txnHash = Utils.objectSHA512(transaction);  
         final List<Operation> transactionOps = transaction.getOperationsList();
+        final List<OperationResult> operationResults = new ArrayList<OperationResult>(transactionOps.size());
+        final String txnHash = Utils.objectSHA512(transaction);  
         for (final Operation op : transactionOps) {
-            final Grant grantForObject = multiGrant.getGrantsMap().get(op.getOperand1());
+            if (objectBelongsToCurrentShardServer(op.getOperand1()) == false) {
+                final OperationResult.Builder operationResultBuilder = OperationResult.newBuilder();
+                operationResultBuilder.setStatus(OperationResultStatus.WRONG_SHARD);
+                operationResults.add(operationResultBuilder.build());
+                continue;
+            }
+            final Grant grantForObject = coalescedTxnGrantMap.get(op.getOperand1()).getValue1().get(0);
             Utils.assertNotNull(grantForObject, "No grant for object in txn");
+            Utils.assertTrue(coalescedTxnGrantMap.get(op.getOperand1()).getValue1().size() > clusterConfiguration.getServerMajority());
             if (grantForObject.getTransactionHash().equals(txnHash)) {
                 final StoreValueObjectContainer<String> storeValueContainer = getDataMap(op.getOperand1()).get(op.getOperand1());
                 if (op.getOperand1().equals(storeValueContainer.getKey())) {
-                    if (listOfObjectsWhoseTimestampIsOld.contains(op.getOperand1())) {
+                    Long objectTS = storeValueContainer.getCurrentTimestampFromCurrentCertificate();
+                    if ( objectTS != null && objectTS > grantForObject.getTimestamp()) {
                         operationResults.add(readOperation(op));
                     } else {
                         operationResults.add(applyOperation(op, write2ToServer.getWriteCertificate()));
@@ -542,26 +610,52 @@ public class InMemoryDataStore implements DataStore {
         return operationResults;
     }
 
+    private HashMap<String, Pair<Long, List<Grant>>> processMultiGrantsFromAllServers(final Map<String, MultiGrant> multiGrantsFromAllServers, final Transaction transaction) {
+        Utils.assertNotNull(multiGrantsFromAllServers, "MultiGrants map should not be null");
+        HashMap<String, Pair<Long, List<Grant>>> coalescedTxnGrantMap = new HashMap<String, Pair<Long, List<Grant>>>();
+        for (final MultiGrant multiGrant : multiGrantsFromAllServers.values()) {
+            final Map<String, Grant> allGrants = multiGrant.getGrantsMap();
+            Utils.assertNotNull(allGrants, "Grants map should not be null");
+            final List<Operation> transactionOps = transaction.getOperationsList();
+                for (final Operation op : transactionOps) {
+                    final Grant grantForCurrentKey = allGrants.get(op.getOperand1());
+                    if (grantForCurrentKey == null) {
+                        continue;
+                    }
+                    long timestampFromGrant = grantForCurrentKey.getTimestamp();
+                    if (coalescedTxnGrantMap.containsKey(op.getOperand1())) {
+                        if (coalescedTxnGrantMap.get(op.getOperand1()).getValue0() != timestampFromGrant) {
+                            throw new UnsupportedOperationException();
+                        }
+                        coalescedTxnGrantMap.get(op.getOperand1()).getValue1().add(grantForCurrentKey);
+                    } else {
+                        List<Grant> listOfGrants = new ArrayList<Grant>();
+                        listOfGrants.add(grantForCurrentKey);
+                        Pair<Long, List<Grant>> entry = new Pair<Long, List<Grant>>(timestampFromGrant, listOfGrants);
+                        coalescedTxnGrantMap.put(op.getOperand1(), entry);
+                    }
+                }
+        }
+        return coalescedTxnGrantMap;
+    }
     @Override
     public Object processWrite2ToServer(final Write2ToServer write2ToServer) {
         final WriteCertificate wc = write2ToServer.getWriteCertificate();
-        // TODO: check that all multigrants are the same
-        final Map<String, MultiGrant> multiGrants = wc.getGrantsMap();
-        final MultiGrant multiGrant = getFirst(multiGrants);
+        final Transaction transaction = write2ToServer.getTransaction();
+        // MultiGrants will be different thanks to sharding
+        final Map<String, MultiGrant> multiGrantsFromAllServers = wc.getGrantsMap();
+        HashMap<String, Pair<Long, List<Grant>>> coalescedTxnGrantMap = processMultiGrantsFromAllServers(wc.getGrantsMap(), transaction);       
+        final List<String> objectsToWriteLock = acquireWriteLocksAndReturnList(transaction);
 
         final List<OperationResult> operationResults;
         try {
-            final Set<String> listOfObjectsWhoseTimestampIsOld = write2acquireLocksAndCheckViewStamps(multiGrant);
-            if (listOfObjectsWhoseTimestampIsOld.size() != 0) {
-                LOG.debug("Found objects whose timestamps are old: {}", listOfObjectsWhoseTimestampIsOld);
-            }
             LOG.debug("Timestmaps were checked, locks are held and it's time to apply the operation");
-            operationResults = write2apply(multiGrant, write2ToServer, listOfObjectsWhoseTimestampIsOld);
+            operationResults = write2apply(coalescedTxnGrantMap, write2ToServer);
         } catch (Exception ex) {
             LOG.error("Exception at ProcessWrite2ToServer:", ex);
             throw ex;
         } finally {
-            releaseWriteLocks(multiGrant);
+            releaseWriteLocks(objectsToWriteLock);
         }
 
         final Write2AnsFromServer.Builder write2AnsFromServerBuilder = Write2AnsFromServer.newBuilder();
