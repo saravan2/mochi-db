@@ -55,6 +55,10 @@ public class ClusterConfiguration {
         }
     }
 
+    public static boolean configurationExternal() {
+        return System.getProperty(PATH_TO_PROPS_CONFIG_KEY) != null;
+    }
+
     private void loadConfigurationFromFile() {
         final String pathToConfig = System.getProperty(PATH_TO_PROPS_CONFIG_KEY);
         if (pathToConfig == null) {

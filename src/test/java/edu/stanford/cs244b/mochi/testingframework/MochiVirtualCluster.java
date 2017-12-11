@@ -37,6 +37,11 @@ public class MochiVirtualCluster implements Closeable {
     }
 
     public MochiVirtualCluster(int initialNumberOfServers, int bftReplicationFactor) {
+        if (ClusterConfiguration.configurationExternal()) {
+            servers = null;
+            tokenDivision = null;
+            return;
+        }
         Assert.assertTrue(initialNumberOfServers >= 4);
         Assert.assertTrue(bftReplicationFactor >= 4);
         Assert.assertTrue(bftReplicationFactor <= initialNumberOfServers);
@@ -50,6 +55,7 @@ public class MochiVirtualCluster implements Closeable {
         }
         giveTokensToServers(initialNumberOfServers);
 
+        
         setInitialMochiClusterConfiguration();
 
         final Map<String,Server> servrs = clusterConfiguration.getSeverIdToServerMapping();
@@ -114,6 +120,9 @@ public class MochiVirtualCluster implements Closeable {
     }
 
     public void startAllServers() {
+        if (ClusterConfiguration.configurationExternal()) {
+            return;
+        }
         for (final VirtualServer vs : servers.values()) {
             final MochiServer s = vs.getServer();
             s.start();
@@ -131,6 +140,9 @@ public class MochiVirtualCluster implements Closeable {
 
     @Override
     public void close() {
+        if (ClusterConfiguration.configurationExternal()) {
+            return;
+        }
         for (final VirtualServer vs : servers.values()) {
             final MochiServer s = vs.getServer();
             s.close();
